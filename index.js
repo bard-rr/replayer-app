@@ -28,7 +28,6 @@ app.get("/sessions", async (req, res) => {
   // req.query.limit
 
   result = await clickhouse.getSessions();
-  console.log(result);
   res.status(200).json(result);
 });
 

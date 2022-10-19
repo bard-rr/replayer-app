@@ -13,18 +13,18 @@ class Clickhouse {
       password: "",
     });
     //creates a clickhouse db
-    await this.client.exec({
-      query: `CREATE DATABASE IF NOT EXISTS eventDb;`,
-    });
-    // //create a queryable table. note that Primary Keys don't need to be unique among rows
-    await this.client.exec({
-      query: `
-        CREATE TABLE IF NOT EXISTS eventDb.eventTable
-        (sessionId String, event String)
-        ENGINE = MergeTree()
-        PRIMARY KEY (sessionId)
-      `,
-    });
+    // await this.client.exec({
+    //   query: `CREATE DATABASE IF NOT EXISTS eventDb;`,
+    // });
+    // // //create a queryable table. note that Primary Keys don't need to be unique among rows
+    // await this.client.exec({
+    //   query: `
+    //     CREATE TABLE IF NOT EXISTS eventDb.eventTable
+    //     (sessionId String, event String)
+    //     ENGINE = MergeTree()
+    //     PRIMARY KEY (sessionId)
+    //   `,
+    // });
 
     // //this creates a clickhouse table that listens for messages sent to the provided
     // //rabbitMQ exchange. We use a materialize view to take messages from this table
@@ -49,21 +49,21 @@ class Clickhouse {
     // });
 
     //create a table to store session information
-    await this.client.exec({
-      query: `
-        CREATE TABLE IF NOT EXISTS eventDb.sessionTable
-        (
-          sessionId String, 
-          startTime DateTime64(3, 'Etc/UTC'), 
-          endTime DateTime64(3, 'Etc/UTC'), 
-          length String,
-          date Date,
-          complete Bool
-        )
-        ENGINE = MergeTree()
-        PRIMARY KEY (sessionId)
-      `,
-    });
+    // await this.client.exec({
+    //   query: `
+    //     CREATE TABLE IF NOT EXISTS eventDb.sessionTable
+    //     (
+    //       sessionId String,
+    //       startTime DateTime64(3, 'Etc/UTC'),
+    //       endTime DateTime64(3, 'Etc/UTC'),
+    //       length String,
+    //       date Date,
+    //       complete Bool
+    //     )
+    //     ENGINE = MergeTree()
+    //     PRIMARY KEY (sessionId)
+    //   `,
+    // });
   }
 
   async getEventsFromSession(sessionId) {
