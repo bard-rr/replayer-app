@@ -29,13 +29,11 @@ app.get("/sessions", async (req, res) => {
 
   result = await clickhouse.getSessions();
   result = result.map((obj) => {
-    if (obj.complete === true) {
-      return {
-        sessionId: obj.sessionId,
-        length: obj.length,
-        date: obj.date,
-      };
-    }
+    return {
+      sessionId: obj.sessionId,
+      length: obj.lengthMs,
+      date: obj.date,
+    };
   });
   res.status(200).json(result);
 });
