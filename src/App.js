@@ -30,7 +30,7 @@ function App() {
 
   const getEventData = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3003/replay/${id}`);
+      const response = await axios.get(`http://localhost:3003/sessions/${id}`);
       navigate(`/sessions/${id}`);
       setEventData(response.data);
     } catch (error) {
