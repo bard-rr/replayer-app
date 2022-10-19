@@ -33,7 +33,7 @@ app.get("/sessions", async (req, res) => {
       return {
         sessionId: obj.sessionId,
         length: obj.length,
-        date: obj.data,
+        date: obj.date,
       };
     }
   });
