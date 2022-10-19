@@ -1,14 +1,12 @@
 const events = [
   {
-    event: {
-      data: {
-        href: "http://127.0.0.1:5173/",
-        width: 1920,
-        height: 1000,
-      },
-      type: 4,
-      timestamp: 1666015901606,
+    data: {
+      href: "http://127.0.0.1:5173/",
+      width: 1920,
+      height: 1000,
     },
+    type: 4,
+    timestamp: 1666015901606,
     sessionId: "4071c287-4b45-4367-8590-e36731bb25ad",
   },
   {

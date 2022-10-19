@@ -1,18 +1,20 @@
-// import axios from "axios";
 import rrwebPlayer from "rrweb-player";
 import "rrweb-player/dist/style.css";
 
-const removeOldPlayers = () => {
-  document.querySelectorAll(".rr-player").forEach((player) => player.remove());
+let player;
+
+const removeOldPlayer = () => {
+  if (player !== null) {
+    player.pause();
+    player.$destroy();
+    player = null;
+  }
 };
 
-// const getEvents = () => {
-//   const url = "http://localhost:3001/replayer";
-//   return axios.get(url);
-// };
-
 const instantiatePlayer = (data) => {
-  new rrwebPlayer({
+  if (data.length <= 0) return null;
+
+  return new rrwebPlayer({
     target: document.querySelector(".player"),
     props: {
       events: data,
@@ -23,11 +25,10 @@ const instantiatePlayer = (data) => {
   });
 };
 
-const init = async (data) => {
-  removeOldPlayers();
+const init = (data) => {
   try {
-    // const { data } = await getEvents();
-    instantiatePlayer(data);
+    player = instantiatePlayer(data);
+    return removeOldPlayer;
   } catch (error) {
     console.error(error);
   }
