@@ -67,7 +67,7 @@ class Clickhouse {
   }
 
   async getEventsFromSession(sessionId) {
-    let query = `SELECT * from eventDb.eventTable where sessionId='${sessionId}'`;
+    let query = `SELECT event from eventDb.eventTable where sessionId='${sessionId}'`;
     let resultSet = await this.client.query({
       query,
       format: "JSONEachRow",
@@ -81,7 +81,7 @@ class Clickhouse {
   //into a json object
   processData(dataSet) {
     return dataSet.map((row) => {
-      return { ...row, event: JSON.parse(row.event) };
+      return JSON.parse(row.event);
     });
   }
 
