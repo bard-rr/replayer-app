@@ -28,6 +28,15 @@ app.get("/sessions", async (req, res) => {
   // req.query.limit
 
   result = await clickhouse.getSessions();
+  result = result.map((obj) => {
+    if (obj.complete === true) {
+      return {
+        sessionId: obj.sessionId,
+        length: obj.length,
+        date: obj.data,
+      };
+    }
+  });
   res.status(200).json(result);
 });
 

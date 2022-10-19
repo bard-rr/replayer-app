@@ -56,7 +56,7 @@ class Clickhouse {
     //       sessionId String,
     //       startTime DateTime64(3, 'Etc/UTC'),
     //       endTime DateTime64(3, 'Etc/UTC'),
-    //       length String,
+    //       length Number,
     //       date Date,
     //       complete Bool
     //     )
