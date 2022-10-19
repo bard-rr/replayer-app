@@ -17,14 +17,14 @@ class Clickhouse {
       query: `CREATE DATABASE IF NOT EXISTS eventDb;`,
     });
     // //create a queryable table. note that Primary Keys don't need to be unique among rows
-    // await this.client.exec({
-    //   query: `
-    //     CREATE TABLE IF NOT EXISTS eventDb.eventTable
-    //     (sessionId String, event String)
-    //     ENGINE = MergeTree()
-    //     PRIMARY KEY (sessionId)
-    //   `,
-    // });
+    await this.client.exec({
+      query: `
+        CREATE TABLE IF NOT EXISTS eventDb.eventTable
+        (sessionId String, event String)
+        ENGINE = MergeTree()
+        PRIMARY KEY (sessionId)
+      `,
+    });
 
     // //this creates a clickhouse table that listens for messages sent to the provided
     // //rabbitMQ exchange. We use a materialize view to take messages from this table
