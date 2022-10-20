@@ -1,4 +1,5 @@
-import { BASE_URL } from "./const";
+import { BASE_URL, FILTER_OPTIONS } from "./const";
+import { getQueryString } from "./urlUtils";
 
 const filterSessions = (sessions, filterTag) => {
   switch (filterTag) {
@@ -34,40 +35,36 @@ const filterByThisWeek = (sessions) => {
   return sessions.filter(({ date }) => date >= lastWeek);
 };
 
-export const getFilterUrl = (filterTag, filterStr) => {
+export const getFilterQuery = (filterTag, filterStr) => {
   //TODO: build this out in the future.
   switch (filterTag) {
     case "date":
-      return getFilterByDateUrl(filterStr);
+      return getFilterByDateQuery(filterStr);
     default:
-      return getDefaultFilterUrl();
+      return getDefaultFilterQuery();
   }
 };
 
-const getQueryString = (obj) => {
-  return new URLSearchParams(obj).toString();
-};
-
-const getFilterByDateUrl = (filterStr) => {
+const getFilterByDateQuery = (filterStr) => {
   switch (filterStr) {
     case "Today":
-      return buildDateUrl(getToday(), getToday());
+      return buildDateQuery(getToday(), getToday());
     case "Yesterday":
-      return buildDateUrl(yesterday(), yesterday());
+      return buildDateQuery(yesterday(), yesterday());
     case "Last Week":
-      return buildDateUrl(aWeekAgo(), getToday());
+      return buildDateQuery(aWeekAgo(), getToday());
     case "All Sessions":
-      return buildDateUrl(get1970(), getToday());
+      return buildDateQuery(get1970(), getToday());
     default:
-      return getDefaultFilterUrl();
+      return getDefaultFilterQuery();
   }
 };
 
-const getDefaultFilterUrl = () => {
-  return buildDateUrl(getToday(), getToday());
+const getDefaultFilterQuery = () => {
+  return buildDateQuery(getToday(), getToday());
 };
 
-const buildDateUrl = (startDate, endDate) => {
+const buildDateQuery = (startDate, endDate) => {
   let startStr = getDateStr(startDate);
   let endStr = getDateStr(endDate);
   let filterObj = {
@@ -75,8 +72,7 @@ const buildDateUrl = (startDate, endDate) => {
     startDate: startStr,
     endDate: endStr,
   };
-  let queryString = getQueryString(filterObj);
-  return BASE_URL + `/sessions?${queryString}`;
+  return getQueryString(filterObj);
 };
 
 const getDateStr = (ms) => {

@@ -27,13 +27,6 @@ import Player from "./components/Player";
       Only other piece will be implementing changes to those state values as appropriate in the 
         session list. ie, when the user changes the rows per page, update the state value for 
         rows per page accordingly. 
-
-Bit of a plan change here:
-  only implement filtering on the backend 
-  sorting and pagination happen on the frontend: we've got lots of tools to 
-  help us with that. 
-We'll have a new component that controls the filtering. Some kind of form that sends a 
-request when a user submits it. 
 */
 
 function App() {

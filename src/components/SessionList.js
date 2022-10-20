@@ -9,13 +9,17 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import filterSessions from "../utils/sessionFilter";
-import Filter from "./Filter";
+import filterSessions, { getFilterUrl } from "../utils/sessionFilter";
+import { Autocomplete, Button, TextField } from "@mui/material";
+import { DEFAULT_FILTER, FILTER_OPTIONS } from "../utils/const";
+import axios from "axios";
+import { getFullUrl } from "../utils/urlUtils";
 
 export default function SessionList({ sessions, setSessions, onClick }) {
-  //pagination part of code.
+  //TODO: merge these page state variables into a single object?
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [filter, setFilter] = useState(DEFAULT_FILTER);
 
   //assums that we have filter params in the url of the page we're on
   //route is /sessions?whatever params we want
@@ -31,13 +35,17 @@ export default function SessionList({ sessions, setSessions, onClick }) {
     setPage(0);
   }, [filterTag]);
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = async (event, newPage) => {
     setPage(newPage);
+    let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
+    setSessions(newSessions);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = async (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+    let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
+    setSessions(newSessions);
   };
 
   //this assumes we've got ALL of the data we're interested in stored in 'data',
@@ -48,9 +56,66 @@ export default function SessionList({ sessions, setSessions, onClick }) {
     return rowsPerPage > 0 ? data.slice(startIdx, endIdx) : data;
   };
 
+  const handleFilterSelection = (event, newFilter) => {
+    event.preventDefault();
+    if (!newFilter) {
+      newFilter = DEFAULT_FILTER;
+    }
+    if (isValidOption(newFilter)) {
+      setFilter(newFilter);
+    }
+  };
+
+  const isValidOption = (newValue) => {
+    return FILTER_OPTIONS.includes(newValue);
+  };
+
+  const handleFilter = async (event) => {
+    event.preventDefault();
+    if (isValidOption(filter)) {
+      let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
+      setSessions(newSessions);
+    } else {
+      //TODO: handle invalid option
+    }
+  };
+
+  const getNewSessions = async (page, rowsPerPage, filterTag, filterStr) => {
+    let url = getFullUrl(
+      { pageNum: page, perPage: rowsPerPage },
+      {},
+      { filterTag, filterStr }
+    );
+    let response = await axios.get(url);
+    return response.data;
+  };
+
   return (
     <div className="sessionList">
-      <Filter setSessions={setSessions}></Filter>
+      <div className="filter">
+        <form>
+          <Autocomplete
+            id="filter-dropdown"
+            options={FILTER_OPTIONS}
+            defaultValue={DEFAULT_FILTER}
+            renderInput={(params) => (
+              <TextField {...params} label="Filter By:" />
+            )}
+            sx={{
+              ml: "280px",
+              mt: "30px",
+              mr: "30px",
+              width: "500px",
+              height: "75px",
+              display: "inline-flex",
+            }}
+            onChange={handleFilterSelection}
+          />
+          <Button variant="outlined" onClick={handleFilter}>
+            Filter
+          </Button>
+        </form>
+      </div>
       <TableContainer
         sx={{
           ml: "280px",
