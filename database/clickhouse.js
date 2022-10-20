@@ -12,6 +12,69 @@ class Clickhouse {
       username: "default",
       password: "",
     });
+  }
+
+  async getEventsFromSession(sessionId) {
+    let query = `SELECT event from eventDb.eventTable where sessionId='${sessionId}'`;
+    let resultSet = await this.client.query({
+      query,
+      format: "JSONEachRow",
+    });
+    let dataSet = await resultSet.json();
+    return this.processData(dataSet);
+  }
+
+  //data is an array of objects with a sessionId and event property.
+  //both contain strings. we need to parse the json string in the event property
+  //into a json object
+  processData(dataSet) {
+    return dataSet.map((row) => {
+      return JSON.parse(row.event);
+    });
+  }
+
+  //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
+  async getSessions(paramsObj) {
+    // tag: date
+      // startDate:
+    const whereStatement = filter(paramsObj);
+    let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
+    let resultSet = await this.client.query({
+      query,
+      format: "JSONEachRow",
+    });
+    return await resultSet.json();
+  }
+}
+
+const filter = (paramsObj) => {
+  switch (paramsObj.tag) {
+    case "length":
+      const minLength = Number(paramsObj.minLength) || 0;
+      const maxLength = Number(paramsObj.maxLength) || Date.now();
+      return `WHERE (lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
+    case "date":
+      const startDate = paramsObj.startDate || "1970-01-01";
+      const todayString = getTodayString();
+      const endDate = paramsObj.endDate || todayString;
+      return `WHERE (date >= '${startDate}') AND (date <= '${endDate}')`;
+
+    default:
+      return `WHERE (date = '${getTodayString()}')`;
+  }
+};
+
+const getTodayString = () => {
+  const today = new Date();
+  const year = today.getUTCFullYear();
+  const month = today.getUTCMonth() + 1;
+  const day = today.getUTCDate();
+  return `${year}-${month}-${day}`;
+};
+
+module.exports = Clickhouse;
+
+
     //creates a clickhouse db
     // await this.client.exec({
     //   query: `CREATE DATABASE IF NOT EXISTS eventDb;`,
@@ -64,62 +127,3 @@ class Clickhouse {
     //     PRIMARY KEY (sessionId)
     //   `,
     // });
-  }
-
-  async getEventsFromSession(sessionId) {
-    let query = `SELECT event from eventDb.eventTable where sessionId='${sessionId}'`;
-    let resultSet = await this.client.query({
-      query,
-      format: "JSONEachRow",
-    });
-    let dataSet = await resultSet.json();
-    return this.processData(dataSet);
-  }
-
-  //data is an array of objects with a sessionId and event property.
-  //both contain strings. we need to parse the json string in the event property
-  //into a json object
-  processData(dataSet) {
-    return dataSet.map((row) => {
-      return JSON.parse(row.event);
-    });
-  }
-
-  //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
-  async getSessions(paramsObj) {
-    const whereStatement = filter(paramsObj);
-    let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
-    let resultSet = await this.client.query({
-      query,
-      format: "JSONEachRow",
-    });
-    return await resultSet.json();
-  }
-}
-
-const filter = (paramsObj) => {
-  switch (paramsObj.tag) {
-    case "length":
-      const minLength = Number(paramsObj.minLength) || 0;
-      const maxLength = Number(paramsObj.maxLength) || Date.now();
-      return `WHERE (lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
-    case "date":
-      const startDate = paramsObj.startDate || "1970-01-01";
-      const todayString = getTodayString();
-      const endDate = paramsObj.endDate || todayString;
-      return `WHERE (date >= '${startDate}') AND (date <= '${endDate}')`;
-
-    default:
-      return `WHERE (date = '${getTodayString()}')`;
-  }
-};
-
-const getTodayString = () => {
-  const today = new Date();
-  const year = today.getUTCFullYear();
-  const month = today.getUTCMonth() + 1;
-  const day = today.getUTCDate();
-  return `${year}-${month}-${day}`;
-};
-
-module.exports = Clickhouse;
