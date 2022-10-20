@@ -10,6 +10,7 @@ const Layout = ({
   return (
     <>
       <Sidebar
+        // these props aren't actually used...
         onYesterdayClick={onYesterdayClick}
         onTodayClick={onTodayClick}
         onSessionClick={onSessionClick}

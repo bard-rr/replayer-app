@@ -20,6 +20,8 @@ const Sidebar = () => {
     },
   };
 
+  //this naviagtes users to a '/sessions' url with a query param for filtering by
+  //today / yesterday / etc.
   return (
     <Box>
       <Drawer varient="permanent" open={true} hideBackdrop={true} sx={sxProps}>

@@ -12,12 +12,20 @@ import { useEffect, useState } from "react";
 import filterSessions from "../utils/sessionFilter";
 
 export default function SessionList({ sessions, onClick }) {
+  //pagination part of code.
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  //assums that we have filter params in the url of the page we're on
+  //route is /sessions?whatever params we want
   const [searchParams] = useSearchParams();
+
+  //manually implement filtering?
   const filterTag = searchParams.get("filter");
   const filteredSessions = filterSessions(sessions, filterTag);
 
+  //if we filter by something new (ie, click an option in the sidebar), go to
+  //the first page by default
   useEffect(() => {
     setPage(0);
   }, [filterTag]);
@@ -31,6 +39,8 @@ export default function SessionList({ sessions, onClick }) {
     setPage(0);
   };
 
+  //this assumes we've got ALL of the data we're interested in stored in 'data',
+  //which is prefiltered: this is how pagination is impld
   const sliceData = (data) => {
     let startIdx = page * rowsPerPage;
     const endIdx = startIdx + rowsPerPage;
@@ -61,6 +71,8 @@ export default function SessionList({ sessions, onClick }) {
                   cursor: "pointer",
                 },
               }}
+              //this gets events for the session the user clicks on + navigates to replay page,
+              //which takes us to the Player component
               onClick={onClick}
             >
               <TableCell>{session.sessionId}</TableCell>
@@ -71,6 +83,7 @@ export default function SessionList({ sessions, onClick }) {
         </TableBody>
         <TableFooter>
           <TableRow>
+            {/* From MUI library: setup for pagination. Seems straightforward */}
             <TablePagination
               count={filteredSessions.length}
               page={page * rowsPerPage > filteredSessions.length ? 0 : page}

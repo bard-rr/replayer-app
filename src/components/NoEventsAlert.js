@@ -20,6 +20,8 @@ const NoEventsAlert = () => {
         <Button
           variant="outlined"
           size="small"
+          //TODO: can we preserve the user's filtered, paginated & sorted view of sessions
+          //from here instead of taking them back to everything?
           onClick={() => navigate("/sessions")}
           sx={{
             color: "#3B4252",
