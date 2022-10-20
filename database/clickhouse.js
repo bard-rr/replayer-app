@@ -105,17 +105,21 @@ const filter = (paramsObj) => {
       return `WHERE (lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
     case "date":
       const startDate = paramsObj.startDate || "1970-01-01";
-      const today = new Date();
-      const year = today.getUTCFullYear();
-      const month = today.getUTCMonth() + 1;
-      const day = today.getUTCDate();
-      const todayString = `${year}-${month}-${day}`;
+      const todayString = getTodayString();
       const endDate = paramsObj.endDate || todayString;
       return `WHERE (date >= '${startDate}') AND (date <= '${endDate}')`;
 
     default:
-      break;
+      return `WHERE (date = '${getTodayString()}')`;
   }
+};
+
+const getTodayString = () => {
+  const today = new Date();
+  const year = today.getUTCFullYear();
+  const month = today.getUTCMonth() + 1;
+  const day = today.getUTCDate();
+  return `${year}-${month}-${day}`;
 };
 
 module.exports = Clickhouse;
