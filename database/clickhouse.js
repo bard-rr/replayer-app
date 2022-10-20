@@ -98,7 +98,7 @@ class Clickhouse {
 }
 
 const filter = (paramsObj) => {
-  switch (paramsObj.filterTag) {
+  switch (paramsObj.tag) {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
       const maxLength = Number(paramsObj.maxLength) || Date.now();
