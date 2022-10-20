@@ -86,8 +86,9 @@ class Clickhouse {
   }
 
   //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
-  async getSessions() {
-    let query = `SELECT * FROM eventDb.sessionTable`;
+  async getSessions(paramsObj) {
+    const whereStatement = filter(paramsObj);
+    let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
     let resultSet = await this.client.query({
       query,
       format: "JSONEachRow",
@@ -95,5 +96,16 @@ class Clickhouse {
     return await resultSet.json();
   }
 }
+
+const filter = (paramsObj) => {
+  switch (paramsObj.filterTag) {
+    case "length":
+      const minLength = Number(paramsObj.minLength) || 0;
+      const maxLength = Number(paramsObj.maxLength) || Date.now();
+      return `WHERE (lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
+    default:
+      break;
+  }
+};
 
 module.exports = Clickhouse;

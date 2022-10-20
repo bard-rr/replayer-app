@@ -24,10 +24,17 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/sessions", async (req, res) => {
-  // req.query.page
-  // req.query.limit
+  // const filterObj = filter(req.params)
+  // const pageNum = req.query.page
+  // const perPage = req.query.perPage
+  // const sortOrder = req.query.sort-order
+  // const sortBy = req.query.sort-by
+  // const filterTag = req.query.filter-tag
+  // const startDate = req.query.filter-startDate
+  // const endDate = req.query.filter-endDate
+  console.log(req.query);
 
-  result = await clickhouse.getSessions();
+  result = await clickhouse.getSessions(req.query);
   result = result.map((obj) => {
     return {
       sessionId: obj.sessionId,
