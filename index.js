@@ -8,7 +8,6 @@ const Clickhouse = require("./database/clickhouse");
 const app = express();
 
 let clickhouse;
-setupAllConnections();
 const setupAllConnections = async () => {
   try {
     clickhouse = new Clickhouse();
@@ -18,6 +17,7 @@ const setupAllConnections = async () => {
     console.log("clickhouse error:", e);
   }
 };
+setupAllConnections();
 
 app.use(express.json());
 app.use(cors());
