@@ -36,7 +36,7 @@ class Clickhouse {
   //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
   async getSessions(paramsObj) {
     // tag: date
-      // startDate:
+      // startDate: 
     const whereStatement = filter(paramsObj);
     let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
     let resultSet = await this.client.query({
@@ -48,6 +48,7 @@ class Clickhouse {
 }
 
 const filter = (paramsObj) => {
+  //filter params
   switch (paramsObj.tag) {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
