@@ -36,7 +36,7 @@ const Filter = ({ setSessions }) => {
         <Autocomplete
           id="filter-dropdown"
           options={options}
-          defautvalue={options[0]}
+          defaultValue={options[0]}
           renderInput={(params) => <TextField {...params} label="Filter By:" />}
           sx={{
             ml: "280px",
