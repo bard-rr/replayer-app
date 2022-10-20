@@ -48,7 +48,6 @@ class Clickhouse {
 }
 
 const filter = (paramsObj) => {
-  //filter params
   switch (paramsObj.tag) {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
