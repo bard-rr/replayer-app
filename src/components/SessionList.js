@@ -10,8 +10,9 @@ import Paper from "@mui/material/Paper";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import filterSessions from "../utils/sessionFilter";
+import Filter from "./Filter";
 
-export default function SessionList({ sessions, onClick }) {
+export default function SessionList({ sessions, setSessions, onClick }) {
   //pagination part of code.
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -48,53 +49,62 @@ export default function SessionList({ sessions, onClick }) {
   };
 
   return (
-    <TableContainer
-      sx={{ ml: "280px", mt: "60px", mr: "60px", width: "auto", boxShadow: 1 }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 350 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell>Session Id</TableCell>
-            <TableCell>Date</TableCell>
-            <TableCell>Length</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {sliceData(filteredSessions).map((session) => (
-            <TableRow
-              key={session.sessionId}
-              data-id={session.sessionId}
-              sx={{
-                "&:hover": {
-                  backgroundColor: "#ECEFF4",
-                  cursor: "pointer",
-                },
-              }}
-              //this gets events for the session the user clicks on + navigates to replay page,
-              //which takes us to the Player component
-              onClick={onClick}
-            >
-              <TableCell>{session.sessionId}</TableCell>
-              <TableCell>{session.date}</TableCell>
-              <TableCell>{session.length}</TableCell>
+    <div className="sessionList">
+      <Filter setSessions={setSessions}></Filter>
+      <TableContainer
+        sx={{
+          ml: "280px",
+          mt: "10px",
+          mr: "60px",
+          width: "auto",
+          boxShadow: 1,
+        }}
+        component={Paper}
+      >
+        <Table sx={{ minWidth: 350 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Session Id</TableCell>
+              <TableCell>Date</TableCell>
+              <TableCell>Length</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            {/* From MUI library: setup for pagination. Seems straightforward */}
-            <TablePagination
-              count={filteredSessions.length}
-              page={page * rowsPerPage > filteredSessions.length ? 0 : page}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10]}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {sliceData(filteredSessions).map((session) => (
+              <TableRow
+                key={session.sessionId}
+                data-id={session.sessionId}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#ECEFF4",
+                    cursor: "pointer",
+                  },
+                }}
+                //this gets events for the session the user clicks on + navigates to replay page,
+                //which takes us to the Player component
+                onClick={onClick}
+              >
+                <TableCell>{session.sessionId}</TableCell>
+                <TableCell>{session.date}</TableCell>
+                <TableCell>{session.length}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              {/* From MUI library: setup for pagination. Seems straightforward */}
+              <TablePagination
+                count={filteredSessions.length}
+                page={page * rowsPerPage > filteredSessions.length ? 0 : page}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10]}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
