@@ -1,4 +1,5 @@
-const events = [
+const events1 = [];
+const events2 = [
   {
     data: {
       href: "http://127.0.0.1:5173/",
@@ -2950,4 +2951,5 @@ const events = [
   },
 ];
 
+const events = { events1, events2 };
 module.exports = events;
