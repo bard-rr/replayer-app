@@ -8,7 +8,9 @@ export const FILTER_OPTIONS = [
 
 export const DEFAULT_FILTER = FILTER_OPTIONS[0];
 
-export const DEFAULT_PAGE_STATE = {
-  pageNum: 0,
-  perPage: 5,
+export const DEFAULT_SORT_STATE = {
+  sortBy: "date",
+  sortOrder: "descending",
 };
+
+export const DEFAULT_PAGE = 0;

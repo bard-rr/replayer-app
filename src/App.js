@@ -4,6 +4,7 @@ import axios from "axios";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
+import { DEFAULT_FILTER } from "./utils/const";
 
 /*
   Initial thoughts on implementing filtering and pagination

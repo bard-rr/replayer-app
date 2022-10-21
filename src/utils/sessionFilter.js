@@ -35,7 +35,7 @@ const filterByThisWeek = (sessions) => {
   return sessions.filter(({ date }) => date >= lastWeek);
 };
 
-export const getFilterQuery = (filterTag, filterStr) => {
+export const getFilterQuery = ({ filterTag, filterStr }) => {
   //TODO: build this out in the future.
   switch (filterTag) {
     case "date":

@@ -1,26 +1,33 @@
 import { Autocomplete, Button, TextField } from "@mui/material";
-import axios from "axios";
-import { useState } from "react";
-import { getFilterUrl } from "../utils/sessionFilter";
+import {
+  DEFAULT_FILTER,
+  DEFAULT_PAGE,
+  DEFAULT_SORT_STATE,
+  FILTER_OPTIONS,
+} from "../utils/const";
+import { getNewSessions } from "../utils/urlUtils";
 
-const options = ["Today", "Yesterday", "Last Week", "All Sessions"];
-const defaultOption = options[0];
-const Filter = ({ setSessions }) => {
-  let [filter, setFilter] = useState(defaultOption);
+const Filter = ({ setSessions, setPage, rowsPerPage, filter, setFilter }) => {
   const handleFilter = async (event) => {
     event.preventDefault();
     if (isValidOption(filter)) {
-      let url = getFilterUrl("date", filter);
-      let response = await axios.get(url);
-      setSessions(response.data);
+      let newSessions = await getNewSessions(
+        DEFAULT_PAGE,
+        rowsPerPage,
+        "date",
+        filter,
+        DEFAULT_SORT_STATE
+      );
+      setSessions(newSessions);
+      setPage(DEFAULT_PAGE);
     } else {
       //TODO: handle invalid option
     }
   };
-  const handleChange = (event, newFilter) => {
+  const handleFilterSelection = (event, newFilter) => {
     event.preventDefault();
     if (!newFilter) {
-      newFilter = defaultOption;
+      newFilter = DEFAULT_FILTER;
     }
     if (isValidOption(newFilter)) {
       setFilter(newFilter);
@@ -28,15 +35,15 @@ const Filter = ({ setSessions }) => {
   };
 
   const isValidOption = (newValue) => {
-    return options.includes(newValue);
+    return FILTER_OPTIONS.includes(newValue);
   };
   return (
     <div className="filter">
       <form>
         <Autocomplete
           id="filter-dropdown"
-          options={options}
-          defaultValue={options[0]}
+          options={FILTER_OPTIONS}
+          defaultValue={DEFAULT_FILTER}
           renderInput={(params) => <TextField {...params} label="Filter By:" />}
           sx={{
             ml: "280px",
@@ -46,7 +53,7 @@ const Filter = ({ setSessions }) => {
             height: "75px",
             display: "inline-flex",
           }}
-          onChange={handleChange}
+          onChange={handleFilterSelection}
         />
         <Button variant="outlined" onClick={handleFilter}>
           Filter

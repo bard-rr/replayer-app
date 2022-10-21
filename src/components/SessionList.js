@@ -9,16 +9,20 @@ import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import filterSessions, { getFilterUrl } from "../utils/sessionFilter";
-import { Autocomplete, Button, TextField } from "@mui/material";
-import { DEFAULT_FILTER, FILTER_OPTIONS } from "../utils/const";
-import axios from "axios";
-import { getFullUrl } from "../utils/urlUtils";
+import filterSessions from "../utils/sessionFilter";
+import {
+  DEFAULT_FILTER,
+  DEFAULT_PAGE,
+  DEFAULT_SORT_STATE,
+} from "../utils/const";
+import { getNewSessions } from "../utils/urlUtils";
+import Filter from "./Filter";
 
 export default function SessionList({ sessions, setSessions, onClick }) {
   //TODO: merge these page state variables into a single object?
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
 
   //assums that we have filter params in the url of the page we're on
@@ -32,19 +36,32 @@ export default function SessionList({ sessions, setSessions, onClick }) {
   //if we filter by something new (ie, click an option in the sidebar), go to
   //the first page by default
   useEffect(() => {
-    setPage(0);
+    setPage(DEFAULT_PAGE);
   }, [filterTag]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
-    let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
+    let newSessions = await getNewSessions(
+      newPage,
+      rowsPerPage,
+      "date",
+      filter,
+      sortState
+    );
     setSessions(newSessions);
   };
 
   const handleChangeRowsPerPage = async (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-    let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
+    let newRowsPerPage = parseInt(event.target.value, 10);
+    setRowsPerPage(newRowsPerPage);
+    setPage(DEFAULT_PAGE);
+    let newSessions = await getNewSessions(
+      DEFAULT_PAGE,
+      newRowsPerPage,
+      "date",
+      filter,
+      sortState
+    );
     setSessions(newSessions);
   };
 
@@ -56,66 +73,15 @@ export default function SessionList({ sessions, setSessions, onClick }) {
     return rowsPerPage > 0 ? data.slice(startIdx, endIdx) : data;
   };
 
-  const handleFilterSelection = (event, newFilter) => {
-    event.preventDefault();
-    if (!newFilter) {
-      newFilter = DEFAULT_FILTER;
-    }
-    if (isValidOption(newFilter)) {
-      setFilter(newFilter);
-    }
-  };
-
-  const isValidOption = (newValue) => {
-    return FILTER_OPTIONS.includes(newValue);
-  };
-
-  const handleFilter = async (event) => {
-    event.preventDefault();
-    if (isValidOption(filter)) {
-      let newSessions = await getNewSessions(page, rowsPerPage, "date", filter);
-      setSessions(newSessions);
-    } else {
-      //TODO: handle invalid option
-    }
-  };
-
-  const getNewSessions = async (page, rowsPerPage, filterTag, filterStr) => {
-    let url = getFullUrl(
-      { pageNum: page, perPage: rowsPerPage },
-      {},
-      { filterTag, filterStr }
-    );
-    let response = await axios.get(url);
-    return response.data;
-  };
-
   return (
     <div className="sessionList">
-      <div className="filter">
-        <form>
-          <Autocomplete
-            id="filter-dropdown"
-            options={FILTER_OPTIONS}
-            defaultValue={DEFAULT_FILTER}
-            renderInput={(params) => (
-              <TextField {...params} label="Filter By:" />
-            )}
-            sx={{
-              ml: "280px",
-              mt: "30px",
-              mr: "30px",
-              width: "500px",
-              height: "75px",
-              display: "inline-flex",
-            }}
-            onChange={handleFilterSelection}
-          />
-          <Button variant="outlined" onClick={handleFilter}>
-            Filter
-          </Button>
-        </form>
-      </div>
+      <Filter
+        setSessions={setSessions}
+        setPage={setPage}
+        rowsPerPage={rowsPerPage}
+        filter={filter}
+        setFilter={setFilter}
+      ></Filter>
       <TableContainer
         sx={{
           ml: "280px",
