@@ -33,22 +33,41 @@ class Clickhouse {
     });
   }
 
-  //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
   async getSessions(paramsObj) {
-    // tag: date
-      // startDate: 
-    const whereStatement = filter(paramsObj);
-    let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
-    let resultSet = await this.client.query({
-      query,
-      format: "JSONEachRow",
-    });
-    return await resultSet.json();
+    const sessionQuery = makeSessionQuery(paramsObj);
+    const result = await this.#getData(sessionQuery);
+    return result;
+  }
+
+  async getCount(paramsObj) {
+    const countQuery = makeCountQuery(paramsObj);
+    const result = await this.#getData(countQuery);
+    return result[0]["count()"];
+  }
+
+  async #getData(query, format = "JSONEachRow") {
+    const resultSet = await this.client.query({ query, format });
+    return resultSet.json();
   }
 }
 
-const filter = (paramsObj) => {
-  //paramObj give us the params
+const DEFAULT_PER_PAGE = 5;
+const DEFAULT_PAGE_NUM = 0;
+
+const makeSessionQuery = (paramsObj) => {
+  const where = filterBy(paramsObj);
+  const orderBy = sortBy(paramsObj);
+  const limitOffset = paginateBy(paramsObj);
+  const select = "SELECT * FROM eventDb.sessionTable";
+  const sessionQuery = `${select} ${where} ${orderBy} ${limitOffset}`;
+  return sessionQuery;
+};
+
+const makeCountQuery = (paramsObj) => {
+  return `SELECT count(*) FROM eventDb.sessionTable ${filterBy(paramsObj)}`;
+};
+
+const filterBy = (paramsObj) => {
   switch (paramsObj.tag) {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
@@ -63,6 +82,29 @@ const filter = (paramsObj) => {
     default:
       return `WHERE (date = '${getTodayString()}')`;
   }
+};
+
+const sortBy = (paramsObj) => {
+  const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
+  let column;
+  switch (paramsObj.sortBy) {
+    case "length":
+      column = "lengthMs";
+      break;
+    case "date":
+      column = "date";
+      break;
+    default:
+      column = "date";
+  }
+  return `ORDER BY ${column} ${direction}`;
+};
+
+const paginateBy = (paramsObj) => {
+  const limit = Number(paramsObj.perPage) || DEFAULT_PER_PAGE;
+  const offset = limit * (Number(paramsObj.pageNum) || DEFAULT_PAGE_NUM);
+
+  return `LIMIT ${limit} OFFSET ${offset}`;
 };
 
 const getTodayString = () => {
