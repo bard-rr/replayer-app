@@ -7,9 +7,7 @@ import TableRow from "@mui/material/TableRow";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import Paper from "@mui/material/Paper";
-import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import filterSessions from "../utils/sessionFilter";
 import {
   DEFAULT_FILTER,
   DEFAULT_PAGE,
@@ -41,7 +39,6 @@ export default function SessionList({ onClick }) {
         const sessionInfo = sessionData.sessions
         console.log("sessions", sessionInfo)
 
-        // setSessions(sessionData)
         setCount(count)
         setSessions(sessionInfo)
       } catch (error) { 
@@ -54,17 +51,16 @@ export default function SessionList({ onClick }) {
 
   //assums that we have filter params in the url of the page we're on
   //route is /sessions?whatever params we want
-  const [searchParams] = useSearchParams();
+  // const [searchParams] = useSearchParams();
 
   //manually implement filtering?
-  const filterTag = searchParams.get("filter");
-  const filteredSessions = filterSessions(sessions, filterTag);
+  // const filterTag = searchParams.get("filter");
 
   //if we filter by something new (ie, click an option in the sidebar), go to
   //the first page by default
-  useEffect(() => {
-    setPage(DEFAULT_PAGE);
-  }, [filterTag]);
+  // useEffect(() => {
+  //   setPage(DEFAULT_PAGE);
+  // }, [filterTag]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
@@ -74,22 +70,6 @@ export default function SessionList({ onClick }) {
     let newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
     setPage(DEFAULT_PAGE);
-    // let newSessions = await getNewSessions(
-    //   DEFAULT_PAGE,
-    //   newRowsPerPage,
-    //   "date",
-    //   filter,
-    //   sortState
-    // );
-    // setSessions(newSessions);
-  };
-
-  //this assumes we've got ALL of the data we're interested in stored in 'data',
-  //which is prefiltered: this is how pagination is impld
-  const sliceData = (data) => {
-    let startIdx = page * rowsPerPage;
-    const endIdx = startIdx + rowsPerPage;
-    return rowsPerPage > 0 ? data.slice(startIdx, endIdx) : data;
   };
 
   return (

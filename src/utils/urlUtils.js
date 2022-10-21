@@ -2,7 +2,6 @@ import axios from "axios";
 import { BASE_URL } from "./const";
 import { getFilterQuery } from "./sessionFilter";
 
-// {0, 5, "date", "today", {sortby: "length", sortOrder: "ascending"}}
 export const getNewSessions = async (
   page,
   rowsPerPage,
