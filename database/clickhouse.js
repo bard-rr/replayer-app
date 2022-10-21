@@ -85,11 +85,9 @@ class Clickhouse {
     });
   }
 
-  //TODO: the query works in the clickhouse client. need to make sure it works in the wild.
   async getSessions(paramsObj) {
-    const whereStatement = filter(paramsObj);
-    let query = `SELECT * FROM eventDb.sessionTable ${whereStatement}`;
-    let resultSet = await this.client.query({
+    const query = makeQuery(paramsObj);
+    const resultSet = await this.client.query({
       query,
       format: "JSONEachRow",
     });
@@ -97,7 +95,18 @@ class Clickhouse {
   }
 }
 
-const filter = (paramsObj) => {
+const DEFAULT_PER_PAGE = 5;
+const DEFAULT_PAGE_NUM = 0;
+
+const makeQuery = (paramsObj) => {
+  const where = filterBy(paramsObj);
+  const orderBy = sortBy(paramsObj);
+  const limitOffset = paginateBy(paramsObj);
+  const select = "SELECT * FROM eventDb.sessionTable";
+  return `${select} ${where} ${orderBy} ${limitOffset}`;
+};
+
+const filterBy = (paramsObj) => {
   switch (paramsObj.tag) {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
@@ -112,6 +121,29 @@ const filter = (paramsObj) => {
     default:
       return `WHERE (date = '${getTodayString()}')`;
   }
+};
+
+const sortBy = (paramsObj) => {
+  const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
+  let column;
+  switch (paramsObj.sortBy) {
+    case "length":
+      column = "lengthMs";
+      break;
+    case "date":
+      column = "date";
+      break;
+    default:
+      column = "date";
+  }
+  return `ORDER BY ${column} ${direction}`;
+};
+
+const paginateBy = (paramsObj) => {
+  const limit = Number(paramsObj.perPage) || DEFAULT_PER_PAGE;
+  const offset = limit * (Number(paramsObj.pageNum) || DEFAULT_PAGE_NUM);
+
+  return `LIMIT ${limit} OFFSET ${offset}`;
 };
 
 const getTodayString = () => {
