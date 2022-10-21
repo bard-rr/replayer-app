@@ -7,22 +7,27 @@ import {
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
 
-const Filter = ({ setSessions, setPage, rowsPerPage, filter, setFilter }) => {
+const Filter = ({ setSessions, setPage, rowsPerPage, filter, setFilter, setSortState }) => {
+  // const [tempFilter, setTempFilter] = useState() 
   const handleFilter = async (event) => {
     event.preventDefault();
-    if (isValidOption(filter)) {
-      let newSessions = await getNewSessions(
-        DEFAULT_PAGE,
-        rowsPerPage,
-        "date",
-        filter,
-        DEFAULT_SORT_STATE
-      );
-      setSessions(newSessions);
-      setPage(DEFAULT_PAGE);
-    } else {
-      //TODO: handle invalid option
-    }
+    console.log(event.target[0].value)
+    setFilter(event.target[0].value)
+    setPage(DEFAULT_PAGE)
+    setSortState(DEFAULT_SORT_STATE)
+    // if (isValidOption(filter)) {
+    //   let newSessions = await getNewSessions(
+    //     DEFAULT_PAGE,
+    //     rowsPerPage,
+    //     "date",
+    //     filter,
+    //     DEFAULT_SORT_STATE
+    //   );
+    //   setSessions(newSessions);
+    //   setPage(DEFAULT_PAGE);
+    // } else {
+    //   //TODO: handle invalid option
+    // }
   };
   const handleFilterSelection = (event, newFilter) => {
     event.preventDefault();
@@ -39,9 +44,10 @@ const Filter = ({ setSessions, setPage, rowsPerPage, filter, setFilter }) => {
   };
   return (
     <div className="filter">
-      <form>
+      <form name="filterForm" onSubmit={handleFilter}>
         <Autocomplete
           id="filter-dropdown"
+          name="dateFilter"
           options={FILTER_OPTIONS}
           defaultValue={DEFAULT_FILTER}
           renderInput={(params) => <TextField {...params} label="Filter By:" />}
@@ -53,9 +59,9 @@ const Filter = ({ setSessions, setPage, rowsPerPage, filter, setFilter }) => {
             height: "75px",
             display: "inline-flex",
           }}
-          onChange={handleFilterSelection}
+          // onChange={handleFilterSelection}
         />
-        <Button variant="outlined" onClick={handleFilter}>
+        <Button type="submit" variant="outlined">
           Filter
         </Button>
       </form>

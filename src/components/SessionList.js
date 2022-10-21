@@ -25,6 +25,7 @@ export default function SessionList({ onClick }) {
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
+  const [count, setCount] = useState(0)
 
   useEffect(() => {
     //starts by getting all sessions and displaying them.
@@ -34,14 +35,15 @@ export default function SessionList({ onClick }) {
         const sessionData = await getNewSessions(page, rowsPerPage, "date", filter, sortState);
         console.log(sessionData)
         
-        // const count = sessionData.count
-        // console.log("count", count)
+        const count = Number(sessionData.count)
+        console.log("count", count)
 
-        // const sessionInfo = sessionData.sessions
-        // console.log("sessions", sessionInfo)
+        const sessionInfo = sessionData.sessions
+        console.log("sessions", sessionInfo)
 
         // setSessions(sessionData)
-        setSessions(sessionData)
+        setCount(count)
+        setSessions(sessionInfo)
       } catch (error) { 
         console.log(error.message);
       }
@@ -98,6 +100,7 @@ export default function SessionList({ onClick }) {
         rowsPerPage={rowsPerPage}
         filter={filter}
         setFilter={setFilter}
+        setSortState={setSortState}
       ></Filter>
       <TableContainer
         sx={{
@@ -118,7 +121,7 @@ export default function SessionList({ onClick }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sliceData(filteredSessions).map((session) => (
+            {sessions.map((session) => (
               <TableRow
                 key={session.sessionId}
                 data-id={session.sessionId}
@@ -142,8 +145,8 @@ export default function SessionList({ onClick }) {
             <TableRow>
               {/* From MUI library: setup for pagination. Seems straightforward */}
               <TablePagination
-                count={filteredSessions.length}
-                page={page * rowsPerPage > filteredSessions.length ? 0 : page}
+                count={count}
+                page={page}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
