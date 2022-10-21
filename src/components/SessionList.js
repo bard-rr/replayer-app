@@ -18,12 +18,37 @@ import {
 import { getNewSessions } from "../utils/urlUtils";
 import Filter from "./Filter";
 
-export default function SessionList({ sessions, setSessions, onClick }) {
+export default function SessionList({ onClick }) {
   //TODO: merge these page state variables into a single object?
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
+  const [sessions, setSessions] = useState([]);
+
+  useEffect(() => {
+    //starts by getting all sessions and displaying them.
+    const getSessionIds = async () => {
+      try {
+        console.log("Query:")
+        const sessionData = await getNewSessions(page, rowsPerPage, "date", filter, sortState);
+        console.log(sessionData)
+        
+        // const count = sessionData.count
+        // console.log("count", count)
+
+        // const sessionInfo = sessionData.sessions
+        // console.log("sessions", sessionInfo)
+
+        // setSessions(sessionData)
+        setSessions(sessionData)
+      } catch (error) { 
+        console.log(error.message);
+      }
+    };
+
+    getSessionIds();
+  }, [page, rowsPerPage, sortState, filter]);
 
   //assums that we have filter params in the url of the page we're on
   //route is /sessions?whatever params we want
@@ -41,28 +66,20 @@ export default function SessionList({ sessions, setSessions, onClick }) {
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
-    let newSessions = await getNewSessions(
-      newPage,
-      rowsPerPage,
-      "date",
-      filter,
-      sortState
-    );
-    setSessions(newSessions);
   };
 
   const handleChangeRowsPerPage = async (event) => {
     let newRowsPerPage = parseInt(event.target.value, 10);
     setRowsPerPage(newRowsPerPage);
     setPage(DEFAULT_PAGE);
-    let newSessions = await getNewSessions(
-      DEFAULT_PAGE,
-      newRowsPerPage,
-      "date",
-      filter,
-      sortState
-    );
-    setSessions(newSessions);
+    // let newSessions = await getNewSessions(
+    //   DEFAULT_PAGE,
+    //   newRowsPerPage,
+    //   "date",
+    //   filter,
+    //   sortState
+    // );
+    // setSessions(newSessions);
   };
 
   //this assumes we've got ALL of the data we're interested in stored in 'data',

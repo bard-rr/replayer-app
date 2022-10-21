@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
-import { DEFAULT_FILTER } from "./utils/const";
+// import { DEFAULT_FILTER } from "./utils/const";
+// import { getFilterQuery } from "./utils/sessionFilter";
+// import { getNewSessions } from "./utils/urlUtils";
 
 /*
   Initial thoughts on implementing filtering and pagination
@@ -31,23 +33,11 @@ import { DEFAULT_FILTER } from "./utils/const";
 */
 
 function App() {
-  const [sessions, setSessions] = useState([]);
+
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    //starts by getting all sessions and displaying them.
-    const getSessionIds = async () => {
-      try {
-        const response = await axios.get("http://localhost:3003/sessions");
-        setSessions(response.data);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
 
-    getSessionIds();
-  }, []);
 
   //when we click a session table, fetch all the events for it and store them in state
   const handleIdClick = async (e) => {
@@ -74,8 +64,8 @@ function App() {
             path="/sessions"
             element={
               <SessionList
-                sessions={sessions}
-                setSessions={setSessions}
+                // sessions={sessions}
+                // setSessions={setSessions}
                 onClick={handleIdClick}
               />
             }
