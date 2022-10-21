@@ -23,15 +23,16 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/sessions", async (req, res) => {
-  result = await clickhouse.getSessions(req.query);
-  result = result.map((obj) => {
+  let result = await clickhouse.getSessions(req.query);
+  let count = await clickhouse.getCount(req.query);
+  const sessions = result.map((obj) => {
     return {
       sessionId: obj.sessionId,
       length: obj.lengthMs,
       date: obj.date,
     };
   });
-  res.status(200).json(result);
+  res.status(200).json({ count, sessions });
 });
 
 app.get("/sessions/:id", async (req, res) => {

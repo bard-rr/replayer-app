@@ -86,24 +86,37 @@ class Clickhouse {
   }
 
   async getSessions(paramsObj) {
-    const query = makeQuery(paramsObj);
-    const resultSet = await this.client.query({
-      query,
-      format: "JSONEachRow",
-    });
-    return await resultSet.json();
+    const sessionQuery = makeSessionQuery(paramsObj);
+    const result = await this.#getData(sessionQuery);
+    return result;
+  }
+
+  async getCount(paramsObj) {
+    const countQuery = makeCountQuery(paramsObj);
+    const result = await this.#getData(countQuery);
+    return result[0]["count()"];
+  }
+
+  async #getData(query, format = "JSONEachRow") {
+    const resultSet = await this.client.query({ query, format });
+    return resultSet.json();
   }
 }
 
 const DEFAULT_PER_PAGE = 5;
 const DEFAULT_PAGE_NUM = 0;
 
-const makeQuery = (paramsObj) => {
+const makeSessionQuery = (paramsObj) => {
   const where = filterBy(paramsObj);
   const orderBy = sortBy(paramsObj);
   const limitOffset = paginateBy(paramsObj);
   const select = "SELECT * FROM eventDb.sessionTable";
-  return `${select} ${where} ${orderBy} ${limitOffset}`;
+  const sessionQuery = `${select} ${where} ${orderBy} ${limitOffset}`;
+  return sessionQuery;
+};
+
+const makeCountQuery = (paramsObj) => {
+  return `SELECT count(*) FROM eventDb.sessionTable ${filterBy(paramsObj)}`;
 };
 
 const filterBy = (paramsObj) => {
