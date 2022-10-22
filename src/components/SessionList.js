@@ -22,7 +22,7 @@ export default function SessionList({ onSessionClick }) {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
-  const [filterType, setFilterType] = useState();
+  const [filterType, setFilterType] = useState("");
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
@@ -128,7 +128,8 @@ export default function SessionList({ onSessionClick }) {
           width: "auto",
           boxShadow: 1,
         }}
-        component={Paper}>
+        component={Paper}
+      >
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -138,7 +139,8 @@ export default function SessionList({ onSessionClick }) {
                     <TableSortLabel
                       active={id === sortState.sortBy}
                       direction={getDirection(id)}
-                      onClick={makeHandleSort(id)}>
+                      onClick={makeHandleSort(id)}
+                    >
                       {label}
                     </TableSortLabel>
                   </TableCell>
@@ -157,7 +159,8 @@ export default function SessionList({ onSessionClick }) {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSessionClick}>
+                onClick={onSessionClick}
+              >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
                 <TableCell>{session.length}</TableCell>
