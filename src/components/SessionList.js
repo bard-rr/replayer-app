@@ -15,13 +15,14 @@ import {
   DEFAULT_SORT_STATE,
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
-import Filter from "./Filter";
+import FilterComponents from "./FilterComponents";
 
 export default function SessionList({ onSessionClick }) {
   //TODO: merge these page state variables into a single object?
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
+  const [filterType, setFilterType] = useState();
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
@@ -33,7 +34,7 @@ export default function SessionList({ onSessionClick }) {
         const sessionData = await getNewSessions(
           page,
           rowsPerPage,
-          "date",
+          filterType,
           filter,
           sortState
         );
@@ -49,7 +50,7 @@ export default function SessionList({ onSessionClick }) {
     };
 
     getSessionIds();
-  }, [page, rowsPerPage, sortState, filter]);
+  }, [page, rowsPerPage, sortState, filter, filterType]);
 
   //assums that we have filter params in the url of the page we're on
   //route is /sessions?whatever params we want
@@ -108,24 +109,26 @@ export default function SessionList({ onSessionClick }) {
 
   return (
     <div className="sessionList">
-      <Filter
+      <FilterComponents
+        filter={filter}
+        setFilter={setFilter}
         setSessions={setSessions}
         setPage={setPage}
         rowsPerPage={rowsPerPage}
-        filter={filter}
-        setFilter={setFilter}
         setSortState={setSortState}
-      ></Filter>
+        filterType={filterType}
+        setFilterType={setFilterType}
+      />
+
       <TableContainer
         sx={{
-          ml: "280px",
+          ml: "60px",
           mt: "10px",
           mr: "60px",
           width: "auto",
           boxShadow: 1,
         }}
-        component={Paper}
-      >
+        component={Paper}>
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -135,8 +138,7 @@ export default function SessionList({ onSessionClick }) {
                     <TableSortLabel
                       active={id === sortState.sortBy}
                       direction={getDirection(id)}
-                      onClick={makeHandleSort(id)}
-                    >
+                      onClick={makeHandleSort(id)}>
                       {label}
                     </TableSortLabel>
                   </TableCell>
@@ -155,8 +157,7 @@ export default function SessionList({ onSessionClick }) {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSessionClick}
-              >
+                onClick={onSessionClick}>
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
                 <TableCell>{session.length}</TableCell>

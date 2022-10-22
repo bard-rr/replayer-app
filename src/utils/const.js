@@ -6,7 +6,7 @@ export const FILTER_OPTIONS = [
   "All Sessions",
 ];
 
-export const DEFAULT_FILTER = FILTER_OPTIONS[0];
+export const DEFAULT_FILTER = FILTER_OPTIONS[3];
 
 export const DEFAULT_SORT_STATE = {
   sortBy: "date",

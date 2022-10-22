@@ -1,4 +1,4 @@
-import Sidebar from "./Sidebar";
+// import Sidebar from "./Sidebar";
 
 const Layout = ({
   onWeekClick,
@@ -9,13 +9,13 @@ const Layout = ({
 }) => {
   return (
     <>
-      <Sidebar
+      {/* <Sidebar
         // these props aren't actually used...
         onYesterdayClick={onYesterdayClick}
         onTodayClick={onTodayClick}
         onSessionClick={onSessionClick}
         onWeekClick={onWeekClick}
-      />
+      /> */}
       {children}
     </>
   );

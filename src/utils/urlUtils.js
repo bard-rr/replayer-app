@@ -13,7 +13,7 @@ export const getNewSessions = async (
     filterTag,
     filterStr,
   });
-
+  console.log(url);
   const response = await axios.get(url);
   return response.data;
 };
