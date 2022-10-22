@@ -21,15 +21,22 @@ const Sidebar = () => {
   };
 
   const handleClick = (e) => {
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   //this naviagtes users to a '/sessions' url with a query param for filtering by
   //today / yesterday / etc.
   return (
     <Box>
       <Drawer varient="permanent" open={true} hideBackdrop={true} sx={sxProps}>
-        <img alt="bard" src={logo} height="100px" width="100px" onClick={handleClick}/>
+        <img
+          alt="bard"
+          src={logo}
+          height="100px"
+          width="100px"
+          onClick={handleClick}
+          style={{ cursor: "pointer" }}
+        />
         {/* <List>
           <ListItem
             key={"Sessions"}

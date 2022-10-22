@@ -4,6 +4,7 @@ import axios from "axios";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
+import EnhancedTable from "./components/SortTable";
 // import { DEFAULT_FILTER } from "./utils/const";
 // import { getFilterQuery } from "./utils/sessionFilter";
 // import { getNewSessions } from "./utils/urlUtils";
@@ -33,14 +34,11 @@ import Player from "./components/Player";
 */
 
 function App() {
-
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
-
-
   //when we click a session table, fetch all the events for it and store them in state
-  const handleIdClick = async (e) => {
+  const handleSessionClick = async (e) => {
     const id = e.target.parentElement.dataset.id;
     getEventData(id);
   };
@@ -66,7 +64,7 @@ function App() {
               <SessionList
                 // sessions={sessions}
                 // setSessions={setSessions}
-                onClick={handleIdClick}
+                onSessionClick={handleSessionClick}
               />
             }
           />
@@ -77,6 +75,7 @@ function App() {
             }
           />
         </Routes>
+        {/* <EnhancedTable /> */}
       </Layout>
     </div>
   );
