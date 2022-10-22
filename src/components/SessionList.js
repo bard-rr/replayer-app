@@ -52,19 +52,6 @@ export default function SessionList({ onSessionClick }) {
     getSessionIds();
   }, [page, rowsPerPage, sortState, filter, filterType]);
 
-  //assums that we have filter params in the url of the page we're on
-  //route is /sessions?whatever params we want
-  // const [searchParams] = useSearchParams();
-
-  //manually implement filtering?
-  // const filterTag = searchParams.get("filter");
-
-  //if we filter by something new (ie, click an option in the sidebar), go to
-  //the first page by default
-  // useEffect(() => {
-  //   setPage(DEFAULT_PAGE);
-  // }, [filterTag]);
-
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
   };

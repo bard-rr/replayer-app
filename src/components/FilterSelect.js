@@ -2,10 +2,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { TextField } from "@mui/material";
 
 const FilterSelect = ({ selectedFilter, setSelectedFilter }) => {
-  const handleChange = (e) => {
-    console.log("event", e.target.value);
-    setSelectedFilter(e.target.value);
-  };
+  const handleChange = (e) => setSelectedFilter(e.target.value);
 
   return (
     <TextField
@@ -13,7 +10,7 @@ const FilterSelect = ({ selectedFilter, setSelectedFilter }) => {
       sx={{
         ml: "60px",
         width: "150px",
-        "& .MuiInputLabel-root": { color: "#8A8692" }, //styles the label
+        "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {
           "& > fieldset": { borderColor: "#A3A2AF" },
         },

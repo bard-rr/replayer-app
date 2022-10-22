@@ -17,6 +17,30 @@ const FilterComponents = ({
   setFilterType,
 }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
+  const [filterData, setFilterData] = useState({});
+
+  const selectFilterType = () => {
+    switch (selectedFilter) {
+      case "date":
+        // TODO (10-22-2022)
+        // Need to mimic logic found in LengthInputs in DateInputs
+        // DateInputs should set `filterData` to { startDate, endDate }
+        return <DateInputs setFilterData={setFilterData} />;
+      case "length":
+        return <LengthInputs setFilterData={setFilterData} />;
+      default:
+        return null;
+    }
+  };
+
+  // TODO (10-22-2022)
+  // filterData will have the object we need to send our request
+  // will either be { minLength, maxLength } or { startDate, endDate }
+  // This function needs to set some state in place of the `filterType`
+  // state passed in
+  const handleClickFilter = () => {
+    console.log("filterData:", filterData);
+  };
 
   return (
     <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: "30px" }}>
@@ -24,18 +48,8 @@ const FilterComponents = ({
         setSelectedFilter={setSelectedFilter}
         selectedFilter={selectedFilter}
       />
-      {/* <Filter
-        setSessions={setSessions}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        filter={filter}
-        setFilter={setFilter}
-        setSortState={setSortState}
-      /> */}
-      {console.log("filterType:", selectedFilter)}
-      {selectedFilter === "date" ? <DateInputs /> : null}
-      {selectedFilter === "length" ? <LengthInputs /> : null}
-      {selectedFilter !== "" ? <FilterButton /> : null}
+      {selectFilterType()}
+      {selectedFilter !== "" && <FilterButton onClick={handleClickFilter} />}
     </Stack>
   );
 };

@@ -1,8 +1,13 @@
 import { Button } from "@mui/material";
 
-const FilterButton = () => {
+const FilterButton = ({ onClick }) => {
   return (
-    <Button type="submit" variant="outlined" sx={{ height: "56px" }}>
+    <Button
+      onClick={onClick}
+      type="submit"
+      variant="outlined"
+      sx={{ height: "56px" }}
+    >
       Filter
     </Button>
   );

@@ -14,3 +14,7 @@ export const DEFAULT_SORT_STATE = {
 };
 
 export const DEFAULT_PAGE = 0;
+
+export const SEC_TO_MS = 1000;
+export const MIN_TO_MS = 60 * SEC_TO_MS;
+export const HRS_TO_MS = 60 * MIN_TO_MS;
