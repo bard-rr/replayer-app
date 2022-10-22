@@ -6,6 +6,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import {
@@ -16,32 +17,33 @@ import {
 import { getNewSessions } from "../utils/urlUtils";
 import Filter from "./Filter";
 
-export default function SessionList({ onClick }) {
+export default function SessionList({ onSessionClick }) {
   //TODO: merge these page state variables into a single object?
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     //starts by getting all sessions and displaying them.
     const getSessionIds = async () => {
       try {
-        console.log("Query:")
-        const sessionData = await getNewSessions(page, rowsPerPage, "date", filter, sortState);
-        console.log(sessionData)
-        
-        const count = Number(sessionData.count)
-        console.log("count", count)
+        const sessionData = await getNewSessions(
+          page,
+          rowsPerPage,
+          "date",
+          filter,
+          sortState
+        );
 
-        const sessionInfo = sessionData.sessions
-        console.log("sessions", sessionInfo)
+        const count = Number(sessionData.count);
+        const sessionInfo = sessionData.sessions;
 
-        setCount(count)
-        setSessions(sessionInfo)
-      } catch (error) { 
+        setCount(count);
+        setSessions(sessionInfo);
+      } catch (error) {
         console.log(error.message);
       }
     };
@@ -72,6 +74,38 @@ export default function SessionList({ onClick }) {
     setPage(DEFAULT_PAGE);
   };
 
+  const headers = [
+    { id: "sessionId", label: "Session Id" },
+    { id: "date", label: "Date" },
+    { id: "length", label: "Length" },
+  ];
+
+  const makeHandleSort = (id) => {
+    return () => {
+      let newSortOrder;
+      if (sortState.sortBy === id) {
+        newSortOrder =
+          sortState.sortOrder === "ascending" ? "descending" : "ascending";
+      } else {
+        newSortOrder = "descending";
+      }
+      const sortObj = {
+        sortBy: id,
+        sortOrder: newSortOrder,
+      };
+      setSortState(sortObj);
+      setPage(0);
+    };
+  };
+
+  const getDirection = (id) => {
+    if (sortState.sortBy === id) {
+      return sortState.sortOrder === "descending" ? "desc" : "asc";
+    } else {
+      return "desc";
+    }
+  };
+
   return (
     <div className="sessionList">
       <Filter
@@ -95,9 +129,19 @@ export default function SessionList({ onClick }) {
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Session Id</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Length</TableCell>
+              {headers.map(({ label, id }) => {
+                return (
+                  <TableCell key={id}>
+                    <TableSortLabel
+                      active={id === sortState.sortBy}
+                      direction={getDirection(id)}
+                      onClick={makeHandleSort(id)}
+                    >
+                      {label}
+                    </TableSortLabel>
+                  </TableCell>
+                );
+              })}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -111,9 +155,7 @@ export default function SessionList({ onClick }) {
                     cursor: "pointer",
                   },
                 }}
-                //this gets events for the session the user clicks on + navigates to replay page,
-                //which takes us to the Player component
-                onClick={onClick}
+                onClick={onSessionClick}
               >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
@@ -123,7 +165,6 @@ export default function SessionList({ onClick }) {
           </TableBody>
           <TableFooter>
             <TableRow>
-              {/* From MUI library: setup for pagination. Seems straightforward */}
               <TablePagination
                 count={count}
                 page={page}

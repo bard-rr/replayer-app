@@ -1,39 +1,39 @@
-import { BASE_URL, FILTER_OPTIONS } from "./const";
+// import { BASE_URL, FILTER_OPTIONS } from "./const";
 import { getQueryString } from "./urlUtils";
 
-const filterSessions = (sessions, filterTag) => {
-  switch (filterTag) {
-    case "today":
-      return filterByToday(sessions);
-    case "yesterday":
-      return filterByYesterday(sessions);
-    case "week":
-      return filterByThisWeek(sessions);
-    default:
-      return sessions;
-  }
-};
+// const filterSessions = (sessions, filterTag) => {
+//   switch (filterTag) {
+//     case "today":
+//       return filterByToday(sessions);
+//     case "yesterday":
+//       return filterByYesterday(sessions);
+//     case "week":
+//       return filterByThisWeek(sessions);
+//     default:
+//       return sessions;
+//   }
+// };
 
-const filterByToday = (sessions) => {
-  const today = new Date().toLocaleDateString();
-  return sessions.filter(({ date }) => date === today);
-};
+// const filterByToday = (sessions) => {
+//   const today = new Date().toLocaleDateString();
+//   return sessions.filter(({ date }) => date === today);
+// };
 
-const filterByYesterday = (sessions) => {
-  const today = new Date();
-  let yesterday = new Date(today);
-  yesterday.setDate(yesterday.getDate() - 1);
-  yesterday = yesterday.toLocaleDateString();
-  return sessions.filter(({ date }) => date === yesterday);
-};
+// const filterByYesterday = (sessions) => {
+//   const today = new Date();
+//   let yesterday = new Date(today);
+//   yesterday.setDate(yesterday.getDate() - 1);
+//   yesterday = yesterday.toLocaleDateString();
+//   return sessions.filter(({ date }) => date === yesterday);
+// };
 
-const filterByThisWeek = (sessions) => {
-  const today = new Date();
-  let lastWeek = new Date(today);
-  lastWeek.setDate(lastWeek.getDate() - 7);
-  lastWeek = lastWeek.toLocaleDateString();
-  return sessions.filter(({ date }) => date >= lastWeek);
-};
+// const filterByThisWeek = (sessions) => {
+//   const today = new Date();
+//   let lastWeek = new Date(today);
+//   lastWeek.setDate(lastWeek.getDate() - 7);
+//   lastWeek = lastWeek.toLocaleDateString();
+//   return sessions.filter(({ date }) => date >= lastWeek);
+// };
 
 export const getFilterQuery = ({ filterTag, filterStr }) => {
   //TODO: build this out in the future.
@@ -50,9 +50,9 @@ const getFilterByDateQuery = (filterStr) => {
     case "Today":
       return buildDateQuery(getToday(), getToday());
     case "Yesterday":
-      return buildDateQuery(yesterday(), yesterday());
+      return buildDateQuery(getYesterday(), getYesterday());
     case "Last Week":
-      return buildDateQuery(aWeekAgo(), getToday());
+      return buildDateQuery(getAWeekAgo(), getToday());
     case "All Sessions":
       return buildDateQuery(get1970(), getToday());
     default:
@@ -86,11 +86,11 @@ const getDateStr = (ms) => {
 const getToday = () => {
   return Date.now();
 };
-const yesterday = () => {
+const getYesterday = () => {
   let today = new Date(getToday());
   return today.setDate(today.getDate() - 1);
 };
-const aWeekAgo = () => {
+const getAWeekAgo = () => {
   let today = new Date(getToday());
   return today.setDate(today.getDate() - 7);
 };
@@ -98,4 +98,4 @@ const get1970 = () => {
   return 0;
 };
 
-export default filterSessions;
+// export default filterSessions;

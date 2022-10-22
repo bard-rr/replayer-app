@@ -33,14 +33,11 @@ import Player from "./components/Player";
 */
 
 function App() {
-
   const [eventData, setEventData] = useState([]);
   const navigate = useNavigate();
 
-
-
   //when we click a session table, fetch all the events for it and store them in state
-  const handleIdClick = async (e) => {
+  const handleSessionClick = async (e) => {
     const id = e.target.parentElement.dataset.id;
     getEventData(id);
   };
@@ -66,7 +63,7 @@ function App() {
               <SessionList
                 // sessions={sessions}
                 // setSessions={setSessions}
-                onClick={handleIdClick}
+                onSessionClick={handleSessionClick}
               />
             }
           />
