@@ -9,20 +9,20 @@ export const getNewSessions = async (
   filterStr,
   sortObj
 ) => {
-  let url = getFullUrl({ pageNum: page, perPage: rowsPerPage }, sortObj, {
+  const url = getFullUrl({ pageNum: page, perPage: rowsPerPage }, sortObj, {
     filterTag,
     filterStr,
   });
-  console.log(url)
-  let response = await axios.get(url);
+
+  const response = await axios.get(url);
   return response.data;
 };
 
 const getFullUrl = (pageObj, sortObj, filterObj) => {
-  let filterQuery = getFilterQuery(filterObj);
-  let pageQuery = getQueryString(pageObj);
-  let sortQuery = getQueryString(sortObj);
-  let finalUrl =
+  const filterQuery = getFilterQuery(filterObj);
+  const pageQuery = getQueryString(pageObj);
+  const sortQuery = getQueryString(sortObj);
+  const finalUrl =
     BASE_URL + "/sessions?" + filterQuery + "&" + pageQuery + "&" + sortQuery;
   return finalUrl;
 };

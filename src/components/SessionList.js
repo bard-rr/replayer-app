@@ -75,19 +75,36 @@ export default function SessionList({ onSessionClick }) {
   };
 
   const headers = [
-    {
-      id: "sessionId",
-      label: "Session Id",
-    },
-    {
-      id: "date",
-      label: "Date",
-    },
-    {
-      id: "length",
-      label: "Length",
-    },
+    { id: "sessionId", label: "Session Id" },
+    { id: "date", label: "Date" },
+    { id: "length", label: "Length" },
   ];
+
+  const makeHandleSort = (id) => {
+    return () => {
+      let newSortOrder;
+      if (sortState.sortBy === id) {
+        newSortOrder =
+          sortState.sortOrder === "ascending" ? "descending" : "ascending";
+      } else {
+        newSortOrder = "descending";
+      }
+      const sortObj = {
+        sortBy: id,
+        sortOrder: newSortOrder,
+      };
+      setSortState(sortObj);
+      setPage(0);
+    };
+  };
+
+  const getDirection = (id) => {
+    if (sortState.sortBy === id) {
+      return sortState.sortOrder === "descending" ? "desc" : "asc";
+    } else {
+      return "desc";
+    }
+  };
 
   return (
     <div className="sessionList">
@@ -117,30 +134,8 @@ export default function SessionList({ onSessionClick }) {
                   <TableCell key={id}>
                     <TableSortLabel
                       active={id === sortState.sortBy}
-                      direction={
-                        sortState.sortBy === id
-                          ? sortState.sortOrder === "descending"
-                            ? "desc"
-                            : "asc"
-                          : "desc"
-                      }
-                      onClick={() => {
-                        let newSortOrder;
-                        if (sortState.sortBy === id) {
-                          newSortOrder =
-                            sortState.sortOrder === "ascending"
-                              ? "descending"
-                              : "ascending";
-                        } else {
-                          newSortOrder = "descending";
-                        }
-                        const sortObj = {
-                          sortBy: id,
-                          sortOrder: newSortOrder,
-                        };
-                        setSortState(sortObj);
-                        setPage(0);
-                      }}
+                      direction={getDirection(id)}
+                      onClick={makeHandleSort(id)}
                     >
                       {label}
                     </TableSortLabel>
