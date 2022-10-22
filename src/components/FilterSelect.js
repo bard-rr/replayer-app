@@ -9,7 +9,15 @@ const FilterSelect = ({ selectedFilter, setSelectedFilter }) => {
 
   return (
     <TextField
-      sx={{ ml: "60px", width: "150px" }}
+      variant="outlined"
+      sx={{
+        ml: "60px",
+        width: "150px",
+        "& .MuiInputLabel-root": { color: "#8A8692" }, //styles the label
+        "& .MuiOutlinedInput-root": {
+          "& > fieldset": { borderColor: "#A3A2AF" },
+        },
+      }}
       value={selectedFilter}
       label="Filter Type"
       select
