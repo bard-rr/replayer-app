@@ -1,5 +1,4 @@
-// import Sidebar from "./Sidebar";
-
+import Topbar from "./Topbar";
 const Layout = ({
   onWeekClick,
   onYesterdayClick,
@@ -9,6 +8,7 @@ const Layout = ({
 }) => {
   return (
     <>
+      <Topbar />
       {/* <Sidebar
         // these props aren't actually used...
         onYesterdayClick={onYesterdayClick}
