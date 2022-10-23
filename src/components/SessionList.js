@@ -81,7 +81,6 @@ export default function SessionList({ onSessionClick }) {
         sortBy: id,
         sortOrder: newSortOrder,
       };
-      console.log("new sort obj", sortObj);
       setSortState(sortObj);
       setPage(0);
     };
