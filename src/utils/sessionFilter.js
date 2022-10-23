@@ -37,65 +37,13 @@ import { getQueryString } from "./urlUtils";
 
 export const getFilterQuery = ({ filterTag, filterStr }) => {
   //TODO: build this out in the future.
+  console.log(filterTag, ":", filterStr);
   switch (filterTag) {
     case "date":
-      return getFilterByDateQuery(filterStr);
+      console.log("here", filterStr);
+      // return getFilterByDateQuery(filterStr);
+      return filterStr;
     default:
-      return getDefaultFilterQuery();
+    // return getDefaultFilterQuery();
   }
 };
-
-const getFilterByDateQuery = (filterStr) => {
-  switch (filterStr) {
-    case "Today":
-      return buildDateQuery(getToday(), getToday());
-    case "Yesterday":
-      return buildDateQuery(getYesterday(), getYesterday());
-    case "Last Week":
-      return buildDateQuery(getAWeekAgo(), getToday());
-    case "All Sessions":
-      return buildDateQuery(get1970(), getToday());
-    default:
-      return getDefaultFilterQuery();
-  }
-};
-
-const getDefaultFilterQuery = () => {
-  return buildDateQuery(getToday(), getToday());
-};
-
-const buildDateQuery = (startDate, endDate) => {
-  let startStr = getDateStr(startDate);
-  let endStr = getDateStr(endDate);
-  let filterObj = {
-    tag: "date",
-    startDate: startStr,
-    endDate: endStr,
-  };
-  return getQueryString(filterObj);
-};
-
-const getDateStr = (ms) => {
-  let date = new Date(ms);
-  let day = date.getUTCDate();
-  let month = date.getUTCMonth() + 1;
-  let year = date.getUTCFullYear();
-  return `${year.toString()}-${month.toString()}-${day.toString()}`;
-};
-
-const getToday = () => {
-  return Date.now();
-};
-const getYesterday = () => {
-  let today = new Date(getToday());
-  return today.setDate(today.getDate() - 1);
-};
-const getAWeekAgo = () => {
-  let today = new Date(getToday());
-  return today.setDate(today.getDate() - 7);
-};
-const get1970 = () => {
-  return 0;
-};
-
-// export default filterSessions;

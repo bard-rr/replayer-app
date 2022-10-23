@@ -1,12 +1,7 @@
 export const BASE_URL = "http://localhost:3003";
-export const FILTER_OPTIONS = [
-  "Today",
-  "Yesterday",
-  "Last Week",
-  "All Sessions",
-];
+const today = new Date().toISOString().substring(0, 10);
 
-export const DEFAULT_FILTER = FILTER_OPTIONS[3];
+export const DEFAULT_FILTER = { start_date: "1970-01-01", end_date: today };
 
 export const DEFAULT_SORT_STATE = {
   sortBy: "date",
