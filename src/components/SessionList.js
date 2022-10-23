@@ -63,6 +63,7 @@ export default function SessionList({ onSessionClick }) {
 
   const headers = [
     { id: "sessionId", label: "Session Id" },
+    { id: "originHost", label: "Origin Host" },
     { id: "date", label: "Date" },
     { id: "length", label: "Length" },
   ];
@@ -80,6 +81,7 @@ export default function SessionList({ onSessionClick }) {
         sortBy: id,
         sortOrder: newSortOrder,
       };
+      console.log("new sort obj", sortObj);
       setSortState(sortObj);
       setPage(0);
     };
@@ -139,6 +141,9 @@ export default function SessionList({ onSessionClick }) {
                 onClick={onSessionClick}
               >
                 <TableCell>{session.sessionId}</TableCell>
+                <TableCell>
+                  {session.originHost ? session.originHost : "invalid source"}
+                </TableCell>
                 <TableCell>{session.date}</TableCell>
                 <TableCell>{msToTime(session.length)}</TableCell>
               </TableRow>
