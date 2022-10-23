@@ -11,17 +11,20 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import {
   DEFAULT_FILTER,
+  DEFAULT_LIMIT,
   DEFAULT_PAGE,
   DEFAULT_SORT_STATE,
+  DEFAULT_TAG,
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
-import Filter from "./Filter";
+import FilterComponents from "./FilterComponents";
+import { msToTime } from "../utils/formatLength";
 
 export default function SessionList({ onSessionClick }) {
-  //TODO: merge these page state variables into a single object?
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
+  const [filterType, setFilterType] = useState(DEFAULT_TAG);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
@@ -33,36 +36,20 @@ export default function SessionList({ onSessionClick }) {
         const sessionData = await getNewSessions(
           page,
           rowsPerPage,
-          "date",
+          filterType,
           filter,
           sortState
         );
 
-        const count = Number(sessionData.count);
-        const sessionInfo = sessionData.sessions;
-
-        setCount(count);
-        setSessions(sessionInfo);
+        setCount(Number(sessionData.count));
+        setSessions(sessionData.sessions);
       } catch (error) {
         console.log(error.message);
       }
     };
 
     getSessionIds();
-  }, [page, rowsPerPage, sortState, filter]);
-
-  //assums that we have filter params in the url of the page we're on
-  //route is /sessions?whatever params we want
-  // const [searchParams] = useSearchParams();
-
-  //manually implement filtering?
-  // const filterTag = searchParams.get("filter");
-
-  //if we filter by something new (ie, click an option in the sidebar), go to
-  //the first page by default
-  // useEffect(() => {
-  //   setPage(DEFAULT_PAGE);
-  // }, [filterTag]);
+  }, [page, rowsPerPage, sortState, filter, filterType]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
@@ -108,17 +95,11 @@ export default function SessionList({ onSessionClick }) {
 
   return (
     <div className="sessionList">
-      <Filter
-        setSessions={setSessions}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        filter={filter}
-        setFilter={setFilter}
-        setSortState={setSortState}
-      ></Filter>
+      <FilterComponents setFilter={setFilter} setFilterType={setFilterType} />
+
       <TableContainer
         sx={{
-          ml: "280px",
+          ml: "60px",
           mt: "10px",
           mr: "60px",
           width: "auto",
@@ -159,7 +140,7 @@ export default function SessionList({ onSessionClick }) {
               >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
-                <TableCell>{session.length}</TableCell>
+                <TableCell>{msToTime(session.length)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

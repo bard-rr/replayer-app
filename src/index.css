@@ -13,10 +13,6 @@ code {
     monospace;
 }
 
-.App {
-  text-align: center;
-}
-
 img {
   display: block;
   margin-left: auto;
@@ -35,4 +31,16 @@ img {
   align-items: center;
   margin-left: 240px;
   margin-top: 30px;
+}
+
+.custom-label {
+  color: #8a8692;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  position: absolute;
+  margin-top: -57px;
+  margin-left: 8px;
+  background-color: #eceff4;
+  padding: 0px 5px;
 }
