@@ -1,17 +1,17 @@
 import axios from "axios";
 import { BASE_URL } from "./const";
-import { getFilterQuery } from "./sessionFilter";
+// import { getFilterQuery } from "./sessionFilter";
 
 export const getNewSessions = async (
   page,
   rowsPerPage,
   filterTag,
-  filterStr,
+  filterData,
   sortObj
 ) => {
   const url = getFullUrl({ pageNum: page, perPage: rowsPerPage }, sortObj, {
     filterTag,
-    filterStr,
+    filterData,
   });
   console.log(url);
   const response = await axios.get(url);
@@ -19,11 +19,20 @@ export const getNewSessions = async (
 };
 
 const getFullUrl = (pageObj, sortObj, filterObj) => {
-  const filterQuery = getFilterQuery(filterObj);
+  const filterTag = `tag=${filterObj.filterTag}`;
+  const filterQuery = getQueryString(filterObj.filterData);
   const pageQuery = getQueryString(pageObj);
   const sortQuery = getQueryString(sortObj);
   const finalUrl =
-    BASE_URL + "/sessions?" + filterQuery + "&" + pageQuery + "&" + sortQuery;
+    BASE_URL +
+    "/sessions?" +
+    filterTag +
+    "&" +
+    filterQuery +
+    "&" +
+    pageQuery +
+    "&" +
+    sortQuery;
   return finalUrl;
 };
 
