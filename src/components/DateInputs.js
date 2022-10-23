@@ -22,10 +22,7 @@ const DateInputs = ({ setFilterData }) => {
         <DatePicker
           label="Start Date"
           value={startDate}
-          onChange={(newValue) => {
-            console.log(newValue);
-            setStartDate(newValue);
-          }}
+          onChange={(newValue) => setStartDate(newValue)}
           renderInput={(params) => <TextField {...params} />}
         />
       </LocalizationProvider>

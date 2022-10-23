@@ -11,18 +11,20 @@ import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
 import {
   DEFAULT_FILTER,
+  DEFAULT_LIMIT,
   DEFAULT_PAGE,
   DEFAULT_SORT_STATE,
+  DEFAULT_TAG,
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
 import FilterComponents from "./FilterComponents";
+import { msToTime } from "../utils/formatLength";
 
 export default function SessionList({ onSessionClick }) {
-  //TODO: merge these page state variables into a single object?
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
-  const [filterType, setFilterType] = useState("date");
+  const [filterType, setFilterType] = useState(DEFAULT_TAG);
   const [filter, setFilter] = useState(DEFAULT_FILTER);
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
@@ -39,11 +41,8 @@ export default function SessionList({ onSessionClick }) {
           sortState
         );
 
-        const count = Number(sessionData.count);
-        const sessionInfo = sessionData.sessions;
-
-        setCount(count);
-        setSessions(sessionInfo);
+        setCount(Number(sessionData.count));
+        setSessions(sessionData.sessions);
       } catch (error) {
         console.log(error.message);
       }
@@ -96,16 +95,7 @@ export default function SessionList({ onSessionClick }) {
 
   return (
     <div className="sessionList">
-      <FilterComponents
-        filter={filter}
-        setFilter={setFilter}
-        setSessions={setSessions}
-        setPage={setPage}
-        rowsPerPage={rowsPerPage}
-        setSortState={setSortState}
-        filterType={filterType}
-        setFilterType={setFilterType}
-      />
+      <FilterComponents setFilter={setFilter} setFilterType={setFilterType} />
 
       <TableContainer
         sx={{
@@ -115,7 +105,8 @@ export default function SessionList({ onSessionClick }) {
           width: "auto",
           boxShadow: 1,
         }}
-        component={Paper}>
+        component={Paper}
+      >
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -125,7 +116,8 @@ export default function SessionList({ onSessionClick }) {
                     <TableSortLabel
                       active={id === sortState.sortBy}
                       direction={getDirection(id)}
-                      onClick={makeHandleSort(id)}>
+                      onClick={makeHandleSort(id)}
+                    >
                       {label}
                     </TableSortLabel>
                   </TableCell>
@@ -144,10 +136,11 @@ export default function SessionList({ onSessionClick }) {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSessionClick}>
+                onClick={onSessionClick}
+              >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
-                <TableCell>{session.length}</TableCell>
+                <TableCell>{msToTime(session.length)}</TableCell>
               </TableRow>
             ))}
           </TableBody>

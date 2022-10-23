@@ -1,6 +1,5 @@
 import axios from "axios";
 import { BASE_URL } from "./const";
-// import { getFilterQuery } from "./sessionFilter";
 
 export const getNewSessions = async (
   page,

@@ -6,16 +6,7 @@ import LengthInputs from "./LengthInputs";
 import { Stack } from "@mui/material";
 import { useState } from "react";
 
-const FilterComponents = ({
-  filter,
-  setFilter,
-  setSessions,
-  setPage,
-  rowsPerPage,
-  setSortState,
-  filterType,
-  setFilterType,
-}) => {
+const FilterComponents = ({ setFilter, setFilterType }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [filterData, setFilterData] = useState({});
 
@@ -30,13 +21,9 @@ const FilterComponents = ({
     }
   };
 
-  // TODO (10-22-2022)
-  // filterData will have the object we need to send our request
-  // will either be { minLength, maxLength } or { startDate, endDate }
-  // This function needs to set some state in place of the `filterType`
-  // state passed in
   const handleClickFilter = () => {
-    console.log("filterData:", filterData);
+    setFilterType(selectedFilter);
+    setFilter(filterData);
   };
 
   return (

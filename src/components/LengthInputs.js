@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { HRS_TO_MS, MIN_TO_MS, SEC_TO_MS } from "../utils/const";
+import { DEFAULT_TIME_STRING } from "../utils/const";
+import { toMilliseconds } from "../utils/formatLength";
 import TimeDurationInput from "./TimeDurationInput";
 
 const LengthInputs = ({ setFilterData }) => {
-  const [startHours, setStartHours] = useState("00");
-  const [startMinutes, setStartMinutes] = useState("00");
-  const [startSeconds, setStartSeconds] = useState("00");
-  const [endHours, setEndHours] = useState("00");
-  const [endMinutes, setEndMinutes] = useState("00");
-  const [endSeconds, setEndSeconds] = useState("00");
+  const [startHours, setStartHours] = useState(DEFAULT_TIME_STRING);
+  const [startMinutes, setStartMinutes] = useState(DEFAULT_TIME_STRING);
+  const [startSeconds, setStartSeconds] = useState(DEFAULT_TIME_STRING);
+  const [endHours, setEndHours] = useState(DEFAULT_TIME_STRING);
+  const [endMinutes, setEndMinutes] = useState(DEFAULT_TIME_STRING);
+  const [endSeconds, setEndSeconds] = useState(DEFAULT_TIME_STRING);
 
   useEffect(() => {
     const minLength = toMilliseconds(startHours, startMinutes, startSeconds);
@@ -25,10 +26,6 @@ const LengthInputs = ({ setFilterData }) => {
     endSeconds,
     setFilterData,
   ]);
-
-  const toMilliseconds = (hrs, mins, secs) => {
-    return hrs * HRS_TO_MS + mins * MIN_TO_MS + secs * SEC_TO_MS;
-  };
 
   return (
     <>
