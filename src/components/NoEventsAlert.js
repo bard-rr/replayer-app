@@ -8,8 +8,8 @@ const NoEventsAlert = () => {
     <Alert
       severity="info"
       sx={{
-        ml: "280px",
-        mr: "30px",
+        ml: "60px",
+        mr: "60px",
         mt: "15px",
         backgroundColor: "#D8DEE9",
         "& .MuiAlert-icon": {

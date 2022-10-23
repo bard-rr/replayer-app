@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
+import FilterComponents from "./FilterComponents";
 import {
   DEFAULT_FILTER,
   DEFAULT_LIMIT,
@@ -17,20 +18,25 @@ import {
   DEFAULT_TAG,
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
-import FilterComponents from "./FilterComponents";
 import { msToTime } from "../utils/formatLength";
+import { rememberState, getMemory } from "../utils/statePersistence";
 
 export default function SessionList({ onSessionClick }) {
-  const [page, setPage] = useState(DEFAULT_PAGE);
-  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
-  const [sortState, setSortState] = useState(DEFAULT_SORT_STATE);
-  const [filterType, setFilterType] = useState(DEFAULT_TAG);
-  const [filter, setFilter] = useState(DEFAULT_FILTER);
+  const [page, setPage] = useState(getMemory("page", DEFAULT_PAGE));
+  const [rowsPerPage, setRowsPerPage] = useState(
+    getMemory("rowsPerPage", DEFAULT_LIMIT)
+  );
+  const [sortState, setSortState] = useState(
+    getMemory("sortState", DEFAULT_SORT_STATE)
+  );
+  const [filterType, setFilterType] = useState(
+    getMemory("filterType", DEFAULT_TAG)
+  );
+  const [filter, setFilter] = useState(getMemory("filter", DEFAULT_FILTER));
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    //starts by getting all sessions and displaying them.
     const getSessionIds = async () => {
       try {
         const sessionData = await getNewSessions(
@@ -49,7 +55,7 @@ export default function SessionList({ onSessionClick }) {
     };
 
     getSessionIds();
-  }, [page, rowsPerPage, sortState, filter, filterType]);
+  }, [page, rowsPerPage, sortState, filter, filterType, count]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
@@ -93,9 +99,26 @@ export default function SessionList({ onSessionClick }) {
     }
   };
 
+  const onSelectSession = (e) => {
+    console.log("session selected");
+    const stateObj = {
+      page,
+      rowsPerPage,
+      sortState,
+      filterType,
+      filter,
+    };
+    rememberState(stateObj);
+    onSessionClick(e);
+  };
+
   return (
     <div className="sessionList">
-      <FilterComponents setFilter={setFilter} setFilterType={setFilterType} />
+      <FilterComponents
+        setFilter={setFilter}
+        setFilterType={setFilterType}
+        setPage={setPage}
+      />
 
       <TableContainer
         sx={{
@@ -136,7 +159,7 @@ export default function SessionList({ onSessionClick }) {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSessionClick}
+                onClick={onSelectSession}
               >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>{session.date}</TableCell>
@@ -148,7 +171,7 @@ export default function SessionList({ onSessionClick }) {
             <TableRow>
               <TablePagination
                 count={count}
-                page={page}
+                page={sessions.length > 0 ? page : 0}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}

@@ -6,7 +6,7 @@ import LengthInputs from "./LengthInputs";
 import { Stack } from "@mui/material";
 import { useState } from "react";
 
-const FilterComponents = ({ setFilter, setFilterType }) => {
+const FilterComponents = ({ setFilter, setFilterType, setPage }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [filterData, setFilterData] = useState({});
 
@@ -24,6 +24,7 @@ const FilterComponents = ({ setFilter, setFilterType }) => {
   const handleClickFilter = () => {
     setFilterType(selectedFilter);
     setFilter(filterData);
+    setPage(0);
   };
 
   return (
