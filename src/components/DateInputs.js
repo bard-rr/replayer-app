@@ -9,11 +9,11 @@ const DateInputs = ({ setFilterData }) => {
   const [endDate, setendDate] = useState(null);
 
   useEffect(() => {
-    // TODO (10-22-2022)
-    // Need to get the right data into the startDate and endDate state
-    const filterData = { startDate, endDate };
-    console.log(filterData);
-    // setFilterData(filterData);
+    const filterData = {
+      startDate: startDate && startDate.format("YYYY-MM-DD"),
+      endDate: endDate && endDate.format("YYYY-MM-DD"),
+    };
+    setFilterData(filterData);
   }, [startDate, endDate, setFilterData]);
 
   return (

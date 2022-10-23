@@ -22,9 +22,6 @@ const FilterComponents = ({
   const selectFilterType = () => {
     switch (selectedFilter) {
       case "date":
-        // TODO (10-22-2022)
-        // Need to mimic logic found in LengthInputs in DateInputs
-        // DateInputs should set `filterData` to { startDate, endDate }
         return <DateInputs setFilterData={setFilterData} />;
       case "length":
         return <LengthInputs setFilterData={setFilterData} />;
