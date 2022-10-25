@@ -49,22 +49,144 @@ class Clickhouse {
     const resultSet = await this.client.query({ query, format });
     return resultSet.json();
   }
+
+  async getSessionIdsFromFilters(filterArr) {
+    const select = "SELECT sessionId FROM eventDb.sessionTable";
+    const whereClause = getWhereClauseFromFilters(filterArr);
+    const query = `${select} WHERE ${whereClause}`;
+    console.log("filtered session query", query);
+    let result = await this.#getData(query);
+    return result.map((resultObj) => resultObj.sessionId);
+  }
+
+  //make one db query for each eventSequence object in the array
+  //the query returns sessionIds and timestamps of when the event's we're looking
+  //for happened in the session.
+
+  /*
+  first query
+  SELECT
+      sessionId,
+      min(timestamp)
+  FROM eventDb.conversionEvents
+  WHERE (eventType = 'click') AND (textContent = 'Delete Elements')
+  GROUP BY sessionId
+
+
+subsequent queries 
+
+SELECT
+    sessionId,
+    min(timestamp)
+FROM eventDb.conversionEvents
+WHERE (eventType = 'click') AND (textContent = 'Delete Elements') AND (
+  ((sessionId = 'undefined') AND (timestamp > 1666710420216)) OR 
+  ((sessionId = '2969cdf9-627d-457f-a369-c29b520070ae') AND (timestamp > 1666710566122))
+  )
+GROUP BY sessionId
+  */
+  async getEventSequenceResults(eventSequenceArr, filteredSessionArr) {
+    let allResults = [];
+    let firstResult = await this.#getFirstFunnelResults(
+      eventSequenceArr[0],
+      filteredSessionArr
+    );
+    allResults.push(firstResult);
+    //console.log("first result", firstResult);
+    let prevResult = firstResult;
+    for (let i = 1; i < eventSequenceArr.length; i++) {
+      let eventQuery = eventSequenceArr[i];
+      let resultArr = await this.#getSubsequentFunnelResults(
+        prevResult,
+        eventQuery
+      );
+      //console.log("next result", resultArr);
+      allResults.push(resultArr);
+      prevResult = resultArr;
+    }
+    console.log("allResults", allResults);
+  }
+
+  //queries return an array of objects. object properties are the columns
+  //returned by the query
+  #getFirstFunnelResults = async (queryObj, filteredSessionArr) => {
+    //create the query
+    let eventWhereClause = getEventWhereClause(queryObj);
+    let sessionWhereClause = getSessionWhereClause(filteredSessionArr);
+    let query = `SELECT sessionId, MIN(timestamp) AS time FROM
+                 eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
+                 GROUP BY sessionId`;
+    console.log("first funnel query", query);
+    return await this.#getData(query);
+  };
+  #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
+    let eventWhereClause = getEventWhereClause(queryObj);
+    let funnelWhereClause = getFunnelWhereClause(prevResultArr);
+    let query = `SELECT sessionId, MIN(timestamp) AS time FROM
+    eventDb.conversionEvents WHERE ${eventWhereClause} ${funnelWhereClause}
+    GROUP BY sessionId`;
+    return await this.#getData(query);
+  };
 }
 
 const DEFAULT_PER_PAGE = 5;
 const DEFAULT_PAGE_NUM = 0;
 
+const getEventWhereClause = (queryObj) => {
+  switch (queryObj.eventType) {
+    case "click":
+      return `(eventType = 'click') AND (textContent = '${queryObj.textContent}')`;
+    default:
+      return `(eventType = 'click') AND (textContent = '${queryObj.textContent}')`;
+  }
+};
+const getFunnelWhereClause = (prevResultArr) => {
+  let funnelWhereClause = "AND (";
+  let prevResultClauses = [];
+  for (let i = 0; i < prevResultArr.length; i++) {
+    let onePrevResult = prevResultArr[i];
+    prevResultClauses.push(
+      `((sessionId = '${onePrevResult.sessionId}') AND (timestamp > ${onePrevResult.time}))`
+    );
+  }
+  funnelWhereClause += prevResultClauses.join(" OR ");
+  funnelWhereClause += ")";
+  return funnelWhereClause;
+};
+const getSessionWhereClause = (filteredSessionArr) => {
+  let sessionWhereClause = "AND (";
+  let clausePieces = [];
+  for (let i = 0; i < filteredSessionArr.length; i++) {
+    let sessionId = filteredSessionArr[i];
+    clausePieces.push(`(sessionId = '${sessionId}')`);
+  }
+  sessionWhereClause += clausePieces.join(" OR ");
+  sessionWhereClause += ")";
+  return sessionWhereClause;
+};
+
 const makeSessionQuery = (paramsObj) => {
-  const where = filterBy(paramsObj);
+  const whereClause = filterBy(paramsObj);
   const orderBy = sortBy(paramsObj);
   const limitOffset = paginateBy(paramsObj);
   const select = "SELECT * FROM eventDb.sessionTable";
-  const sessionQuery = `${select} ${where} ${orderBy} ${limitOffset}`;
+  const sessionQuery = `${select} WHERE ${whereClause} ${orderBy} ${limitOffset}`;
   return sessionQuery;
 };
 
 const makeCountQuery = (paramsObj) => {
-  return `SELECT count(*) FROM eventDb.sessionTable ${filterBy(paramsObj)}`;
+  return `SELECT count(*) FROM eventDb.sessionTable WHERE ${filterBy(
+    paramsObj
+  )}`;
+};
+
+const getWhereClauseFromFilters = (filterArr) => {
+  let clausePieces = [];
+  for (let i = 0; i < filterArr.length; i++) {
+    let clausePiece = `(${filterBy(filterArr[i])})`;
+    clausePieces.push(clausePiece);
+  }
+  return clausePieces.join(" AND "); //only support AND filtering right now
 };
 
 const filterBy = (paramsObj) => {
@@ -72,15 +194,17 @@ const filterBy = (paramsObj) => {
     case "length":
       const minLength = Number(paramsObj.minLength) || 0;
       const maxLength = Number(paramsObj.maxLength) || Date.now();
-      return `WHERE (lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
+      return `(lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
     case "date":
       const startDate = paramsObj.startDate || "1970-01-01";
       const todayString = getTodayString();
       const endDate = paramsObj.endDate || todayString;
-      return `WHERE (date >= '${startDate}') AND (date <= '${endDate}')`;
-
+      return `(date >= '${startDate}') AND (date <= '${endDate}')`;
+    case "originHost":
+      const originHost = paramsObj.textContent;
+      return `(originHost = '${originHost}')`;
     default:
-      return `WHERE (date = '${getTodayString()}')`;
+      return `(date = '${getTodayString()}')`;
   }
 };
 

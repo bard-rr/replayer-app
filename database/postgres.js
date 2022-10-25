@@ -104,7 +104,11 @@ class Postgres {
     return;
   }
 
-  async getFunnelObj(funnelId) {}
+  async getFunnelObj(funnelId) {
+    let query = `SELECT funnel FROM funnels WHERE id = ${funnelId}`;
+    let result = await this.#executeQuery(query);
+    return result.rows[0];
+  }
 
   async #executeQuery(queryStr) {
     return await this.#client.query(queryStr);
