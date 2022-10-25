@@ -5,6 +5,7 @@ const cors = require("cors");
 const Clickhouse = require("./database/clickhouse");
 // import { Clickhouse } from "./clickhouseService.js";
 const Postgres = require("./database/postgres");
+const handleFunnel = require("./database/funnel");
 
 const app = express();
 
@@ -52,20 +53,27 @@ app.get("/sessions/:id", async (req, res) => {
 });
 
 app.get("/funnels", async (req, res) => {
-  let funnels = await postgres.getFunnels();
-  funnels = funnels.map((funnelObj) => {
-    return funnelObj.id;
-  });
-  res.status(200).json({ funnels });
+  let funnels = await postgres.getFunnelMetadata(req.query);
+  let count = await postgres.getFunnelCount(req.query);
+  res.status(200).json({ funnels, count });
 });
 
 app.post("/funnels", async (req, res) => {
   try {
-    let response = await postgres.insertFunnel(req.body);
+    await postgres.insertFunnel(req.body);
     res.status(201).send();
   } catch (error) {
-    console.log(error.message);
-    res.status(500).send();
+    res.status(500).json({ error });
+  }
+});
+
+app.get("/funnels/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    let result = await handleFunnel(id, postgres, clickhouse);
+    res.status(200).json({ result });
+  } catch (e) {
+    res.status(500).json({ error: e });
   }
 });
 
