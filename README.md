@@ -25,3 +25,42 @@ Session where we do nothing
 ## Session where we click Add then click Change Attribute, but its 30 seconds
 
 1e5bc226-6b62-44d3-9fc7-bc32dc07d8ef
+
+final {
+"funnel":
+{
+"funnelName":"E M A I L S ! ! ! ! ! ! ",
+"eventSequence":[
+{"eventType":"click","textContent":"Add Elements"},
+{"eventType":"click","textContent":"Change Attribute"}
+],
+"sessionFilters":[
+{"tag":"length","maxLength":25000,"minLength":5000},
+{"tag":"originHost","textContent":"http://localhost:5173"}
+]
+},
+"results":
+{
+"totalFilteredSessions":4,
+"eventSequenceResults":[
+{
+"numberCompleted":2,
+"sessionsCompleted":[
+"1c8eec81-cc65-4e65-aaeb-2fc3ac15feeb",
+"c22c3225-3276-4aaf-aac5-b86ccaa2034b"
+],
+"numberNotCompleted":2,
+"sessionsNotCompleted":[
+"9376138b-515a-488e-8c0c-bc7319f7b312",
+"a441d630-5ef5-4058-8409-d522278060ba"
+]
+},
+{"numberCompleted":1,
+"sessionsCompleted":[
+"c22c3225-3276-4aaf-aac5-b86ccaa2034b"
+],
+"numberNotCompleted":1,
+"sessionsNotCompleted":[
+"1c8eec81-cc65-4e65-aaeb-2fc3ac15feeb"
+]
+}]}}

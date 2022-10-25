@@ -54,7 +54,6 @@ class Clickhouse {
     const select = "SELECT sessionId FROM eventDb.sessionTable";
     const whereClause = getWhereClauseFromFilters(filterArr);
     const query = `${select} WHERE ${whereClause}`;
-    console.log("filtered session query", query);
     let result = await this.#getData(query);
     return result.map((resultObj) => resultObj.sessionId);
   }
@@ -104,7 +103,9 @@ GROUP BY sessionId
       allResults.push(resultArr);
       prevResult = resultArr;
     }
-    console.log("allResults", allResults);
+    return allResults.map((resultArr) =>
+      resultArr.map((resultObj) => resultObj.sessionId)
+    );
   }
 
   //queries return an array of objects. object properties are the columns
@@ -116,7 +117,6 @@ GROUP BY sessionId
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
-    console.log("first funnel query", query);
     return await this.#getData(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
