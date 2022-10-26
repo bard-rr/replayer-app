@@ -1,9 +1,8 @@
 import { Box, Stack, Typography } from "@mui/material";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import FunnelSelection from "./FunnelSelection";
 import ClickEventField from "./ClickEventField";
 import { DEFAULT_FUNNEL } from "../utils/const";
+import AddOrRemoveButton from "./AddOrRemoveButton";
 
 const FunnelComponents = ({ funnelData, setFunnelData }) => {
   const handleAddClick = (e) => {
@@ -74,25 +73,12 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
                     funnelData={funnelData}
                     setFunnelData={setFunnelData}
                   />
-                  {index === funnelData.length - 1 ? (
-                    <AddCircleOutlineIcon
-                      onClick={handleAddClick}
-                      sx={{
-                        "&:hover": {
-                          cursor: "pointer",
-                        },
-                      }}
-                    />
-                  ) : (
-                    <RemoveCircleOutlineIcon
-                      onClick={(e) => handleRemoveClick(e, index)}
-                      sx={{
-                        "&:hover": {
-                          cursor: "pointer",
-                        },
-                      }}
-                    />
-                  )}
+                  <AddOrRemoveButton
+                    handleAddClick={handleAddClick}
+                    handleRemoveClick={handleRemoveClick}
+                    index={index}
+                    dataLength={funnelData.length}
+                  />
                 </Stack>
               );
             default:

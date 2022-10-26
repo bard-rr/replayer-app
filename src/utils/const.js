@@ -23,3 +23,6 @@ export const HRS_TO_MS = 60 * MIN_TO_MS;
 export const DEFAULT_TIME_STRING = "00";
 
 export const DEFAULT_FUNNEL = { eventType: "" };
+export const DEFAULT_FUNNEL_FILTER = {};
+
+export const ALL_FILTER_OPTIONS = ["length", "date", "originHost"];

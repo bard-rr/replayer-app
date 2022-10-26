@@ -1,12 +1,12 @@
 // import Filter from "./Filter";
-import FilterSelect from "./FilterSelect";
+import FilterForm from "./FilterForm";
 import FilterButton from "./FilterButton";
 import DateInputs from "./DateInputs";
 import LengthInputs from "./LengthInputs";
 import { Stack } from "@mui/material";
 import { useState } from "react";
 
-const FilterComponents = ({ setFilter, setFilterType, setPage }) => {
+const SessionFilter = ({ setFilter, setFilterType, setPage }) => {
   const [selectedFilter, setSelectedFilter] = useState("");
   const [filterData, setFilterData] = useState({});
 
@@ -29,7 +29,7 @@ const FilterComponents = ({ setFilter, setFilterType, setPage }) => {
 
   return (
     <Stack direction="row" spacing={2} alignItems="center" sx={{ mt: "30px" }}>
-      <FilterSelect
+      <FilterForm
         setSelectedFilter={setSelectedFilter}
         selectedFilter={selectedFilter}
       />
@@ -41,4 +41,4 @@ const FilterComponents = ({ setFilter, setFilterType, setPage }) => {
   );
 };
 
-export default FilterComponents;
+export default SessionFilter;

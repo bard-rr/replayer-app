@@ -9,7 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
-import FilterComponents from "./FilterComponents";
+import SessionFilter from "./SessionFilter";
 import {
   DEFAULT_FILTER,
   DEFAULT_LIMIT,
@@ -115,7 +115,7 @@ export default function SessionList({ onSessionClick }) {
 
   return (
     <div className="sessionList">
-      <FilterComponents
+      <SessionFilter
         setFilter={setFilter}
         setFilterType={setFilterType}
         setPage={setPage}

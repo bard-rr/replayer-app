@@ -1,11 +1,12 @@
-import FilterComponents from "./FilterComponents";
+import SessionFilterForFunnel from "./SessionFilterForFunnel";
 import FunnelComponents from "./FunnelComponents";
 import { Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { DEFAULT_FUNNEL } from "../utils/const";
+import { DEFAULT_FUNNEL, DEFAULT_FUNNEL_FILTER } from "../utils/const";
 
 const NewFunnelForm = () => {
   const [funnelData, setFunnelData] = useState([DEFAULT_FUNNEL]);
+  const [filterData, setFilterData] = useState([DEFAULT_FUNNEL_FILTER]);
 
   return (
     <Stack
@@ -32,7 +33,10 @@ const NewFunnelForm = () => {
         Create New Funnel
       </Typography>
 
-      <FilterComponents />
+      <SessionFilterForFunnel
+        filterData={filterData}
+        setFilterData={setFilterData}
+      />
       <FunnelComponents funnelData={funnelData} setFunnelData={setFunnelData} />
     </Stack>
   );
