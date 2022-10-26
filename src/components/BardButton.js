@@ -1,6 +1,6 @@
 import { Button } from "@mui/material";
 
-const FilterButton = ({ text, onClick }) => {
+const BardButton = ({ text, onClick }) => {
   return (
     <Button
       onClick={onClick}
@@ -12,4 +12,4 @@ const FilterButton = ({ text, onClick }) => {
   );
 };
 
-export default FilterButton;
+export default BardButton;

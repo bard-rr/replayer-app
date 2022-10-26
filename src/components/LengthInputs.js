@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { DEFAULT_TIME_STRING } from "../utils/const";
 import { toMilliseconds } from "../utils/formatLength";
 import TimeDurationInput from "./TimeDurationInput";
@@ -36,8 +36,8 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
         return data;
       } else {
         let newFilter = { ...data };
-        newFilter.startLength = minLength;
-        newFilter.endLength = maxLength;
+        newFilter.minLength = minLength;
+        newFilter.maxLength = maxLength;
         return newFilter;
       }
     });

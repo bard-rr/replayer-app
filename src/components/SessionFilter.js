@@ -1,6 +1,6 @@
 // import Filter from "./Filter";
 import FilterForm from "./FilterForm";
-import FilterButton from "./FilterButton";
+import BardButton from "./BardButton";
 import DateInputs from "./DateInputs";
 import LengthInputs from "./LengthInputs";
 import { Stack } from "@mui/material";
@@ -35,7 +35,7 @@ const SessionFilter = ({ setFilter, setFilterType, setPage }) => {
       />
       {selectFilterType()}
       {selectedFilter !== "" && (
-        <FilterButton text={"Filter"} onClick={handleClickFilter} />
+        <BardButton text={"Filter"} onClick={handleClickFilter} />
       )}
     </Stack>
   );

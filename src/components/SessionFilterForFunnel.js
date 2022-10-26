@@ -1,14 +1,9 @@
 // import Filter from "./Filter";
 import FilterForm from "./FilterForm";
-import FilterButton from "./FilterButton";
-import DateInputs from "./DateInputs";
-import LengthInputs from "./LengthInputs";
 import { Box, Stack, Typography } from "@mui/material";
 import { ALL_FILTER_OPTIONS } from "../utils/const";
-import { useState } from "react";
 
 const SessionFilterForFunnel = ({ filterData, setFilterData }) => {
-  console.log("filter state", filterData);
   const filterOptions = ALL_FILTER_OPTIONS.filter(
     (option) => option !== "date"
   );
@@ -20,15 +15,13 @@ const SessionFilterForFunnel = ({ filterData, setFilterData }) => {
         mr: "60px",
         ml: "60px",
         width: "85%",
-      }}
-    >
+      }}>
       <Stack
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
         spacing={2}
-        sx={{ mt: "10px", mb: "10px" }}
-      >
+        sx={{ mt: "10px", mb: "10px" }}>
         <Typography
           variant="h9"
           sx={{
@@ -41,8 +34,7 @@ const SessionFilterForFunnel = ({ filterData, setFilterData }) => {
             "&:hover": {
               cursor: "pointer",
             },
-          }}
-        >
+          }}>
           Session Filters
         </Typography>
         <FilterForm

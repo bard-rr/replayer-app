@@ -17,8 +17,8 @@ const FilterSelection = ({
         newFilter.filterType = e.target.value;
         switch (newFilter.filterType) {
           case "length":
-            newFilter["startLength"] = "";
-            newFilter["endLength"] = "";
+            newFilter["minLength"] = "";
+            newFilter["maxLength"] = "";
             break;
           case "originHost":
             newFilter["textContent"] = "";
@@ -49,8 +49,7 @@ const FilterSelection = ({
       label="Event Type"
       value={filterData[index].filterType}
       onChange={handleChange}
-      select
-    >
+      select>
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
