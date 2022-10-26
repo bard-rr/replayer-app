@@ -34,7 +34,9 @@ const FilterComponents = ({ setFilter, setFilterType, setPage }) => {
         selectedFilter={selectedFilter}
       />
       {selectFilterType()}
-      {selectedFilter !== "" && <FilterButton onClick={handleClickFilter} />}
+      {selectedFilter !== "" && (
+        <FilterButton text={"Filter"} onClick={handleClickFilter} />
+      )}
     </Stack>
   );
 };

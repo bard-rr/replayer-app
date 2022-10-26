@@ -15,6 +15,9 @@ import {
   DEFAULT_SORT_FUNNELS,
 } from "../utils/const";
 import { getNewFunnels } from "../utils/urlUtils";
+import FilterButton from "./FilterButton";
+import { Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const fakeFunnels = [
   {
@@ -127,67 +130,76 @@ const FunnelList = ({ onFunnelClick }) => {
   };
 
   return (
-    <TableContainer
-      sx={{
-        ml: "60px",
-        mt: "60px",
-        mr: "60px",
-        width: "auto",
-        boxShadow: 1,
-      }}
-      component={Paper}
-    >
-      <Table sx={{ minWidth: 350 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            {headers.map(({ label, id }) => {
-              return (
-                <TableCell key={id}>
-                  <TableSortLabel
-                    active={id === sortState.sortBy}
-                    direction={getDirection(id)}
-                    onClick={makeHandleSort(id)}
-                  >
-                    {label}
-                  </TableSortLabel>
-                </TableCell>
-              );
-            })}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {funnels.map((funnel) => (
-            <TableRow
-              key={funnel.funnelId}
-              data-id={funnel.funnelId}
-              sx={{
-                "&:hover": {
-                  backgroundColor: "#ECEFF4",
-                  cursor: "pointer",
-                },
-              }}
-              onClick={onSelectFunnel}
-            >
-              <TableCell>{funnel.name}</TableCell>
-              <TableCell>{funnel.created}</TableCell>
-              <TableCell>{funnel.lastModified}</TableCell>
+    <div>
+      <Stack
+        direction="row-reverse"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0.5}
+        sx={{ mr: "60px", mt: "30px" }}>
+        <Link to={"/funnels/create"}>
+          <FilterButton text={"Add Filter"} sx={{ mr: "60px" }} />
+        </Link>
+      </Stack>
+      <TableContainer
+        sx={{
+          ml: "60px",
+          mt: "10px",
+          mr: "60px",
+          width: "auto",
+          boxShadow: 1,
+        }}
+        component={Paper}>
+        <Table sx={{ minWidth: 350 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              {headers.map(({ label, id }) => {
+                return (
+                  <TableCell key={id}>
+                    <TableSortLabel
+                      active={id === sortState.sortBy}
+                      direction={getDirection(id)}
+                      onClick={makeHandleSort(id)}>
+                      {label}
+                    </TableSortLabel>
+                  </TableCell>
+                );
+              })}
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              count={count}
-              page={funnels.length > 0 ? page : 0}
-              onPageChange={handleChangePage}
-              rowsPerPage={rowsPerPage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              rowsPerPageOptions={[5, 10]}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {funnels.map((funnel) => (
+              <TableRow
+                key={funnel.funnelId}
+                data-id={funnel.funnelId}
+                sx={{
+                  "&:hover": {
+                    backgroundColor: "#ECEFF4",
+                    cursor: "pointer",
+                  },
+                }}
+                onClick={onSelectFunnel}>
+                <TableCell>{funnel.name}</TableCell>
+                <TableCell>{funnel.created}</TableCell>
+                <TableCell>{funnel.lastModified}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={count}
+                page={funnels.length > 0 ? page : 0}
+                onPageChange={handleChangePage}
+                rowsPerPage={rowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                rowsPerPageOptions={[5, 10]}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </div>
   );
 };
 

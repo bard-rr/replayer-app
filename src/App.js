@@ -6,6 +6,7 @@ import SessionList from "./components/SessionList";
 import Player from "./components/Player";
 import FunnelList from "./components/FunnelList";
 import Funnel from "./components/Funnel";
+import NewFunnelForm from "./components/NewFunnelForm";
 
 function App() {
   const [eventData, setEventData] = useState([]);
@@ -61,6 +62,7 @@ function App() {
             path="/funnels"
             element={<FunnelList onFunnelClick={handleFunnelClick} />}
           />
+          <Route path="/funnels/create" element={<NewFunnelForm />} />
           <Route path="/funnels/:id" element={<Funnel />} />
         </Routes>
       </Layout>
