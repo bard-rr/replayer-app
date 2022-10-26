@@ -136,9 +136,10 @@ const FunnelList = ({ onFunnelClick }) => {
         justifyContent="flex-start"
         alignItems="flex-start"
         spacing={0.5}
-        sx={{ mr: "60px", mt: "30px" }}>
+        sx={{ mr: "60px", mt: "30px" }}
+      >
         <Link to={"/funnels/create"}>
-          <FilterButton text={"Add Filter"} sx={{ mr: "60px" }} />
+          <FilterButton text={"Add Funnel"} sx={{ mr: "60px" }} />
         </Link>
       </Stack>
       <TableContainer
@@ -149,7 +150,8 @@ const FunnelList = ({ onFunnelClick }) => {
           width: "auto",
           boxShadow: 1,
         }}
-        component={Paper}>
+        component={Paper}
+      >
         <Table sx={{ minWidth: 350 }} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -159,7 +161,8 @@ const FunnelList = ({ onFunnelClick }) => {
                     <TableSortLabel
                       active={id === sortState.sortBy}
                       direction={getDirection(id)}
-                      onClick={makeHandleSort(id)}>
+                      onClick={makeHandleSort(id)}
+                    >
                       {label}
                     </TableSortLabel>
                   </TableCell>
@@ -178,7 +181,8 @@ const FunnelList = ({ onFunnelClick }) => {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSelectFunnel}>
+                onClick={onSelectFunnel}
+              >
                 <TableCell>{funnel.name}</TableCell>
                 <TableCell>{funnel.created}</TableCell>
                 <TableCell>{funnel.lastModified}</TableCell>

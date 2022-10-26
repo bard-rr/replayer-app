@@ -1,4 +1,5 @@
 import { TextField, MenuItem } from "@mui/material";
+import { DEFAULT_FUNNEL } from "../utils/const";
 
 const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
   const handleChange = (e) => {
@@ -6,18 +7,19 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
       if (innerIndex !== index) {
         return innerData;
       }
-      innerData.eventType = e.target.value;
+      let newFunnel = { ...innerData };
+      newFunnel.eventType = e.target.value;
 
-      switch (innerData.eventType) {
+      switch (newFunnel.eventType) {
         case "click":
-          innerData["textContent"] = "";
+          newFunnel["textContent"] = "";
           break;
         default:
-          innerData = { eventType: "" };
+          newFunnel = DEFAULT_FUNNEL;
           break;
       }
 
-      return innerData;
+      return newFunnel;
     });
     setFunnelData(newFunnelData);
   };
@@ -36,7 +38,8 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
       label="Event Type"
       value={data.eventType}
       onChange={handleChange}
-      select>
+      select
+    >
       <MenuItem value="">
         <em>None</em>
       </MenuItem>

@@ -21,3 +21,5 @@ export const SEC_TO_MS = 1000;
 export const MIN_TO_MS = 60 * SEC_TO_MS;
 export const HRS_TO_MS = 60 * MIN_TO_MS;
 export const DEFAULT_TIME_STRING = "00";
+
+export const DEFAULT_FUNNEL = { eventType: "" };

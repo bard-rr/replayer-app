@@ -6,8 +6,9 @@ const ClickEventField = ({ index, funnelData, setFunnelData }) => {
       if (index !== innerIndex) {
         return innerData;
       }
-      innerData.textContent = e.target.value;
-      return innerData;
+      let newFunnel = { ...innerData };
+      newFunnel.textContent = e.target.value;
+      return newFunnel;
     });
     setFunnelData(newFunnelData);
   };
@@ -23,6 +24,7 @@ const ClickEventField = ({ index, funnelData, setFunnelData }) => {
           "& > fieldset": { borderColor: "#A3A2AF" },
         },
       }}
+      value={funnelData[index].textContent || ""}
       label="Clicked Text"
       onChange={handleChange}
     />
