@@ -72,14 +72,14 @@ class Clickhouse {
   GROUP BY sessionId
 
 
-subsequent queries 
+subsequent queries
 
 SELECT
     sessionId,
     min(timestamp)
 FROM eventDb.conversionEvents
 WHERE (eventType = 'click') AND (textContent = 'Delete Elements') AND (
-  ((sessionId = 'undefined') AND (timestamp > 1666710420216)) OR 
+  ((sessionId = 'undefined') AND (timestamp > 1666710420216)) OR
   ((sessionId = '2969cdf9-627d-457f-a369-c29b520070ae') AND (timestamp > 1666710566122))
   )
 GROUP BY sessionId
@@ -224,7 +224,7 @@ const sortBy = (paramsObj) => {
     default:
       column = "date";
   }
-  return `ORDER BY ${column} ${direction}`;
+  return `ORDER BY ${column} ${direction}, sessionId ASC`;
 };
 
 const paginateBy = (paramsObj) => {
