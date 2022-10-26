@@ -16,7 +16,12 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
         switch (data.eventType) {
           case "click":
             return (
-              <Box key={index}>
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={4}
+                key={index}>
                 <FunnelSelection
                   data={data}
                   index={index}
@@ -28,7 +33,17 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
                   funnelData={funnelData}
                   setFunnelData={setFunnelData}
                 />
-              </Box>
+                {index === funnelData.length - 1 ? (
+                  <AddCircleOutlineIcon
+                    onClick={handleAddClick}
+                    sx={{
+                      "&:hover": {
+                        cursor: "pointer",
+                      },
+                    }}
+                  />
+                ) : null}
+              </Stack>
             );
           default:
             return (
@@ -43,15 +58,6 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
             );
         }
       })}
-
-      <AddCircleOutlineIcon
-        onClick={handleAddClick}
-        sx={{
-          "&:hover": {
-            cursor: "pointer",
-          },
-        }}
-      />
     </Stack>
   );
 };
