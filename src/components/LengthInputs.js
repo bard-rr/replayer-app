@@ -11,35 +11,26 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
   const [endMinutes, setEndMinutes] = useState(DEFAULT_TIME_STRING);
   const [endSeconds, setEndSeconds] = useState(DEFAULT_TIME_STRING);
 
-  // useEffect(() => {
-  //   const minLength = toMilliseconds(startHours, startMinutes, startSeconds);
-  //   const maxLength = toMilliseconds(endHours, endMinutes, endSeconds);
-  //   let newFilterData = filterData.map((data, innerIndex) => {
-  //     if (innerIndex !== index) {
-  //       return data;
-  //     } else {
-  //       let newFilter = { ...data };
-  //       newFilter.startLength = minLength;
-  //       newFilter.endLength = maxLength;
-  //       return newFilter;
-  //     }
-  //   });
-  //   setFilterData(newFilterData);
-  // }, [
-  //   startHours,
-  //   startMinutes,
-  //   startSeconds,
-  //   endHours,
-  //   endMinutes,
-  //   endSeconds,
-  //   setFilterData,
-  //   index,
-  //   filterData,
-  // ]);
-
-  const changeFilter = (e) => {
-    const minLength = toMilliseconds(startHours, startMinutes, startSeconds);
-    const maxLength = toMilliseconds(endHours, endMinutes, endSeconds);
+  //gross, but I can't think of a better way to do it: need the updated state that's
+  //changed in the TimeDurationInput component
+  const changeFilter = (isStartChange, payload) => {
+    let minLength;
+    let maxLength;
+    if (isStartChange) {
+      minLength = toMilliseconds(
+        payload.hours,
+        payload.minutes,
+        payload.seconds
+      );
+      maxLength = toMilliseconds(endHours, endMinutes, endSeconds);
+    } else {
+      minLength = toMilliseconds(startHours, startMinutes, startSeconds);
+      maxLength = toMilliseconds(
+        payload.hours,
+        payload.minutes,
+        payload.seconds
+      );
+    }
     let newFilterData = filterData.map((data, innerIndex) => {
       if (innerIndex !== index) {
         return data;
@@ -64,6 +55,7 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
         seconds={startSeconds}
         setSeconds={setStartSeconds}
         changeFilter={changeFilter}
+        isStart={true}
       />
       <TimeDurationInput
         label="Max Length"
@@ -74,6 +66,7 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
         seconds={endSeconds}
         setSeconds={setEndSeconds}
         changeFilter={changeFilter}
+        isStart={false}
       />
     </>
   );
