@@ -38,3 +38,9 @@ const getFullUrl = (pageObj, sortObj, filterObj) => {
 export const getQueryString = (obj) => {
   return new URLSearchParams(obj).toString();
 };
+
+export const getNewFunnels = async (page, rowsPerPage, sortObj) => {
+  const pageQuery = getQueryString({ pageNum: page, perPage: rowsPerPage });
+  const sortQuery = getQueryString(sortObj);
+  return `${BASE_URL}/funnels?${pageQuery}&${sortQuery}`;
+};

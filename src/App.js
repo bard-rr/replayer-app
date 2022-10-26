@@ -4,6 +4,8 @@ import axios from "axios";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
+import FunnelList from "./components/FunnelList";
+import Funnel from "./components/Funnel";
 
 function App() {
   const [eventData, setEventData] = useState([]);
@@ -24,6 +26,22 @@ function App() {
     }
   };
 
+  const handleFunnelClick = async (e) => {
+    const id = e.target.parentElement.dataset.id;
+    // console.log(id);
+    getFunnelData(id);
+  };
+
+  const getFunnelData = async (id) => {
+    try {
+      // const response = await axios.get(`http://localhost:3003/funnels/${id}`);
+      navigate(`/funnels/${id}`);
+      // set some state maybe
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="App">
       <Layout>
@@ -39,6 +57,11 @@ function App() {
               <Player eventData={eventData} getEventData={getEventData} />
             }
           />
+          <Route
+            path="/funnels"
+            element={<FunnelList onFunnelClick={handleFunnelClick} />}
+          />
+          <Route path="/funnels/:id" element={<Funnel />} />
         </Routes>
       </Layout>
     </div>
