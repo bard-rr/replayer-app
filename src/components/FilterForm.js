@@ -5,6 +5,7 @@ import FilterSelection from "./FilterSelection";
 import AddOrRemoveButton from "./AddOrRemoveButton";
 import OriginHostFilterField from "./OriginHostFilterField";
 import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
+import DateInputs from "./DateInputs";
 
 const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
   const handleAddClick = (e) => {
@@ -31,8 +32,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={4}
-                key={index}
-              >
+                key={index}>
                 <FilterSelection
                   filterOptions={filterOptions}
                   index={index}
@@ -59,8 +59,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={4}
-                key={index}
-              >
+                key={index}>
                 <FilterSelection
                   filterOptions={filterOptions}
                   index={index}
@@ -68,6 +67,33 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   filterData={filterData}
                 />
                 <OriginHostFilterField
+                  setFilterData={setFilterData}
+                  index={index}
+                  filterData={filterData}
+                />
+                <AddOrRemoveButton
+                  handleAddClick={handleAddClick}
+                  handleRemoveClick={handleRemoveClick}
+                  index={index}
+                  dataLength={filterData.length}
+                />
+              </Stack>
+            );
+          case "date":
+            return (
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={4}
+                key={index}>
+                <FilterSelection
+                  filterOptions={filterOptions}
+                  index={index}
+                  setFilterData={setFilterData}
+                  filterData={filterData}
+                />
+                <DateInputs
                   setFilterData={setFilterData}
                   index={index}
                   filterData={filterData}

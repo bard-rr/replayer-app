@@ -7,6 +7,7 @@ const SessionFilterForFunnel = ({ filterData, setFilterData }) => {
   const filterOptions = ALL_FILTER_OPTIONS.filter(
     (option) => option !== "date"
   );
+
   return (
     <Box
       sx={{
