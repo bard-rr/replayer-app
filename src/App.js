@@ -5,6 +5,7 @@ import Player from "./components/Player";
 import FunnelList from "./components/FunnelList";
 import Funnel from "./components/Funnel";
 import NewFunnelForm from "./components/NewFunnelForm";
+import EditFunnelForm from "./components/EditFunnelForm";
 
 function App() {
   return (
@@ -23,17 +24,12 @@ function App() {
             path="/sessions/:sessionId"
             element={<Player />}
           />
-          <Route
-            path="/funnels"
-            element={<FunnelList />}
-          />
+          <Route path="/funnels" element={<FunnelList />} />
+          <Route path="/funnels/create" element={<NewFunnelForm />} />
+          <Route path="/funnels/update/:id" element={<EditFunnelForm />} />
           <Route
             path="/funnels/:funnelId"
             element={<Funnel />}
-          />
-          <Route
-            path="/funnels/create"
-            element={<NewFunnelForm />}
           />
         </Routes>
       </Layout>

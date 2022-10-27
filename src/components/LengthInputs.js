@@ -1,15 +1,32 @@
 import { useState } from "react";
 import { DEFAULT_TIME_STRING } from "../utils/const";
-import { toMilliseconds } from "../utils/formatLength";
+import {
+  msToHours,
+  msToMinutes,
+  msToSeconds,
+  toMilliseconds,
+} from "../utils/formatLength";
 import TimeDurationInput from "./TimeDurationInput";
 
 const LengthInputs = ({ setFilterData, filterData, index }) => {
-  const [startHours, setStartHours] = useState(DEFAULT_TIME_STRING);
-  const [startMinutes, setStartMinutes] = useState(DEFAULT_TIME_STRING);
-  const [startSeconds, setStartSeconds] = useState(DEFAULT_TIME_STRING);
-  const [endHours, setEndHours] = useState(DEFAULT_TIME_STRING);
-  const [endMinutes, setEndMinutes] = useState(DEFAULT_TIME_STRING);
-  const [endSeconds, setEndSeconds] = useState(DEFAULT_TIME_STRING);
+  const [startHours, setStartHours] = useState(
+    msToHours(filterData[index].minLength) || DEFAULT_TIME_STRING
+  );
+  const [startMinutes, setStartMinutes] = useState(
+    msToMinutes(filterData[index].minLength) || DEFAULT_TIME_STRING
+  );
+  const [startSeconds, setStartSeconds] = useState(
+    msToSeconds(filterData[index].minLength) || DEFAULT_TIME_STRING
+  );
+  const [endHours, setEndHours] = useState(
+    msToHours(filterData[index].maxLength) || DEFAULT_TIME_STRING
+  );
+  const [endMinutes, setEndMinutes] = useState(
+    msToMinutes(filterData[index].maxLength) || DEFAULT_TIME_STRING
+  );
+  const [endSeconds, setEndSeconds] = useState(
+    msToSeconds(filterData[index].maxLength) || DEFAULT_TIME_STRING
+  );
 
   //gross, but I can't think of a better way to do it: need the updated state that's
   //changed in the TimeDurationInput component

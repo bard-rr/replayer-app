@@ -8,7 +8,6 @@ import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import DateInputs from "./DateInputs";
 
 const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
-  console.log("filter data", filterData);
   const handleAddClick = (e) => {
     e.preventDefault();
     let newFilterData = [...filterData].concat(DEFAULT_FUNNEL_FILTER);

@@ -1,29 +1,37 @@
-import SessionFilterForFunnel from "./SessionFilterForFunnel";
-import FunnelComponents from "./FunnelComponents";
 import { Stack, TextField, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { DEFAULT_FUNNEL, DEFAULT_FUNNEL_FILTER } from "../utils/const";
+import FunnelComponents from "./FunnelComponents";
+import SessionFilterForFunnel from "./SessionFilterForFunnel";
+import { getOneFunnel, updateOneFunnel } from "../utils/urlUtils";
 import BardButton from "./BardButton";
-import { Link } from "react-router-dom";
-import { createOneFunnel } from "../utils/urlUtils";
 
-const NewFunnelForm = () => {
-  const [funnelData, setFunnelData] = useState([DEFAULT_FUNNEL]);
-  const [filterData, setFilterData] = useState([DEFAULT_FUNNEL_FILTER]);
+const EditFunnelForm = () => {
+  let { id } = useParams();
+  const [eventSequence, seteventSequence] = useState([DEFAULT_FUNNEL]);
+  const [sessionFilters, setSessionFilters] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
 
-  const handleSubmitClick = async (e) => {
-    await createOneFunnel({
-      funnelName,
-      sessionFilters: filterData,
-      eventSequence: funnelData,
-    });
-  };
+  useEffect(() => {
+    const getFunnel = async () => {
+      //should work with no filter portion
+      const response = await getOneFunnel(id);
+      console.log("funnel response from axios", response);
+      setFunnelName(response.funnelName);
+      seteventSequence(response.eventSequence);
+      setSessionFilters(response.sessionFilters);
+    };
+    getFunnel();
+  }, [id]);
 
   const handleNameChange = (e) => {
     setFunnelName(e.target.value);
   };
 
+  const handleUpdateClick = async (e) => {
+    await updateOneFunnel(id, { funnelName, eventSequence, sessionFilters });
+  };
   return (
     <Stack
       direction="column"
@@ -46,7 +54,7 @@ const NewFunnelForm = () => {
           },
         }}
       >
-        Create New Funnel
+        Update a Funnel
       </Typography>
       <TextField
         variant="outlined"
@@ -63,10 +71,13 @@ const NewFunnelForm = () => {
         onChange={handleNameChange}
       />
       <SessionFilterForFunnel
-        filterData={filterData}
-        setFilterData={setFilterData}
+        filterData={sessionFilters}
+        setFilterData={setSessionFilters}
       />
-      <FunnelComponents funnelData={funnelData} setFunnelData={setFunnelData} />
+      <FunnelComponents
+        funnelData={eventSequence}
+        setFunnelData={seteventSequence}
+      />
       <Stack
         direction="row"
         justifyContent="flex-end"
@@ -78,11 +89,11 @@ const NewFunnelForm = () => {
           <BardButton text={"Cancel"} />
         </Link>
         <Link to="/funnels">
-          <BardButton text={"Create Funnel"} onClick={handleSubmitClick} />
+          <BardButton text={"Update Funnel"} onClick={handleUpdateClick} />
         </Link>
       </Stack>
     </Stack>
   );
 };
 
-export default NewFunnelForm;
+export default EditFunnelForm;
