@@ -3,17 +3,19 @@ import { useParams } from "react-router-dom";
 import replayer from "../utils/replayer";
 import { getEventData } from "../utils/urlUtils";
 
-const Player = () => {
-  const { id } = useParams();
+const Player = (props) => {
+  let { sessionId } = useParams();
   const [eventData, setEventData] = useState([]);
+
+  if (sessionId === undefined) sessionId = props.sessionId;
 
   useEffect(() => {
     const getAndSetEventData = async () => {
-      const data = await getEventData(id);
+      const data = await getEventData(sessionId);
       setEventData(data);
     };
     getAndSetEventData();
-  }, [id]);
+  }, [sessionId]);
 
   useEffect(() => {
     replayer.init(eventData);

@@ -108,8 +108,8 @@ export default function SessionList() {
     };
     rememberState(stateObj);
 
-    const id = e.target.parentElement.dataset.id;
-    navigate(`/sessions/${id}`);
+    const sessionId = e.target.parentElement.dataset.id;
+    navigate(`/sessions/${sessionId}`);
   };
 
   return (

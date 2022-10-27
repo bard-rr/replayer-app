@@ -20,7 +20,7 @@ function App() {
             element={<SessionList />}
           />
           <Route
-            path="/sessions/:id"
+            path="/sessions/:sessionId"
             element={<Player />}
           />
           <Route
@@ -28,7 +28,7 @@ function App() {
             element={<FunnelList />}
           />
           <Route
-            path="/funnels/:id"
+            path="/funnels/:funnelId"
             element={<Funnel />}
           />
           <Route
