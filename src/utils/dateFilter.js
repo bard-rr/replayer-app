@@ -24,16 +24,16 @@ const getDates = (tag) => {
       endDate = getPastDate(1);
       break;
     case "last 7":
-      startDate = today;
-      endDate = getPastDate(7);
+      startDate = getPastDate(7);
+      endDate = today;
       break;
     case "last 30":
-      startDate = today;
-      endDate = getPastDate(30);
+      startDate = getPastDate(30);
+      endDate = today;
       break;
     default:
-      startDate = today;
-      endDate = getPastDate(7);
+      startDate = getPastDate(7);
+      endDate = today;
       break;
   }
   return {

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import FunnelStep from "./FunnelStep";
 import FunnelTimeFilter from "./FunnelTimeFilter";
+import getDates from "../utils/dateFilter";
+import { getFunnelData } from "../utils/urlUtils";
 
-const name = "Generated Affiliate Link";
 const fakeFunnel = {
   funnel: {
     sessionFilters: [
@@ -50,14 +52,18 @@ const fakeFunnel = {
   },
 };
 
-// name would be passed in?
-const Funnel = ({ funnelData }) => {
-  // const [selectedFilter, setSelectedFilter] = useState("last 7");
-  // const handleChange = (e) => {
-  //   console.log(getDates(e.target.value));
+const Funnel = ({ funnelData, setFunnelData, funnelMetaData }) => {
+  const { id, name } = funnelMetaData;
+  const [selectedFilter, setSelectedFilter] = useState("last 7");
+  console.log("funnel id: ", id);
 
-  //   setSelectedFilter(e.target.value);
-  // };
+  const handleChange = (e) => {
+    setSelectedFilter(e.target.value);
+    const dates = getDates(e.target.value);
+    // const data = await getFunnelData(id, dates);
+    getFunnelData(id, dates);
+    // setFunnelData(data);
+  };
 
   const listFunnelSteps = () => {
     return fakeFunnel.funnel.eventSequence.map((event, idx) => {
@@ -83,7 +89,10 @@ const Funnel = ({ funnelData }) => {
         position: "relative",
       }}
     >
-      <FunnelTimeFilter />
+      <FunnelTimeFilter
+        selectedFilter={selectedFilter}
+        onChange={handleChange}
+      />
       <Box sx={{ fontSize: "18px" }}>{name}</Box>
       <Box sx={{ fontSize: "16px" }}>
         <em>{fakeFunnel.results.totalFilteredSessions} sessions</em>

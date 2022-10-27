@@ -11,6 +11,7 @@ import Funnel from "./components/Funnel";
 function App() {
   const [eventData, setEventData] = useState([]);
   const [funnelData, setFunnelData] = useState({});
+  const [funnelMetaData, setFunnelMetaData] = useState({});
   const navigate = useNavigate();
 
   const handleSessionClick = async (e) => {
@@ -20,10 +21,11 @@ function App() {
     setEventData(data);
   };
 
-  const handleFunnelClick = async (id) => {
+  const handleFunnelClick = async (id, name) => {
     getFunnelData(id, DEFAULT_FUNNEL_FILTER);
     // const data = await getFunnelData(id, DEFAULT_FUNNEL_FILTER);
     navigate(`/funnels/${id}`);
+    setFunnelMetaData({ id, name });
     // setFunnelData(data);
   };
 
@@ -47,7 +49,11 @@ function App() {
           <Route
             path="/funnels/:id"
             element={
-              <Funnel funnelData={funnelData} setFunnelData={setFunnelData} />
+              <Funnel
+                funnelMetaData={funnelMetaData}
+                funnelData={funnelData}
+                setFunnelData={setFunnelData}
+              />
             }
           />
         </Routes>

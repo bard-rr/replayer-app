@@ -1,21 +1,12 @@
-import { useState } from "react";
 import { TextField, MenuItem } from "@mui/material";
-import getDates from "../utils/dateFilter";
 
-const FunnelTimeFilter = () => {
-  const [selectedFilter, setSelectedFilter] = useState("last 7");
-  const handleChange = (e) => {
-    console.log(getDates(e.target.value));
-
-    setSelectedFilter(e.target.value);
-  };
-
+const FunnelTimeFilter = ({ selectedFilter, onChange }) => {
   return (
     <TextField
       select
       value={selectedFilter}
       label="Date Range"
-      onChange={handleChange}
+      onChange={onChange}
       sx={{
         position: "absolute",
         top: "30px",

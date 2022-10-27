@@ -121,9 +121,15 @@ const FunnelList = ({ onFunnelClick }) => {
     }
   };
 
+  const getFunnelName = (id) => {
+    const funnel = fakeFunnels.find(({ funnelId }) => funnelId === id);
+    return funnel ? funnel.name : funnel;
+  };
+
   const onSelectFunnel = (e) => {
     const id = e.target.parentElement.dataset.id;
-    onFunnelClick(id);
+    const name = getFunnelName(Number(id));
+    onFunnelClick(id, name);
   };
 
   return (
