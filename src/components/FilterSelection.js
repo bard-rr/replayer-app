@@ -1,5 +1,5 @@
 import { MenuItem, TextField } from "@mui/material";
-import { DEFAULT_FUNNEL, DEFAULT_FUNNEL_FILTER } from "../utils/const";
+import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import { capitalizeString } from "../utils/misc";
 
 const FilterSelection = ({
@@ -13,7 +13,8 @@ const FilterSelection = ({
       if (innerIndex !== index) {
         return innerData;
       } else {
-        let newFilter = { ...innerData };
+        //deep copy of the default filter
+        let newFilter = JSON.parse(JSON.stringify(DEFAULT_FUNNEL_FILTER));
         newFilter.filterType = e.target.value;
         switch (newFilter.filterType) {
           case "length":
@@ -49,7 +50,8 @@ const FilterSelection = ({
       label="Event Type"
       value={filterData[index].filterType}
       onChange={handleChange}
-      select>
+      select
+    >
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
