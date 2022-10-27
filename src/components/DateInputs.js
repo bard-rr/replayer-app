@@ -33,17 +33,12 @@ const DateInputs = ({ setFilterData, index, filterData }) => {
     });
     setFilterData(newfilterData);
   };
-  console.log("new start date", new Date(filterData[index].startDate));
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Start Date"
-          value={
-            filterData[index].startDate
-              ? new Date(filterData[index].startDate)
-              : startDate
-          }
+          value={filterData[index].startDate}
           onChange={(newValue) => handleChange(newValue, true)}
           renderInput={(params) => <TextField {...params} />}
         />
@@ -51,11 +46,7 @@ const DateInputs = ({ setFilterData, index, filterData }) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="End Date"
-          value={
-            filterData[index].endDate
-              ? new Date(filterData[index].endDate)
-              : endDate
-          }
+          value={filterData[index].endDate}
           onChange={(newValue) => handleChange(newValue, false)}
           renderInput={(params) => <TextField {...params} />}
         />

@@ -12,7 +12,6 @@ export const getNewSessions = async (
     sortObj,
     filterData
   );
-  console.log("url", url);
   const response = await axios.get(url);
   return response.data;
 };
@@ -46,21 +45,8 @@ const parseFilterQuery = (filterData) => {
       }
       let queryObj = {};
       queryObj[key] = value;
-      let queryPiece = getQueryString(queryObj);
-      console.log("query obj", queryObj, "query piece:", queryPiece);
       queryPieces.push(getQueryString(queryObj));
     });
-    // //don't mutate the filter state
-    // filterObj = { ...filterObj };
-    // i = i.toString();
-    // let key = ;
-    // delete filterObj.filterType;
-    // let value = filterObj;
-    // let queryObj = {};
-    // queryObj[key] = value;
-    // let queryPiece = getQueryString(queryObj);
-    // console.log("query obj", queryObj, "query piece:", queryPiece);
-    // query += getQueryString(queryObj);
   });
   return queryPieces.join("&");
 };
