@@ -4,6 +4,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { List, ListItem } from "@mui/material";
 import PlayerModal from "./PlayerModal";
+import CloseButton from "./CloseButton";
 
 const style = {
   position: "absolute",
@@ -37,6 +38,7 @@ const SessionListModal = ({ open, setOpen, sessionIds, title }) => {
         aria-describedby="modal-modal-list"
       >
         <Box sx={style}>
+          <CloseButton onClick={handleClose} />
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {title}
           </Typography>
