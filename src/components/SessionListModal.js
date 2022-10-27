@@ -21,6 +21,12 @@ const style = {
 const SessionListModal = ({ open, setOpen, sessionIds, title }) => {
   const [openPlayerModal, setOpenPlayerModal] = useState(false);
   const handleClose = () => setOpen(false);
+  const [sessionToView, setSessionToView] = useState("");
+
+  const handleClick = (sessionId) => {
+    setOpenPlayerModal(true);
+    setSessionToView(sessionId);
+  };
 
   return (
     <Box sx={{ position: "absolute" }}>
@@ -47,7 +53,7 @@ const SessionListModal = ({ open, setOpen, sessionIds, title }) => {
                 return (
                   <ListItem
                     key={id}
-                    onClick={() => setOpenPlayerModal(true)}
+                    onClick={() => handleClick(id)}
                     sx={{
                       py: "10px",
                       my: "8px",
@@ -70,7 +76,7 @@ const SessionListModal = ({ open, setOpen, sessionIds, title }) => {
       <PlayerModal
         open={openPlayerModal}
         setOpen={setOpenPlayerModal}
-        sessionId={"85e33a98-a42c-4797-8ac7-7f830f08afbb"}
+        sessionId={sessionToView}
       />
     </Box>
   );
