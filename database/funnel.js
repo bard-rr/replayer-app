@@ -12,6 +12,12 @@ const handleFunnel = async (funnelId, pg, ch, queryObj) => {
   return formatResults(funnel, filteredSessionArr, eventSequenceResults);
 };
 
+const handleUpdateFunnel = async (id, pg, body) => {
+  await pg.updateFunnel(id, body);
+  // const name = body.funnelName;
+  // const lastModified = Date.now();
+};
+
 const formatResults = (funnel, filteredSessionArr, eventSequenceResults) => {
   let results = {};
   results["totalFilteredSessions"] = filteredSessionArr.length;
@@ -54,4 +60,4 @@ const newFormattedResult = () => {
   };
 };
 
-module.exports = handleFunnel;
+module.exports = { handleFunnel, handleUpdateFunnel };

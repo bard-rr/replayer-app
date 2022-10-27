@@ -81,6 +81,15 @@ class Postgres {
     return result.rows[0].count;
   }
 
+  async updateFunnel(id, body) {
+    const name = body.funnelName;
+    const lastModified = Date.now();
+    console.log("id: ", id);
+    console.log("name: ", name);
+    console.log("lastModified: ", lastModified);
+    console.log("body: ", body);
+  }
+
   #makeCountQuery() {
     return "SELECT count(*) FROM funnels";
   }

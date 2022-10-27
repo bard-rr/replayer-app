@@ -3,9 +3,8 @@ require("dotenv").config();
 const port = process.env.PORT || 3003;
 const cors = require("cors");
 const Clickhouse = require("./database/clickhouse");
-// import { Clickhouse } from "./clickhouseService.js";
 const Postgres = require("./database/postgres");
-const handleFunnel = require("./database/funnel");
+const { handleFunnel, handleUpdateFunnel } = require("./database/funnel");
 
 const app = express();
 
@@ -79,6 +78,27 @@ app.get("/funnels/:id", async (req, res) => {
   }
 });
 
+app.get("/funnel/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    result = await postgres.getFunnelObj(id);
+    res.status(200).json(result.funnel);
+  } catch (error) {
+    console.log("error: ", error);
+    res.status(500).json({ error });
+  }
+});
+
+app.put("/funnels/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    let result = await handleUpdateFunnel(id, postgres, req.body);
+    res.status(204).send();
+  } catch (error) {
+    console.log("error in put: ", error);
+    res.status(500).json({ error: error, location: "In Edit Funnel" });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
