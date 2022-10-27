@@ -19,6 +19,8 @@ const Player = () => {
     replayer.init(eventData);
   }, [eventData]);
 
+  if (eventData.length === 0) return null;
+
   //this is where the replayer is mounted in replayer.init
   return <div className="player"></div>;
 };
