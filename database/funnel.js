@@ -5,11 +5,31 @@ const handleFunnel = async (funnelId, pg, ch, queryObj) => {
     queryObj.startDate,
     queryObj.endDate
   );
+  if (filteredSessionArr.length === 0) {
+    return createEmptyFunnel(funnel);
+  }
   let eventSequenceResults = await ch.getEventSequenceResults(
     funnel.eventSequence,
     filteredSessionArr
   );
   return formatResults(funnel, filteredSessionArr, eventSequenceResults);
+};
+
+const createEmptyFunnel = (funnel) => {
+  let newObj = {};
+  newObj.funnel = funnel;
+  newObj.results = {
+    totalFilteredSessions: 0,
+    eventSequenceResults: funnel.eventSequence.map(() => {
+      return {
+        numberCompleted: 0,
+        sessionsCompleted: [],
+        numberNotCompleted: 0,
+        sessionsNotCompleted: [],
+      };
+    }),
+  };
+  return newObj;
 };
 
 const handleUpdateFunnel = async (id, pg, body) => {
