@@ -50,11 +50,21 @@ class Clickhouse {
     return resultSet.json();
   }
 
-  async getSessionIdsFromFilters(filterArr) {
+  async getSessionIdsFromFilters(filterArr, startDate, endDate) {
+    // console.log("getSessionIds: ", filterArr);
+    const newFilterArr = [...filterArr];
+    newFilterArr.push({
+      filterType: "date",
+      startDate,
+      endDate,
+    });
     const select = "SELECT sessionId FROM eventDb.sessionTable";
-    const whereClause = getWhereClauseFromFilters(filterArr);
+    const whereClause = getWhereClauseFromFilters(newFilterArr);
+    // console.log("whereClause: ", whereClause);
     const query = `${select} WHERE ${whereClause}`;
+    console.log("getSessionIdsFromFilters", query);
     let result = await this.#getData(query);
+    console.log("result:", result);
     return result.map((resultObj) => resultObj.sessionId);
   }
 
@@ -153,6 +163,7 @@ const getFunnelWhereClause = (prevResultArr) => {
   funnelWhereClause += ")";
   return funnelWhereClause;
 };
+
 const getSessionWhereClause = (filteredSessionArr) => {
   let sessionWhereClause = "AND (";
   let clausePieces = [];
@@ -167,10 +178,12 @@ const getSessionWhereClause = (filteredSessionArr) => {
 
 const makeSessionQuery = (paramsObj) => {
   const whereClause = filterBy(paramsObj);
+  console.log("makeSessionQuery:", whereClause);
   const orderBy = sortBy(paramsObj);
   const limitOffset = paginateBy(paramsObj);
   const select = "SELECT * FROM eventDb.sessionTable";
   const sessionQuery = `${select} WHERE ${whereClause} ${orderBy} ${limitOffset}`;
+  console.log("fullSessionQuery", sessionQuery);
   return sessionQuery;
 };
 
@@ -190,22 +203,37 @@ const getWhereClauseFromFilters = (filterArr) => {
 };
 
 const filterBy = (paramsObj) => {
-  switch (paramsObj.tag) {
-    case "length":
-      const minLength = Number(paramsObj.minLength) || 0;
-      const maxLength = Number(paramsObj.maxLength) || Date.now();
-      return `(lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`;
-    case "date":
-      const startDate = paramsObj.startDate || "1970-01-01";
-      const todayString = getTodayString();
-      const endDate = paramsObj.endDate || todayString;
-      return `(date >= '${startDate}') AND (date <= '${endDate}')`;
-    case "originHost":
-      const originHost = paramsObj.textContent;
-      return `(originHost = '${originHost}')`;
-    default:
-      return `(date = '${getTodayString()}')`;
-  }
+  let result = [];
+  const filtersTags = Object.keys(paramsObj).filter(
+    (key) => key.substring(0, 6) === "filter"
+  );
+  const filters = filtersTags.map((filter) => {
+    return paramsObj[filter];
+  });
+  filters.forEach((filter) => {
+    switch (filter) {
+      case "length":
+        const minLength = Number(paramsObj.minLength) || 0;
+        const maxLength = Number(paramsObj.maxLength) || Date.now();
+        result.push(
+          `(lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`
+        );
+        break;
+      case "date":
+        const startDate = paramsObj.startDate || "1970-01-01";
+        const todayString = getTodayString();
+        const endDate = paramsObj.endDate || todayString;
+        result.push(`(date >= '${startDate}') AND (date <= '${endDate}')`);
+        break;
+      case "originHost":
+        const originHost = paramsObj.textContent;
+        result.push(`(originHost = '${originHost}')`);
+        break;
+      default:
+        result.push(`(date = '${getTodayString()}')`);
+    }
+  });
+  return result.join(` AND `);
 };
 
 const sortBy = (paramsObj) => {
