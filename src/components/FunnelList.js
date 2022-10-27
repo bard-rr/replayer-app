@@ -8,51 +8,85 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
-import { useEffect, useState } from "react";
-import SessionFilter from "./SessionFilter";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
-  DEFAULT_FILTER,
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
-  DEFAULT_SORT_STATE,
+  DEFAULT_SORT_FUNNELS,
 } from "../utils/const";
-import { getNewSessions } from "../utils/urlUtils";
-import { msToTime } from "../utils/formatLength";
-import { rememberState, getMemory } from "../utils/statePersistence";
+import { getNewFunnels } from "../utils/urlUtils";
+import BardButton from "./BardButton";
+import { Stack } from "@mui/material";
+import { Link } from "react-router-dom";
 
-export default function SessionList({ onSessionClick }) {
-  const [page, setPage] = useState(getMemory("page", DEFAULT_PAGE));
-  const [rowsPerPage, setRowsPerPage] = useState(
-    getMemory("rowsPerPage", DEFAULT_LIMIT)
-  );
-  const [sortState, setSortState] = useState(
-    getMemory("sortState", DEFAULT_SORT_STATE)
-  );
-  const [filterData, setFilterData] = useState(
-    getMemory("filterData", [DEFAULT_FILTER])
-  );
-  const [sessions, setSessions] = useState([]);
+// const fakeFunnels = [
+//   {
+//     name: "bought something",
+//     funnelId: 1,
+//     created: "2022-10-24",
+//     lastModified: "2022-10-25",
+//   },
+//   {
+//     name: "subscribed to emails",
+//     funnelId: 13,
+//     created: "2022-10-23",
+//     lastModified: "2022-10-23",
+//   },
+//   {
+//     name: "posted in forum",
+//     funnelId: 8,
+//     created: "2022-10-20",
+//     lastModified: "2022-10-22",
+//   },
+//   {
+//     name: "generated affiliate link",
+//     funnelId: 5,
+//     created: "2022-10-18",
+//     lastModified: "2022-10-23",
+//   },
+//   {
+//     name: "posted product review",
+//     funnelId: 3,
+//     created: "2022-10-25",
+//     lastModified: "2022-10-25",
+//   },
+//   {
+//     name: "completed survey",
+//     funnelId: 17,
+//     created: "2022-10-19",
+//     lastModified: "2022-10-21",
+//   },
+// ];
+
+const FunnelList = () => {
+  const [funnels, setFunnels] = useState([]);
+  const [page, setPage] = useState(DEFAULT_PAGE);
+  const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
+  const [sortState, setSortState] = useState(DEFAULT_SORT_FUNNELS);
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const getSessionIds = async () => {
+    const getFunnels = async () => {
       try {
-        const sessionData = await getNewSessions(
-          page,
-          rowsPerPage,
-          filterData,
-          sortState
-        );
-
-        setCount(Number(sessionData.count));
-        setSessions(sessionData.sessions);
+        const response = await getNewFunnels(page, rowsPerPage, sortState);
+        setCount(Number(response.data.count));
+        setFunnels(response.data.funnels);
+        // setCount(fakeFunnels.length);
+        // setFunnels(fakeFunnels);
       } catch (error) {
-        console.log(error.message);
+        console.error(error);
       }
     };
+    getFunnels();
+  }, [page, rowsPerPage, sortState]);
 
-    getSessionIds();
-  }, [page, rowsPerPage, sortState, filterData, count]);
+  const headers = [
+    { id: "funnelName", label: "Funnel Name" },
+    { id: "lastModified", label: "Last Modified" },
+    { id: "created", label: "Created" },
+  ];
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
@@ -63,13 +97,6 @@ export default function SessionList({ onSessionClick }) {
     setRowsPerPage(newRowsPerPage);
     setPage(DEFAULT_PAGE);
   };
-
-  const headers = [
-    { id: "sessionId", label: "Session Id" },
-    { id: "originHost", label: "Origin Host" },
-    { id: "date", label: "Date" },
-    { id: "length", label: "Length" },
-  ];
 
   const makeHandleSort = (id) => {
     return () => {
@@ -97,26 +124,24 @@ export default function SessionList({ onSessionClick }) {
     }
   };
 
-  const onSelectSession = (e) => {
-    console.log("session selected");
-    const stateObj = {
-      page,
-      rowsPerPage,
-      sortState,
-      filterData,
-    };
-    rememberState(stateObj);
-    onSessionClick(e);
+  const handleFunnelClick = (e) => {
+    const id = e.target.parentElement.dataset.id;
+    navigate(`/funnels/${id}`);
   };
 
   return (
-    <div className="sessionList">
-      <SessionFilter
-        filterData={filterData}
-        setFilterData={setFilterData}
-        setPage={setPage}
-      />
-
+    <div>
+      <Stack
+        direction="row-reverse"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        spacing={0.5}
+        sx={{ mr: "60px", mt: "30px" }}
+      >
+        <Link to={"/funnels/create"}>
+          <BardButton text={"Add Funnel"} sx={{ mr: "60px" }} />
+        </Link>
+      </Stack>
       <TableContainer
         sx={{
           ml: "60px",
@@ -146,24 +171,21 @@ export default function SessionList({ onSessionClick }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {sessions.map((session) => (
+            {funnels.map((funnel) => (
               <TableRow
-                key={session.sessionId}
-                data-id={session.sessionId}
+                key={funnel.id}
+                data-id={funnel.id}
                 sx={{
                   "&:hover": {
                     backgroundColor: "#ECEFF4",
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSelectSession}
+                onClick={handleFunnelClick}
               >
-                <TableCell>{session.sessionId}</TableCell>
-                <TableCell>
-                  {session.originHost ? session.originHost : "invalid source"}
-                </TableCell>
-                <TableCell>{session.date}</TableCell>
-                <TableCell>{msToTime(session.length)}</TableCell>
+                <TableCell>{funnel.name}</TableCell>
+                <TableCell>{funnel.created}</TableCell>
+                <TableCell>{funnel.lastModified}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -171,7 +193,7 @@ export default function SessionList({ onSessionClick }) {
             <TableRow>
               <TablePagination
                 count={count}
-                page={sessions.length > 0 ? page : 0}
+                page={funnels.length > 0 ? page : 0}
                 onPageChange={handleChangePage}
                 rowsPerPage={rowsPerPage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
@@ -183,4 +205,6 @@ export default function SessionList({ onSessionClick }) {
       </TableContainer>
     </div>
   );
-}
+};
+
+export default FunnelList;

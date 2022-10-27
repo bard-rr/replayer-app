@@ -1,7 +1,16 @@
 import { Stack, TextField } from "@mui/material";
 
 const TimeDurationInput = (props) => {
-  const { hours, setHours, minutes, setMinutes, seconds, setSeconds } = props;
+  const {
+    hours,
+    setHours,
+    minutes,
+    setMinutes,
+    seconds,
+    setSeconds,
+    changeFilter,
+    isStart,
+  } = props;
   const { label } = props;
   const inRange = (num, min, max) => {
     return Number(num) >= min && Number(num) <= max;
@@ -12,6 +21,21 @@ const TimeDurationInput = (props) => {
     if (/^[0-9]{0,2}$/.test(newValue)) {
       if (inRange(newValue, min, max)) {
         setter(newValue.padStart(2, "0"));
+        let payload = {
+          hours:
+            setter === setHours
+              ? newValue.padStart(2, "0")
+              : hours.padStart(2, "0"),
+          minutes:
+            setter === setMinutes
+              ? newValue.padStart(2, "0")
+              : minutes.padStart(2, "0"),
+          seconds:
+            setter === setSeconds
+              ? newValue.padStart(2, "0")
+              : seconds.padStart(2, "0"),
+        };
+        changeFilter(isStart, payload);
       }
     }
   };
