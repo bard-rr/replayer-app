@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
@@ -58,12 +59,13 @@ const fakeFunnels = [
   },
 ];
 
-const FunnelList = ({ onFunnelClick }) => {
+const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [sortState, setSortState] = useState(DEFAULT_SORT_FUNNELS);
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getFunnels = async () => {
@@ -80,7 +82,7 @@ const FunnelList = ({ onFunnelClick }) => {
       }
     };
     getFunnels();
-  }, [page, rowsPerPage, sortState, count]);
+  }, [page, rowsPerPage, sortState]);
 
   const headers = [
     { id: "funnelName", label: "Funnel Name" },
@@ -124,9 +126,9 @@ const FunnelList = ({ onFunnelClick }) => {
     }
   };
 
-  const onSelectFunnel = (e) => {
-    // need to make query for the selected funnel
-    onFunnelClick(e);
+  const handleFunnelClick = (e) => {
+    const id = e.target.parentElement.dataset.id;
+    navigate(`/funnels/${id}`);
   };
 
   return (
