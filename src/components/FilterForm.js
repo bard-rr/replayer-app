@@ -8,6 +8,7 @@ import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import DateInputs from "./DateInputs";
 
 const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
+  console.log("filter data", filterData);
   const handleAddClick = (e) => {
     e.preventDefault();
     let newFilterData = [...filterData].concat(DEFAULT_FUNNEL_FILTER);
@@ -32,7 +33,8 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={4}
-                key={index}>
+                key={index}
+              >
                 <FilterSelection
                   filterOptions={filterOptions}
                   index={index}
@@ -59,7 +61,8 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={4}
-                key={index}>
+                key={index}
+              >
                 <FilterSelection
                   filterOptions={filterOptions}
                   index={index}
@@ -86,7 +89,8 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                 justifyContent="flex-start"
                 alignItems="flex-start"
                 spacing={4}
-                key={index}>
+                key={index}
+              >
                 <FilterSelection
                   filterOptions={filterOptions}
                   index={index}

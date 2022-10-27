@@ -8,18 +8,10 @@ const DateInputs = ({ setFilterData, index, filterData }) => {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setendDate] = useState(null);
 
-  // useEffect(() => {
-  //   const filterData = {
-  //     startDate: startDate && startDate.format("YYYY-MM-DD"),
-  //     endDate: endDate && endDate.format("YYYY-MM-DD"),
-  //   };
-  //   setFilterData(filterData);
-  // }, [startDate, endDate, setFilterData]);
-
   const handleChange = (newValue, isStartDate) => {
     let innerEndDate;
     let innerStartDate;
-
+    console.log("new value", typeof newValue);
     if (isStartDate) {
       innerStartDate = newValue.format("YYYY-MM-DD");
       setStartDate(newValue);
@@ -41,13 +33,17 @@ const DateInputs = ({ setFilterData, index, filterData }) => {
     });
     setFilterData(newfilterData);
   };
-
+  console.log("new start date", new Date(filterData[index].startDate));
   return (
     <>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="Start Date"
-          value={startDate}
+          value={
+            filterData[index].startDate
+              ? new Date(filterData[index].startDate)
+              : startDate
+          }
           onChange={(newValue) => handleChange(newValue, true)}
           renderInput={(params) => <TextField {...params} />}
         />
@@ -55,7 +51,11 @@ const DateInputs = ({ setFilterData, index, filterData }) => {
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
           label="End Date"
-          value={endDate}
+          value={
+            filterData[index].endDate
+              ? new Date(filterData[index].endDate)
+              : endDate
+          }
           onChange={(newValue) => handleChange(newValue, false)}
           renderInput={(params) => <TextField {...params} />}
         />

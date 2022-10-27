@@ -15,7 +15,6 @@ import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
   DEFAULT_SORT_STATE,
-  DEFAULT_TAG,
 } from "../utils/const";
 import { getNewSessions } from "../utils/urlUtils";
 import { msToTime } from "../utils/formatLength";
@@ -29,10 +28,9 @@ export default function SessionList({ onSessionClick }) {
   const [sortState, setSortState] = useState(
     getMemory("sortState", DEFAULT_SORT_STATE)
   );
-  const [filterType, setFilterType] = useState(
-    getMemory("filterType", DEFAULT_TAG)
+  const [filterData, setFilterData] = useState(
+    getMemory("filterData", [DEFAULT_FILTER])
   );
-  const [filter, setFilter] = useState(getMemory("filter", DEFAULT_FILTER));
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
 
@@ -42,8 +40,7 @@ export default function SessionList({ onSessionClick }) {
         const sessionData = await getNewSessions(
           page,
           rowsPerPage,
-          filterType,
-          filter,
+          filterData,
           sortState
         );
 
@@ -55,7 +52,7 @@ export default function SessionList({ onSessionClick }) {
     };
 
     getSessionIds();
-  }, [page, rowsPerPage, sortState, filter, filterType, count]);
+  }, [page, rowsPerPage, sortState, filterData, count]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);
@@ -106,8 +103,7 @@ export default function SessionList({ onSessionClick }) {
       page,
       rowsPerPage,
       sortState,
-      filterType,
-      filter,
+      filterData,
     };
     rememberState(stateObj);
     onSessionClick(e);
@@ -116,8 +112,8 @@ export default function SessionList({ onSessionClick }) {
   return (
     <div className="sessionList">
       <SessionFilter
-        setFilter={setFilter}
-        setFilterType={setFilterType}
+        filterData={filterData}
+        setFilterData={setFilterData}
         setPage={setPage}
       />
 
