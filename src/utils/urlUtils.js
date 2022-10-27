@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./const";
+import { fakeFunnel } from "../fakeData";
 
 export const getNewSessions = async (
   page,
@@ -59,6 +60,9 @@ export const getFunnelData = async (id, filter) => {
     const params = getQueryString(filter);
     const url = `${BASE_URL}/funnels/${id}?${params}`;
     console.log(`Funnel URL: ${url}`);
+
+    // totoggle
+    return fakeFunnel;
     // const response = await axios.get(url);
     // return response.data;
   } catch (error) {
