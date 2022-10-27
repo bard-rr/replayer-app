@@ -1,30 +1,26 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import NoEventsAlert from "./NoEventsAlert";
 import replayer from "../utils/replayer";
+import { getEventData } from "../utils/urlUtils";
 
 const Player = () => {
   const { id } = useParams();
+  const [eventData, setEventData] = useState([]);
 
-  // todelete
-  console.log(id);
+  useEffect(() => {
+    const getAndSetEventData = async () => {
+      const data = await getEventData(id);
+      setEventData(data);
+    };
+    getAndSetEventData();
+  }, [id]);
 
-  /*
-
-  useEffect(() => replayer.init(eventData), [eventData]);
-
-  //should never happen, but have this as a failsafe
-  if (eventData.length === 0) {
-    return <NoEventsAlert />;
-  }
+  useEffect(() => {
+    replayer.init(eventData);
+  }, [eventData]);
 
   //this is where the replayer is mounted in replayer.init
   return <div className="player"></div>;
-
-  */
-
-  // todelete
-  return null;
 };
 
 export default Player;

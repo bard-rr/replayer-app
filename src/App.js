@@ -7,17 +7,6 @@ import Funnel from "./components/Funnel";
 import NewFunnelForm from "./components/NewFunnelForm";
 
 function App() {
-  // todelete
-
-  // import { getEventData } from "./utils/urlUtils";
-
-  // const handleSessionClick = async (e) => {
-  //   const id = e.target.parentElement.dataset.id;
-  //   const data = await getEventData(id);
-  //   navigate(`/sessions/${id}`);
-  //   setEventData(data);
-  // };
-
   return (
     <div className="App">
       <Layout>
