@@ -19,17 +19,7 @@ const style = {
 };
 
 const PlayerModal = ({ sessionId, open, setOpen }) => {
-  const [eventData, setEventData] = useState([]);
   const handleClose = () => setOpen(false);
-
-  useEffect(() => {
-    const getSessionEvents = async () => {
-      if (!open) return;
-      const data = await getEventData(sessionId);
-      setEventData(data);
-    };
-    getSessionEvents();
-  }, [sessionId, open]);
 
   return (
     <div>
@@ -43,7 +33,7 @@ const PlayerModal = ({ sessionId, open, setOpen }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {sessionId}
           </Typography>
-          <Player eventData={eventData} />
+          <Player sessionId={sessionId} />
         </Box>
       </Modal>
     </div>
