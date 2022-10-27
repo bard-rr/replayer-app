@@ -21,13 +21,15 @@ function App() {
     setEventData(data);
   };
 
-  const handleFunnelClick = async (id, name) => {
-    getFunnelData(id, DEFAULT_FUNNEL_FILTER);
-    // const data = await getFunnelData(id, DEFAULT_FUNNEL_FILTER);
-    navigate(`/funnels/${id}`);
-    setFunnelMetaData({ id, name });
-    // setFunnelData(data);
-  };
+  // todelete
+
+  // const handleFunnelClick = async (id, name) => {
+  //   getFunnelData(id, DEFAULT_FUNNEL_FILTER);
+  //   // const data = await getFunnelData(id, DEFAULT_FUNNEL_FILTER);
+  //   navigate(`/funnels/${id}`);
+  //   setFunnelMetaData({ id, name });
+  //   // setFunnelData(data);
+  // };
 
   return (
     <div className="App">
@@ -44,17 +46,24 @@ function App() {
           />
           <Route
             path="/funnels"
-            element={<FunnelList onFunnelClick={handleFunnelClick} />}
+            // todelete
+            // element={<FunnelList onFunnelClick={handleFunnelClick} />}
+            element={<FunnelList />}
           />
           <Route
             path="/funnels/:id"
-            element={
-              <Funnel
-                funnelMetaData={funnelMetaData}
-                funnelData={funnelData}
-                setFunnelData={setFunnelData}
-              />
-            }
+
+            // todelete
+
+            // element={
+            //   <Funnel
+            //     funnelMetaData={funnelMetaData}
+            //     funnelData={funnelData}
+            //     setFunnelData={setFunnelData}
+            //   />
+            // }
+
+            element={<Funnel />}
           />
         </Routes>
       </Layout>

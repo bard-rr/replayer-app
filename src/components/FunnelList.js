@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
@@ -55,12 +56,13 @@ const fakeFunnels = [
   },
 ];
 
-const FunnelList = ({ onFunnelClick }) => {
+const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
   const [page, setPage] = useState(DEFAULT_PAGE);
   const [rowsPerPage, setRowsPerPage] = useState(DEFAULT_LIMIT);
   const [sortState, setSortState] = useState(DEFAULT_SORT_FUNNELS);
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getFunnels = async () => {
@@ -121,15 +123,22 @@ const FunnelList = ({ onFunnelClick }) => {
     }
   };
 
-  const getFunnelName = (id) => {
-    const funnel = fakeFunnels.find(({ funnelId }) => funnelId === id);
-    return funnel ? funnel.name : funnel;
-  };
+  // todelete
 
-  const onSelectFunnel = (e) => {
+  // const getFunnelName = (id) => {
+  //   const funnel = fakeFunnels.find(({ funnelId }) => funnelId === id);
+  //   return funnel ? funnel.name : funnel;
+  // };
+
+  // const onSelectFunnel = (e) => {
+  //   const id = e.target.parentElement.dataset.id;
+  //   const name = getFunnelName(Number(id));
+  //   onFunnelClick(id, name);
+  // };
+
+  const handleFunnelClick = (e) => {
     const id = e.target.parentElement.dataset.id;
-    const name = getFunnelName(Number(id));
-    onFunnelClick(id, name);
+    navigate(`/funnels/${id}`);
   };
 
   return (
@@ -172,7 +181,7 @@ const FunnelList = ({ onFunnelClick }) => {
                   cursor: "pointer",
                 },
               }}
-              onClick={onSelectFunnel}
+              onClick={handleFunnelClick}
             >
               <TableCell>{funnel.name}</TableCell>
               <TableCell>{funnel.created}</TableCell>
