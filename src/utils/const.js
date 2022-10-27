@@ -9,7 +9,7 @@ export const DEFAULT_FILTER = {
   endDate: today,
 };
 
-export const DEFAULT_DATE_FILTER_FOR_FUNNELS = getDates("last 7");
+// export const DEFAULT_DATE_FILTER_FOR_FUNNELS = getDates("last 7");
 
 export const DEFAULT_SORT_STATE = {
   sortBy: "date",

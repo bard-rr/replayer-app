@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./const";
-import { fakeFunnel } from "../fakeData";
+// import { fakeFunnel } from "../fakeData";
 
 export const getNewSessions = async (
   page,
@@ -33,9 +33,9 @@ const getQueryString = (obj) => {
 export const getNewFunnels = async (page, rowsPerPage, sortObj) => {
   const pageQuery = getQueryString({ pageNum: page, perPage: rowsPerPage });
   const sortQuery = getQueryString(sortObj);
-  return `${BASE_URL}/funnels?${pageQuery}&${sortQuery}`;
+  const url = `${BASE_URL}/funnels?${pageQuery}&${sortQuery}`;
+  return await axios.get(url);
 };
-
 
 const parseFilterQuery = (filterData) => {
   let queryPieces = [];
@@ -51,7 +51,7 @@ const parseFilterQuery = (filterData) => {
     });
   });
   return queryPieces.join("&");
-  }
+};
 
 export const getEventData = async (id) => {
   try {
@@ -69,9 +69,9 @@ export const getFunnelData = async (id, filter) => {
     console.log(`Funnel URL: ${url}`);
 
     // totoggle
-    return fakeFunnel;
-    // const response = await axios.get(url);
-    // return response.data;
+    //return fakeFunnel;
+    const response = await axios.get(url);
+    return response.data;
   } catch (error) {
     console.error(error);
   }

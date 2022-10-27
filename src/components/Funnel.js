@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import FunnelStep from "./FunnelStep";
@@ -17,7 +17,7 @@ const Funnel = () => {
       const dates = getDates(selectedFilter);
       const newFunnelData = await getFunnelData(id, dates);
       setFunnelData(newFunnelData);
-    }
+    };
     updateFunnelData();
   }, [id, selectedFilter]);
 
@@ -55,7 +55,7 @@ const Funnel = () => {
         selectedFilter={selectedFilter}
         onChange={handleChange}
       />
-      <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.name}</Box>
+      <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
       <Box sx={{ fontSize: "16px" }}>
         <em>{funnelData.results.totalFilteredSessions} sessions</em>
       </Box>
