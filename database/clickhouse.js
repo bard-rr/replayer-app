@@ -51,7 +51,6 @@ class Clickhouse {
   }
 
   async getSessionIdsFromFilters(filterArr, startDate, endDate) {
-    // console.log("getSessionIds: ", filterArr);
     const newFilterArr = [...filterArr];
     newFilterArr.push({
       filterType: "date",
@@ -60,11 +59,8 @@ class Clickhouse {
     });
     const select = "SELECT sessionId FROM eventDb.sessionTable";
     const whereClause = getWhereClauseFromFilters(newFilterArr);
-    // console.log("whereClause: ", whereClause);
     const query = `${select} WHERE ${whereClause}`;
-    console.log("getSessionIdsFromFilters", query);
     let result = await this.#getData(query);
-    console.log("result:", result);
     return result.map((resultObj) => resultObj.sessionId);
   }
 
@@ -101,7 +97,6 @@ GROUP BY sessionId
       filteredSessionArr
     );
     allResults.push(firstResult);
-    //console.log("first result", firstResult);
     let prevResult = firstResult;
     for (let i = 1; i < eventSequenceArr.length; i++) {
       let eventQuery = eventSequenceArr[i];
@@ -109,7 +104,6 @@ GROUP BY sessionId
         prevResult,
         eventQuery
       );
-      //console.log("next result", resultArr);
       allResults.push(resultArr);
       prevResult = resultArr;
     }
@@ -178,12 +172,10 @@ const getSessionWhereClause = (filteredSessionArr) => {
 
 const makeSessionQuery = (paramsObj) => {
   const whereClause = filterBy(paramsObj);
-  console.log("makeSessionQuery:", whereClause);
   const orderBy = sortBy(paramsObj);
   const limitOffset = paginateBy(paramsObj);
   const select = "SELECT * FROM eventDb.sessionTable";
   const sessionQuery = `${select} WHERE ${whereClause} ${orderBy} ${limitOffset}`;
-  console.log("fullSessionQuery", sessionQuery);
   return sessionQuery;
 };
 

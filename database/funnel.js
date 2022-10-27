@@ -5,7 +5,6 @@ const handleFunnel = async (funnelId, pg, ch, queryObj) => {
     queryObj.startDate,
     queryObj.endDate
   );
-  console.log(filteredSessionArr);
   let eventSequenceResults = await ch.getEventSequenceResults(
     funnel.eventSequence,
     filteredSessionArr
@@ -14,9 +13,6 @@ const handleFunnel = async (funnelId, pg, ch, queryObj) => {
 };
 
 const formatResults = (funnel, filteredSessionArr, eventSequenceResults) => {
-  // console.log("funnelObj", funnel);
-  // console.log("filtered session arr", filteredSessionArr);
-  // console.log("event seq", eventSequenceResults);
   let results = {};
   results["totalFilteredSessions"] = filteredSessionArr.length;
   results["eventSequenceResults"] = formatEventSequenceResults(
@@ -40,7 +36,6 @@ const formatEventSequenceResults = (
     formattedResult.sessionsCompleted = currentResult;
     formattedResult.numberNotCompleted =
       prevResults.length - currentResult.length;
-    //console.log("formatted result", formattedResult);
     formattedResult.sessionsNotCompleted = prevResults.filter(
       (sessionId) => !currentResult.includes(sessionId)
     );

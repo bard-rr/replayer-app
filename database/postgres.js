@@ -19,16 +19,9 @@ class Postgres {
     this.defaultPerPage = 5;
   }
   async init() {
-    // console.log(new Client());
     this.#client = new Client();
     await this.#client.connect();
   }
-
-  // async getSessionMetadata(sessionId) {
-  //   let sql = `SELECT * FROM pending_sessions WHERE session_id='${sessionId}'`;
-  //   let result = await this.#executeQuery(sql);
-  //   return result.rows[0];
-  // }
 
   async getFunnelMetadata(paramsObj) {
     const funnelQuery = this.#makeFunnelQuery(paramsObj);
@@ -85,7 +78,7 @@ class Postgres {
   async getFunnelCount(paramsObj) {
     const countQuery = this.#makeCountQuery(paramsObj);
     let result = await this.#executeQuery(countQuery);
-    return result.rows[0];
+    return result.rows[0].count;
   }
 
   #makeCountQuery() {
