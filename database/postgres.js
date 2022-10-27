@@ -84,10 +84,15 @@ class Postgres {
   async updateFunnel(id, body) {
     const name = body.funnelName;
     const lastModified = Date.now();
-    console.log("id: ", id);
-    console.log("name: ", name);
-    console.log("lastModified: ", lastModified);
-    console.log("body: ", body);
+    const sql = `UPDATE funnels SET name = $1, last_modified_at_ms = $2, funnel= $3 WHERE id=$4`;
+    console.log(sql);
+    try {
+      await this.#client.query(sql, [name, lastModified, body, id]);
+      return;
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
   }
 
   #makeCountQuery() {
