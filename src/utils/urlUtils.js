@@ -67,11 +67,36 @@ export const getFunnelData = async (id, filter) => {
     const params = getQueryString(filter);
     const url = `${BASE_URL}/funnels/${id}?${params}`;
     console.log(`Funnel URL: ${url}`);
-
-    // totoggle
-    //return fakeFunnel;
     const response = await axios.get(url);
     return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getOneFunnel = async (id) => {
+  try {
+    const url = `${BASE_URL}/funnel/${id}`;
+    const response = await axios.get(url);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const createOneFunnel = async (funnelObj) => {
+  try {
+    const url = `${BASE_URL}/funnels`;
+    await axios.post(url, funnelObj);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const updateOneFunnel = async (id, newFunnelObj) => {
+  try {
+    const url = `${BASE_URL}/funnels/${id}`;
+    await axios.put(url, newFunnelObj);
   } catch (error) {
     console.error(error);
   }

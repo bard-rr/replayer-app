@@ -7,6 +7,7 @@ import Player from "./components/Player";
 import FunnelList from "./components/FunnelList";
 import Funnel from "./components/Funnel";
 import NewFunnelForm from "./components/NewFunnelForm";
+import EditFunnelForm from "./components/EditFunnelForm";
 
 function App() {
   const [eventData, setEventData] = useState([]);
@@ -32,11 +33,9 @@ function App() {
             path="/sessions/:id"
             element={<Player eventData={eventData} />}
           />
-          <Route
-            path="/funnels"
-            element={<FunnelList />}
-          />
+          <Route path="/funnels" element={<FunnelList />} />
           <Route path="/funnels/create" element={<NewFunnelForm />} />
+          <Route path="/funnels/update/:id" element={<EditFunnelForm />} />
           <Route path="/funnels/:id" element={<Funnel />} />
         </Routes>
       </Layout>
