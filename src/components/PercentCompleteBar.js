@@ -5,7 +5,8 @@ const PercentCompleteBar = ({ numComplete, numIncomplete }) => {
   const [percentComplete, setPercentComplete] = useState(0);
 
   useEffect(() => {
-    setPercentComplete(100 * (numComplete / (numComplete + numIncomplete)));
+    const percent = 100 * (numComplete / (numComplete + numIncomplete));
+    setPercentComplete(percent || 0);
   }, [numComplete, numIncomplete]);
 
   return (
