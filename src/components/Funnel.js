@@ -19,7 +19,7 @@ const Funnel = () => {
       setFunnelData(newFunnelData);
     }
     updateFunnelData();
-  }, [selectedFilter]);
+  }, [id, selectedFilter]);
 
   const handleChange = (e) => {
     setSelectedFilter(e.target.value);

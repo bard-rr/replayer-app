@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { getEventData, getFunnelData } from "./utils/urlUtils";
-import { DEFAULT_FUNNEL_FILTER } from "./utils/const";
+import { getEventData } from "./utils/urlUtils";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
@@ -10,8 +9,6 @@ import Funnel from "./components/Funnel";
 
 function App() {
   const [eventData, setEventData] = useState([]);
-  const [funnelData, setFunnelData] = useState({});
-  const [funnelMetaData, setFunnelMetaData] = useState({});
   const navigate = useNavigate();
 
   const handleSessionClick = async (e) => {
@@ -20,16 +17,6 @@ function App() {
     navigate(`/sessions/${id}`);
     setEventData(data);
   };
-
-  // todelete
-
-  // const handleFunnelClick = async (id, name) => {
-  //   getFunnelData(id, DEFAULT_FUNNEL_FILTER);
-  //   // const data = await getFunnelData(id, DEFAULT_FUNNEL_FILTER);
-  //   navigate(`/funnels/${id}`);
-  //   setFunnelMetaData({ id, name });
-  //   // setFunnelData(data);
-  // };
 
   return (
     <div className="App">
@@ -46,23 +33,10 @@ function App() {
           />
           <Route
             path="/funnels"
-            // todelete
-            // element={<FunnelList onFunnelClick={handleFunnelClick} />}
             element={<FunnelList />}
           />
           <Route
             path="/funnels/:id"
-
-            // todelete
-
-            // element={
-            //   <Funnel
-            //     funnelMetaData={funnelMetaData}
-            //     funnelData={funnelData}
-            //     setFunnelData={setFunnelData}
-            //   />
-            // }
-
             element={<Funnel />}
           />
         </Routes>
