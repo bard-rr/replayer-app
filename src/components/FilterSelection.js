@@ -8,6 +8,7 @@ const FilterSelection = ({
   filterData,
   setFilterData,
 }) => {
+  let selectedFilters = filterData.map((filterObj) => filterObj.filterType);
   const handleChange = (e) => {
     const newFilterData = filterData.map((innerData, innerIndex) => {
       if (innerIndex !== index) {
@@ -36,6 +37,13 @@ const FilterSelection = ({
     });
     setFilterData(newFilterData);
   };
+  console.log("selected filter data", filterData[index].filterType);
+  /*
+  What do I need? I need a filter type that lives in the filter Data to 
+  appear in the menu item map if the filter type of the object at index
+  matches it
+*/
+
   return (
     <TextField
       variant="outlined"
@@ -55,13 +63,20 @@ const FilterSelection = ({
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
-      {filterOptions.map((filterName) => {
-        return (
-          <MenuItem value={filterName} key={filterName}>
-            {capitalizeString(filterName)}
-          </MenuItem>
-        );
-      })}
+      {filterOptions
+        //filter filter types to only allow a filter type to be selected once.
+        .filter(
+          (filterName) =>
+            !selectedFilters.includes(filterName) ||
+            filterData[index].filterType === filterName
+        )
+        .map((filterName) => {
+          return (
+            <MenuItem value={filterName} key={filterName}>
+              {capitalizeString(filterName)}
+            </MenuItem>
+          );
+        })}
     </TextField>
   );
 };
