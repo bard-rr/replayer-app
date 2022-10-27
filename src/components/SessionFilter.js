@@ -32,8 +32,15 @@ const SessionFilter = ({ filterData, setFilterData, setPage }) => {
           filterOptions={ALL_FILTER_OPTIONS}
         />
       </Stack>
-      {/* {selectFilterType()} */}
-      {filterData[0].filterType ? (
+      {/* only display the filter button if all filters have all fields filled out */}
+      {tempFilterData.every((filterObj) => {
+        let fieldValues = Object.values(filterObj);
+        if (fieldValues.length === 0) {
+          return false;
+        } else {
+          return fieldValues.every((ele) => ele);
+        }
+      }) ? (
         <BardButton text={"Filter"} onClick={handleClickFilter} />
       ) : null}
     </Stack>

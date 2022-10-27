@@ -37,12 +37,6 @@ const FilterSelection = ({
     });
     setFilterData(newFilterData);
   };
-  console.log("selected filter data", filterData[index].filterType);
-  /*
-  What do I need? I need a filter type that lives in the filter Data to 
-  appear in the menu item map if the filter type of the object at index
-  matches it
-*/
 
   return (
     <TextField
