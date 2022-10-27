@@ -85,10 +85,10 @@ const EditFunnelForm = () => {
         spacing={2}
         sx={{ mt: "10px", mr: "60px", ml: "60px", width: "85%" }}
       >
-        <Link to="/funnels">
+        <Link to={`/funnels/${id}`}>
           <BardButton text={"Cancel"} />
         </Link>
-        <Link to="/funnels">
+        <Link to={`/funnels/${id}`}>
           <BardButton text={"Update Funnel"} onClick={handleUpdateClick} />
         </Link>
       </Stack>

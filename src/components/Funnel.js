@@ -1,14 +1,16 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
 import FunnelStep from "./FunnelStep";
 import FunnelTimeFilter from "./FunnelTimeFilter";
 import getDates from "../utils/dateFilter";
 import { getFunnelData } from "../utils/urlUtils";
+import BardButton from "./BardButton";
 
 const Funnel = () => {
   const { funnelId } = useParams();
+  const navigate = useNavigate();
   const [selectedFilter, setSelectedFilter] = useState("last 7");
   const [funnelData, setFunnelData] = useState(null);
 
@@ -54,6 +56,17 @@ const Funnel = () => {
       <FunnelTimeFilter
         selectedFilter={selectedFilter}
         onChange={handleChange}
+      />
+
+      <BardButton
+        text="Edit"
+        onClick={() => navigate(`/funnels/update/${funnelId}`)}
+        sx={{
+          position: "absolute",
+          top: "30px",
+          right: "30px",
+          zIndex: 1,
+        }}
       />
       <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
       <Box sx={{ fontSize: "16px" }}>

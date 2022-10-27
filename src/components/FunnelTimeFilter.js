@@ -10,7 +10,7 @@ const FunnelTimeFilter = ({ selectedFilter, onChange }) => {
       sx={{
         position: "absolute",
         top: "30px",
-        right: "30px",
+        right: "114px",
         zIndex: 1,
         width: "150px",
       }}
