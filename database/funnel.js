@@ -1,8 +1,11 @@
-const handleFunnel = async (funnelId, pg, ch) => {
+const handleFunnel = async (funnelId, pg, ch, queryObj) => {
   let { funnel } = await pg.getFunnelObj(funnelId);
   let filteredSessionArr = await ch.getSessionIdsFromFilters(
-    funnel.sessionFilters
+    funnel.sessionFilters,
+    queryObj.startDate,
+    queryObj.endDate
   );
+  console.log(filteredSessionArr);
   let eventSequenceResults = await ch.getEventSequenceResults(
     funnel.eventSequence,
     filteredSessionArr

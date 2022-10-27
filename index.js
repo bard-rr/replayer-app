@@ -59,6 +59,7 @@ app.get("/funnels", async (req, res) => {
 });
 
 app.post("/funnels", async (req, res) => {
+  console.log(req.body);
   try {
     await postgres.insertFunnel(req.body);
     res.status(201).send();
@@ -70,7 +71,7 @@ app.post("/funnels", async (req, res) => {
 app.get("/funnels/:id", async (req, res) => {
   let id = Number.parseInt(req.params.id, 10);
   try {
-    let result = await handleFunnel(id, postgres, clickhouse);
+    let result = await handleFunnel(id, postgres, clickhouse, req.query);
     res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e });
