@@ -6,10 +6,11 @@ const AddOrRemoveButton = ({
   handleRemoveClick,
   index,
   dataLength,
+  optionsLength,
 }) => {
   return (
     <>
-      {index === dataLength - 1 ? (
+      {index === dataLength - 1 && dataLength !== optionsLength ? (
         <AddCircleOutlineIcon
           onClick={handleAddClick}
           sx={{

@@ -51,6 +51,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   handleRemoveClick={handleRemoveClick}
                   index={index}
                   dataLength={filterData.length}
+                  optionsLength={filterOptions.length}
                 />
               </Stack>
             );
@@ -79,6 +80,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   handleRemoveClick={handleRemoveClick}
                   index={index}
                   dataLength={filterData.length}
+                  optionsLength={filterOptions.length}
                 />
               </Stack>
             );
@@ -107,6 +109,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   handleRemoveClick={handleRemoveClick}
                   index={index}
                   dataLength={filterData.length}
+                  optionsLength={filterOptions.length}
                 />
               </Stack>
             );
