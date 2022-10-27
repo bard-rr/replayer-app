@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { getEventData } from "./utils/urlUtils";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
@@ -9,35 +7,34 @@ import Funnel from "./components/Funnel";
 import NewFunnelForm from "./components/NewFunnelForm";
 
 function App() {
-  const [eventData, setEventData] = useState([]);
-  const navigate = useNavigate();
-
-  const handleSessionClick = async (e) => {
-    const id = e.target.parentElement.dataset.id;
-    const data = await getEventData(id);
-    navigate(`/sessions/${id}`);
-    setEventData(data);
-  };
-
   return (
     <div className="App">
       <Layout>
         <Routes>
-          <Route path={"/"} element={<Navigate to="/sessions" />} />
+          <Route
+            path="/"
+            element={<Navigate to="/sessions" />}
+          />
           <Route
             path="/sessions"
-            element={<SessionList onSessionClick={handleSessionClick} />}
+            element={<SessionList />}
           />
           <Route
             path="/sessions/:id"
-            element={<Player eventData={eventData} />}
+            element={<Player />}
           />
           <Route
             path="/funnels"
             element={<FunnelList />}
           />
-          <Route path="/funnels/create" element={<NewFunnelForm />} />
-          <Route path="/funnels/:id" element={<Funnel />} />
+          <Route
+            path="/funnels/:id"
+            element={<Funnel />}
+          />
+          <Route
+            path="/funnels/create"
+            element={<NewFunnelForm />}
+          />
         </Routes>
       </Layout>
     </div>

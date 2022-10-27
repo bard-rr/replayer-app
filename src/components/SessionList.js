@@ -9,6 +9,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SessionFilter from "./SessionFilter";
 import {
   DEFAULT_FILTER,
@@ -20,7 +21,7 @@ import { getNewSessions } from "../utils/urlUtils";
 import { msToTime } from "../utils/formatLength";
 import { rememberState, getMemory } from "../utils/statePersistence";
 
-export default function SessionList({ onSessionClick }) {
+export default function SessionList() {
   const [page, setPage] = useState(getMemory("page", DEFAULT_PAGE));
   const [rowsPerPage, setRowsPerPage] = useState(
     getMemory("rowsPerPage", DEFAULT_LIMIT)
@@ -33,6 +34,7 @@ export default function SessionList({ onSessionClick }) {
   );
   const [sessions, setSessions] = useState([]);
   const [count, setCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getSessionIds = async () => {
@@ -97,8 +99,7 @@ export default function SessionList({ onSessionClick }) {
     }
   };
 
-  const onSelectSession = (e) => {
-    console.log("session selected");
+  const handleSessionClick = (e) => {
     const stateObj = {
       page,
       rowsPerPage,
@@ -106,7 +107,9 @@ export default function SessionList({ onSessionClick }) {
       filterData,
     };
     rememberState(stateObj);
-    onSessionClick(e);
+
+    const id = e.target.parentElement.dataset.id;
+    navigate(`/sessions/${id}`);
   };
 
   return (
@@ -156,7 +159,7 @@ export default function SessionList({ onSessionClick }) {
                     cursor: "pointer",
                   },
                 }}
-                onClick={onSelectSession}
+                onClick={handleSessionClick}
               >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>
