@@ -77,7 +77,7 @@ const FunnelList = ({ onFunnelClick }) => {
       }
     };
     getFunnels();
-  }, [page, rowsPerPage, sortState, count]);
+  }, [page, rowsPerPage, sortState]);
 
   const headers = [
     { id: "funnelName", label: "Funnel Name" },
@@ -122,8 +122,8 @@ const FunnelList = ({ onFunnelClick }) => {
   };
 
   const onSelectFunnel = (e) => {
-    // need to make query for the selected funnel
-    onFunnelClick(e);
+    const id = e.target.parentElement.dataset.id;
+    onFunnelClick(id);
   };
 
   return (

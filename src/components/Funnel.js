@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-// import Stack from "@mui/material/Stack";
 import List from "@mui/material/List";
 import FunnelStep from "./FunnelStep";
+import FunnelTimeFilter from "./FunnelTimeFilter";
 
 const name = "Generated Affiliate Link";
 const fakeFunnel = {
@@ -51,7 +51,28 @@ const fakeFunnel = {
 };
 
 // name would be passed in?
-const Funnel = () => {
+const Funnel = ({ funnelData }) => {
+  // const [selectedFilter, setSelectedFilter] = useState("last 7");
+  // const handleChange = (e) => {
+  //   console.log(getDates(e.target.value));
+
+  //   setSelectedFilter(e.target.value);
+  // };
+
+  const listFunnelSteps = () => {
+    return fakeFunnel.funnel.eventSequence.map((event, idx) => {
+      const results = fakeFunnel.results.eventSequenceResults[idx];
+      return (
+        <FunnelStep
+          key={idx}
+          stepNum={idx + 1}
+          event={event}
+          results={results}
+        />
+      );
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -59,27 +80,16 @@ const Funnel = () => {
         p: "30px",
         backgroundColor: "#fff",
         borderRadius: "4px",
+        position: "relative",
       }}
     >
-      <Box
-        sx={{
-          fontSize: "18px",
-        }}
-      >
-        {name}
+      <FunnelTimeFilter />
+      <Box sx={{ fontSize: "18px" }}>{name}</Box>
+      <Box sx={{ fontSize: "16px" }}>
+        <em>{fakeFunnel.results.totalFilteredSessions} sessions</em>
       </Box>
       <List sx={{ width: "100%", mr: "30px", bgcolor: "background.paper" }}>
-        {fakeFunnel.funnel.eventSequence.map((event, idx) => {
-          const results = fakeFunnel.results.eventSequenceResults[idx];
-          return (
-            <FunnelStep
-              key={idx}
-              stepNum={idx + 1}
-              event={event}
-              results={results}
-            />
-          );
-        })}
+        {listFunnelSteps()}
       </List>
     </Box>
   );

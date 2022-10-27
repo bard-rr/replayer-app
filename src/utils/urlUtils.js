@@ -44,3 +44,24 @@ export const getNewFunnels = async (page, rowsPerPage, sortObj) => {
   const sortQuery = getQueryString(sortObj);
   return `${BASE_URL}/funnels?${pageQuery}&${sortQuery}`;
 };
+
+export const getEventData = async (id) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/sessions/${id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getFunnelData = async (id, filter) => {
+  try {
+    const params = getQueryString(filter);
+    const url = `${BASE_URL}/funnels/${id}?${params}`;
+    console.log(`Funnel URL: ${url}`);
+    // const response = await axios.get(url);
+    // return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};

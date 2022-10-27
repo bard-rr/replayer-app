@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { getEventData, getFunnelData } from "./utils/urlUtils";
+import { DEFAULT_FUNNEL_FILTER } from "./utils/const";
 import Layout from "./components/Layout";
 import SessionList from "./components/SessionList";
 import Player from "./components/Player";
@@ -9,37 +10,21 @@ import Funnel from "./components/Funnel";
 
 function App() {
   const [eventData, setEventData] = useState([]);
+  const [funnelData, setFunnelData] = useState({});
   const navigate = useNavigate();
 
   const handleSessionClick = async (e) => {
     const id = e.target.parentElement.dataset.id;
-    getEventData(id);
+    const data = await getEventData(id);
+    navigate(`/sessions/${id}`);
+    setEventData(data);
   };
 
-  const getEventData = async (id) => {
-    try {
-      const response = await axios.get(`http://localhost:3003/sessions/${id}`);
-      navigate(`/sessions/${id}`);
-      setEventData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleFunnelClick = async (e) => {
-    const id = e.target.parentElement.dataset.id;
-    // console.log(id);
-    getFunnelData(id);
-  };
-
-  const getFunnelData = async (id) => {
-    try {
-      // const response = await axios.get(`http://localhost:3003/funnels/${id}`);
-      navigate(`/funnels/${id}`);
-      // set some state maybe
-    } catch (error) {
-      console.error(error);
-    }
+  const handleFunnelClick = async (id) => {
+    getFunnelData(id, DEFAULT_FUNNEL_FILTER);
+    // const data = await getFunnelData(id, DEFAULT_FUNNEL_FILTER);
+    navigate(`/funnels/${id}`);
+    // setFunnelData(data);
   };
 
   return (
@@ -53,15 +38,18 @@ function App() {
           />
           <Route
             path="/sessions/:id"
-            element={
-              <Player eventData={eventData} getEventData={getEventData} />
-            }
+            element={<Player eventData={eventData} />}
           />
           <Route
             path="/funnels"
             element={<FunnelList onFunnelClick={handleFunnelClick} />}
           />
-          <Route path="/funnels/:id" element={<Funnel />} />
+          <Route
+            path="/funnels/:id"
+            element={
+              <Funnel funnelData={funnelData} setFunnelData={setFunnelData} />
+            }
+          />
         </Routes>
       </Layout>
     </div>

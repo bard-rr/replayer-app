@@ -1,8 +1,11 @@
+import getDates from "./dateFilter";
+
 export const BASE_URL = "http://localhost:3003";
 const today = new Date().toISOString().substring(0, 10);
 
 export const DEFAULT_TAG = "date";
-export const DEFAULT_FILTER = { start_date: "1970-01-01", end_date: today };
+export const DEFAULT_FILTER = { startDate: "1970-01-01", endDate: today };
+export const DEFAULT_FUNNEL_FILTER = getDates("last 7");
 
 export const DEFAULT_SORT_STATE = {
   sortBy: "date",
