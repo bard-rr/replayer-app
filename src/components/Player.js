@@ -18,7 +18,7 @@ const Player = (props) => {
   }, [sessionId]);
 
   useEffect(() => {
-    replayer.init(eventData);
+    return replayer.init(eventData);
   }, [eventData]);
 
   if (eventData.length === 0) return null;
