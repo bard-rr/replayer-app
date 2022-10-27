@@ -3,9 +3,8 @@ require("dotenv").config();
 const port = process.env.PORT || 3003;
 const cors = require("cors");
 const Clickhouse = require("./database/clickhouse");
-// import { Clickhouse } from "./clickhouseService.js";
 const Postgres = require("./database/postgres");
-const handleFunnel = require("./database/funnel");
+const { handleFunnel, handleUpdateFunnel } = require("./database/funnel");
 
 const app = express();
 
@@ -17,14 +16,14 @@ const setupAllConnections = async () => {
     await clickhouse.init();
     console.log("connected to clickhouse!");
   } catch (e) {
-    console.log("clickhouse error:", e);
+    console.error("clickhouse error:", e);
   }
   try {
     postgres = new Postgres();
     await postgres.init();
     console.log("connected to Postgres!!");
   } catch (e) {
-    console.log("Postgres Error:", e);
+    console.error("Postgres Error:", e);
   }
 };
 setupAllConnections();
@@ -59,7 +58,6 @@ app.get("/funnels", async (req, res) => {
 });
 
 app.post("/funnels", async (req, res) => {
-  console.log(req.body);
   try {
     await postgres.insertFunnel(req.body);
     res.status(201).send();
@@ -74,11 +72,32 @@ app.get("/funnels/:id", async (req, res) => {
     let result = await handleFunnel(id, postgres, clickhouse, req.query);
     res.status(200).json(result);
   } catch (e) {
-    console.log("error", e);
+    console.error("error", e);
     res.status(500).json({ error: e });
   }
 });
 
+app.get("/funnel/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    result = await postgres.getFunnelObj(id);
+    res.status(200).json(result.funnel);
+  } catch (error) {
+    console.error("error: ", error);
+    res.status(500).json({ error });
+  }
+});
+
+app.put("/funnels/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    let result = await handleUpdateFunnel(id, postgres, req.body);
+    res.status(204).send();
+  } catch (error) {
+    console.error("error in put: ", error);
+    res.status(500).json({ error: error, location: "In Edit Funnel" });
+  }
+});
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
