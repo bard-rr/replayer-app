@@ -16,14 +16,14 @@ const setupAllConnections = async () => {
     await clickhouse.init();
     console.log("connected to clickhouse!");
   } catch (e) {
-    console.log("clickhouse error:", e);
+    console.error("clickhouse error:", e);
   }
   try {
     postgres = new Postgres();
     await postgres.init();
     console.log("connected to Postgres!!");
   } catch (e) {
-    console.log("Postgres Error:", e);
+    console.error("Postgres Error:", e);
   }
 };
 setupAllConnections();
@@ -58,7 +58,6 @@ app.get("/funnels", async (req, res) => {
 });
 
 app.post("/funnels", async (req, res) => {
-  console.log(req.body);
   try {
     await postgres.insertFunnel(req.body);
     res.status(201).send();
@@ -70,12 +69,10 @@ app.post("/funnels", async (req, res) => {
 app.get("/funnels/:id", async (req, res) => {
   let id = Number.parseInt(req.params.id, 10);
   try {
-    console.log(id);
     let result = await handleFunnel(id, postgres, clickhouse, req.query);
-    console.log(result);
     res.status(200).json(result);
   } catch (e) {
-    console.log("error", e);
+    console.error("error", e);
     res.status(500).json({ error: e });
   }
 });
@@ -86,7 +83,7 @@ app.get("/funnel/:id", async (req, res) => {
     result = await postgres.getFunnelObj(id);
     res.status(200).json(result.funnel);
   } catch (error) {
-    console.log("error: ", error);
+    console.error("error: ", error);
     res.status(500).json({ error });
   }
 });
@@ -97,7 +94,7 @@ app.put("/funnels/:id", async (req, res) => {
     let result = await handleUpdateFunnel(id, postgres, req.body);
     res.status(204).send();
   } catch (error) {
-    console.log("error in put: ", error);
+    console.error("error in put: ", error);
     res.status(500).json({ error: error, location: "In Edit Funnel" });
   }
 });

@@ -45,6 +45,11 @@ class Clickhouse {
     return result[0]["count()"];
   }
 
+  async #getDataSanitized(query, query_params, format = "JSONEachRow") {
+    const resultSet = await this.client.query({ query, format, query_params });
+    return resultSet.json();
+  }
+
   async #getData(query, format = "JSONEachRow") {
     const resultSet = await this.client.query({ query, format });
     return resultSet.json();
@@ -107,9 +112,13 @@ GROUP BY sessionId
       allResults.push(resultArr);
       prevResult = resultArr;
     }
-    return allResults.map((resultArr) =>
-      resultArr.map((resultObj) => resultObj.sessionId)
-    );
+    return allResults.map((resultArr) => {
+      if (resultArr.length > 0) {
+        return resultArr.map((resultObj) => resultObj.sessionId);
+      } else {
+        return resultArr;
+      }
+    });
   }
 
   //queries return an array of objects. object properties are the columns
@@ -124,6 +133,9 @@ GROUP BY sessionId
     return await this.#getData(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
+    if (prevResultArr.length === 0) {
+      return [];
+    }
     let eventWhereClause = getEventWhereClause(queryObj);
     let funnelWhereClause = getFunnelWhereClause(prevResultArr);
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
