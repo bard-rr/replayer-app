@@ -8,18 +8,18 @@ import getDates from "../utils/dateFilter";
 import { getFunnelData } from "../utils/urlUtils";
 
 const Funnel = () => {
-  const { id } = useParams();
+  const { funnelId } = useParams();
   const [selectedFilter, setSelectedFilter] = useState("last 7");
   const [funnelData, setFunnelData] = useState(null);
 
   useEffect(() => {
     const updateFunnelData = async () => {
       const dates = getDates(selectedFilter);
-      const newFunnelData = await getFunnelData(id, dates);
+      const newFunnelData = await getFunnelData(funnelId, dates);
       setFunnelData(newFunnelData);
     };
     updateFunnelData();
-  }, [id, selectedFilter]);
+  }, [funnelId, selectedFilter]);
 
   const handleChange = (e) => {
     setSelectedFilter(e.target.value);

@@ -125,8 +125,8 @@ const FunnelList = () => {
   };
 
   const handleFunnelClick = (e) => {
-    const id = e.target.parentElement.dataset.id;
-    navigate(`/funnels/${id}`);
+    const funnelId = e.target.parentElement.dataset.id;
+    navigate(`/funnels/${funnelId}`);
   };
 
   return (

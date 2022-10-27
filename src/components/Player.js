@@ -1,14 +1,27 @@
-import { useEffect } from "react";
-import NoEventsAlert from "./NoEventsAlert";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import replayer from "../utils/replayer";
+import { getEventData } from "../utils/urlUtils";
 
-const Player = ({ eventData }) => {
-  useEffect(() => replayer.init(eventData), [eventData]);
+const Player = (props) => {
+  let { sessionId } = useParams();
+  const [eventData, setEventData] = useState([]);
 
-  //should never happen, but have this as a failsafe
-  if (eventData.length === 0) {
-    return <NoEventsAlert />;
-  }
+  if (sessionId === undefined) sessionId = props.sessionId;
+
+  useEffect(() => {
+    const getAndSetEventData = async () => {
+      const data = await getEventData(sessionId);
+      setEventData(data);
+    };
+    getAndSetEventData();
+  }, [sessionId]);
+
+  useEffect(() => {
+    return replayer.init(eventData);
+  }, [eventData]);
+
+  if (eventData.length === 0) return null;
 
   //this is where the replayer is mounted in replayer.init
   return <div className="player"></div>;
