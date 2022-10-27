@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { getEventData } from "../utils/urlUtils";
 import Player from "./Player";
+import CloseButton from "./CloseButton";
 
 const style = {
   position: "absolute",
@@ -30,6 +29,7 @@ const PlayerModal = ({ sessionId, open, setOpen }) => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          <CloseButton onClick={handleClose} />
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {sessionId}
           </Typography>
