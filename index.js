@@ -32,30 +32,44 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/sessions", async (req, res) => {
-  let result = await clickhouse.getSessions(req.query);
-  let count = await clickhouse.getCount(req.query);
-  const sessions = result.map((obj) => {
-    return {
-      sessionId: obj.sessionId,
-      length: obj.lengthMs,
-      date: obj.date,
-      originHost: obj.originHost,
-      errorCount: obj.errorCount,
-    };
-  });
-  res.status(200).json({ count, sessions });
+  try {
+    let result = await clickhouse.getSessions(req.query);
+    let count = await clickhouse.getCount(req.query);
+    const sessions = result.map((obj) => {
+      return {
+        sessionId: obj.sessionId,
+        length: obj.lengthMs,
+        date: obj.date,
+        originHost: obj.originHost,
+      };
+    });
+    res.status(200).json({ count, sessions });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
 });
 
 app.get("/sessions/:id", async (req, res) => {
   const id = req.params.id;
-  result = await clickhouse.getEventsFromSession(id);
-  res.status(200).json(result);
+  try {
+    result = await clickhouse.getEventsFromSession(id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
 });
 
 app.get("/funnels", async (req, res) => {
-  let funnels = await postgres.getFunnelMetadata(req.query);
-  let count = await postgres.getFunnelCount(req.query);
-  res.status(200).json({ funnels, count });
+  try {
+    let funnels = await postgres.getFunnelMetadata(req.query);
+    let count = await postgres.getFunnelCount(req.query);
+    res.status(200).json({ funnels, count });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
 });
 
 app.post("/funnels", async (req, res) => {
@@ -63,6 +77,7 @@ app.post("/funnels", async (req, res) => {
     await postgres.insertFunnel(req.body);
     res.status(201).send();
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error });
   }
 });
@@ -72,9 +87,9 @@ app.get("/funnels/:id", async (req, res) => {
   try {
     let result = await handleFunnel(id, postgres, clickhouse, req.query);
     res.status(200).json(result);
-  } catch (e) {
-    console.error("error", e);
-    res.status(500).json({ error: e });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
   }
 });
 
@@ -92,7 +107,7 @@ app.get("/funnel/:id", async (req, res) => {
 app.put("/funnels/:id", async (req, res) => {
   let id = Number.parseInt(req.params.id, 10);
   try {
-    let result = await handleUpdateFunnel(id, postgres, req.body);
+    await handleUpdateFunnel(id, postgres, req.body);
     res.status(204).send();
   } catch (error) {
     console.error("error in put: ", error);

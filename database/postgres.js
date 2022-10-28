@@ -50,13 +50,14 @@ class Postgres {
   }
 
   #paginateBy = (paramsObj) => {
+    //NaN is falsey, so we can count on the || to sanitize input here
     const limit = Number(paramsObj.perPage) || this.defaultPerPage;
     const offset = limit * (Number(paramsObj.pageNum) || this.defaultPageNum);
-
     return `LIMIT ${limit} OFFSET ${offset}`;
   };
 
   #sortBy = (paramsObj) => {
+    //tenary and switch ensure this query part is sanitized
     const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
     let column;
     switch (paramsObj.sortBy) {
@@ -87,10 +88,10 @@ class Postgres {
     const sql = `UPDATE funnels SET name = $1, last_modified_at_ms = $2, funnel= $3 WHERE id=$4`;
     console.log(sql);
     try {
-      await this.#client.query(sql, [name, lastModified, body, id]);
+      await this.#executeQuery(sql, [name, lastModified, body, id]);
       return;
     } catch (error) {
-      console.log(error);
+      console.error(error);
       return error;
     }
   }
@@ -107,18 +108,22 @@ class Postgres {
       VALUES (
         $1, $2, $3, $4
       )`;
-    await this.#client.query(sql, [funnelObj, funnelObj.funnelName, now, now]);
+    await this.#executeQuery(sql, [funnelObj, funnelObj.funnelName, now, now]);
     return;
   }
 
   async getFunnelObj(funnelId) {
-    let query = `SELECT funnel FROM funnels WHERE id = ${funnelId}`;
-    let result = await this.#executeQuery(query);
+    let query = `SELECT funnel FROM funnels WHERE id = $1`;
+    let result = await this.#executeQuery(query, [funnelId]);
     return result.rows[0];
   }
 
-  async #executeQuery(queryStr) {
-    return await this.#client.query(queryStr);
+  async #executeQuery(queryStr, queryParamsArr = []) {
+    try {
+      return await this.#client.query(queryStr, queryParamsArr);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
   #getDateStr(timestamp) {
     const dateObj = new Date(timestamp);
