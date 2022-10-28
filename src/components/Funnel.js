@@ -45,37 +45,54 @@ const Funnel = () => {
   if (funnelData === null) return null;
 
   return (
-    <Box
-      sx={{
-        m: "60px",
-        p: "30px",
-        backgroundColor: "#fff",
-        borderRadius: "4px",
-        position: "relative",
-      }}
-    >
-      <FunnelTimeFilter
-        selectedFilter={selectedFilter}
-        onChange={handleChange}
-      />
+    <>
       <BardButton
-        text="Edit"
-        onClick={() => navigate(`/funnels/update/${funnelId}`)}
+        text={"Funnels"}
+        onClick={() => navigate("/funnels")}
+        isBackButton={true}
         sx={{
+          mt: "15px",
+          ml: "15px",
+          border: "0px",
+          height: "auto",
           position: "absolute",
-          top: "30px",
-          right: "30px",
-          zIndex: 1,
+          "&:hover": {
+            border: "0px",
+          },
         }}
       />
-      <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
-      <Box sx={{ fontSize: "16px" }}>
-        <em>{funnelData.results.totalFilteredSessions} sessions</em>
+      <Box
+        sx={{
+          m: "60px",
+          p: "30px",
+          backgroundColor: "#fff",
+          borderRadius: "4px",
+          position: "relative",
+        }}
+      >
+        <FunnelTimeFilter
+          selectedFilter={selectedFilter}
+          onChange={handleChange}
+        />
+        <BardButton
+          text="Edit"
+          onClick={() => navigate(`/funnels/update/${funnelId}`)}
+          sx={{
+            position: "absolute",
+            top: "30px",
+            right: "30px",
+            zIndex: 1,
+          }}
+        />
+        <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
+        <Box sx={{ fontSize: "16px" }}>
+          <em>{funnelData.results.totalFilteredSessions} sessions</em>
+        </Box>
+        <List sx={{ width: "100%", mr: "30px", bgcolor: "background.paper" }}>
+          {listFunnelSteps()}
+        </List>
       </Box>
-      <List sx={{ width: "100%", mr: "30px", bgcolor: "background.paper" }}>
-        {listFunnelSteps()}
-      </List>
-    </Box>
+    </>
   );
 };
 
