@@ -22,8 +22,7 @@ class Clickhouse {
     let query = `SELECT event from eventDb.eventTable where sessionId=
                 ${this.#getParam(sessionId, "String")}
                 `;
-    let resultSet = await this.#runQuery(query);
-    let dataSet = await resultSet.json();
+    let dataSet = await this.#runQuery(query);
     return this.processData(dataSet);
   }
 
@@ -70,6 +69,7 @@ class Clickhouse {
         query_params,
       });
       this.#clearQueryParams();
+      //console.log("result set", resultSet);
       return resultSet.json();
     } catch (error) {
       throw new Error(error);
