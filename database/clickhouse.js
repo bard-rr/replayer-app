@@ -5,6 +5,7 @@ class Clickhouse {
   constructor() {
     this.client = {};
     this.query_params = {};
+    this.paramCount = 0;
     this.DEFAULT_PER_PAGE = 5;
     this.DEFAULT_PAGE_NUM = 0;
   }
@@ -37,28 +38,43 @@ class Clickhouse {
   }
 
   async getSessions(paramsObj) {
-    const sessionQuery = makeSessionQuery(paramsObj);
-    const result = await this.#getData(sessionQuery);
+    const sessionQuery = this.#makeSessionQuery(paramsObj);
+    const result = await this.#runQuery(sessionQuery);
     return result;
   }
 
   async getCount(paramsObj) {
-    const countQuery = makeCountQuery(paramsObj);
-    const result = await this.#getData(countQuery);
+    const countQuery = this.#makeCountQuery(paramsObj);
+    const result = await this.#runQuery(countQuery);
     return result[0]["count()"];
   }
 
-  async #getDataSanitized(query, query_params, format = "JSONEachRow") {
-    const resultSet = await this.client.query({ query, format, query_params });
-    return resultSet.json();
+  #getParam(data, dataType) {
+    let paramName = `parameter${this.paramCount}`;
+    this.paramCount++;
+    this.query_params[paramName] = data;
+    return `{${paramName}: ${dataType}}`;
   }
 
-  async #getData(query, format = "JSONEachRow") {
-    let query_params = this.query_params;
-    console.log("query", query, "query_params", query_params);
-    const resultSet = await this.client.query({ query, format, query_params });
+  #clearQueryParams() {
     this.query_params = {};
-    return resultSet.json();
+    this.paramCount = 0;
+  }
+
+  async #runQuery(query, format = "JSONEachRow") {
+    try {
+      let query_params = this.query_params;
+      //console.log("query", query, "\nquery_params", query_params);
+      const resultSet = await this.client.query({
+        query,
+        format,
+        query_params,
+      });
+      this.#clearQueryParams();
+      return resultSet.json();
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async getSessionIdsFromFilters(filterArr, startDate, endDate) {
@@ -71,7 +87,7 @@ class Clickhouse {
     const select = "SELECT sessionId FROM eventDb.sessionTable";
     const whereClause = this.#getWhereClauseFromFilters(newFilterArr);
     const query = `${select} WHERE ${whereClause}`;
-    let result = await this.#getData(query);
+    let result = await this.#runQuery(query);
     return result.map((resultObj) => resultObj.sessionId);
   }
 
@@ -136,7 +152,7 @@ GROUP BY sessionId
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
-    return await this.#getData(query);
+    return await this.#runQuery(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
     if (prevResultArr.length === 0) {
@@ -147,28 +163,37 @@ GROUP BY sessionId
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
     eventDb.conversionEvents WHERE ${eventWhereClause} ${funnelWhereClause}
     GROUP BY sessionId`;
-    return await this.#getData(query);
+    return await this.#runQuery(query);
   };
 
   #getEventWhereClause = (queryObj) => {
+    let query;
     switch (queryObj.eventType) {
       case "click":
-        return `(eventType = 'click') AND (textContent = '${escapeString(
-          queryObj.textContent
-        )}')`;
+        query = `(eventType = 'click') AND (textContent = ${this.#getParam(
+          queryObj.textContent,
+          "String"
+        )})`;
+        return query;
       default:
-        return `(eventType = 'click') AND (textContent = '${escapeString(
-          queryObj.textContent
-        )}')`;
+        query = `(eventType = 'click') AND (textContent = ${this.#getParam(
+          queryObj.textContent,
+          "String"
+        )})`;
+        return query;
     }
   };
+
   #getFunnelWhereClause = (prevResultArr) => {
     let funnelWhereClause = "AND (";
     let prevResultClauses = [];
     for (let i = 0; i < prevResultArr.length; i++) {
       let onePrevResult = prevResultArr[i];
       prevResultClauses.push(
-        `((sessionId = '${onePrevResult.sessionId}') AND (timestamp > ${onePrevResult.time}))`
+        `((sessionId = ${this.#getParam(
+          onePrevResult.sessionId,
+          "String"
+        )}) AND (timestamp > ${this.#getParam(onePrevResult.time, "UInt64")}))`
       );
     }
     funnelWhereClause += prevResultClauses.join(" OR ");
@@ -181,7 +206,7 @@ GROUP BY sessionId
     let clausePieces = [];
     for (let i = 0; i < filteredSessionArr.length; i++) {
       let sessionId = filteredSessionArr[i];
-      clausePieces.push(`(sessionId = '${sessionId}')`);
+      clausePieces.push(`(sessionId = ${this.#getParam(sessionId, "String")})`);
     }
     sessionWhereClause += clausePieces.join(" OR ");
     sessionWhereClause += ")";
@@ -229,25 +254,22 @@ GROUP BY sessionId
           const minLength = Number(paramsObj.minLength) || 0;
           const maxLength = Number(paramsObj.maxLength) || Date.now();
           result.push(
-            `(lengthMs >= {minLength: UInt64}) AND (lengthMs <= {maxLength: UInt64})`
+            `(lengthMs >= ${this.#getParam(minLength, "UInt64")}) AND 
+             (lengthMs <= ${this.#getParam(maxLength, "UInt64")})`
           );
-          this.query_params["maxLength"] = maxLength;
-          this.query_params["minLength"] = minLength;
           break;
         case "date":
           const startDate = paramsObj.startDate || "1970-01-01";
           const todayString = this.getTodayString();
           const endDate = paramsObj.endDate || todayString;
           result.push(
-            `(date >= {startDate: Date}) AND (date <= {endDate: Date})`
+            `(date >= ${this.#getParam(startDate, "Date")}) AND 
+             (date <= ${this.#getParam(endDate, "Date")})`
           );
-          this.query_params["startDate"] = startDate;
-          this.query_params["endDate"] = endDate;
           break;
         case "originHost":
           const originHost = paramsObj.textContent;
-          result.push(`(originHost = {originHost: String})`);
-          this.query_params["originHost"] = originHost;
+          result.push(`(originHost = ${this.#getParam(originHost, "String")})`);
           break;
         default:
           result.push(`(date = '${this.getTodayString()}')`);
@@ -257,6 +279,7 @@ GROUP BY sessionId
   };
 
   #sortBy = (paramsObj) => {
+    //tenary and switch ensure that what makes it into query is sanitized
     const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
     let column;
     switch (paramsObj.sortBy) {
@@ -276,6 +299,7 @@ GROUP BY sessionId
   };
 
   #paginateBy = (paramsObj) => {
+    //NaN is falsey, so the || operator ensures we always have a number here
     const limit = Number(paramsObj.perPage) || this.DEFAULT_PER_PAGE;
     const offset = limit * (Number(paramsObj.pageNum) || this.DEFAULT_PAGE_NUM);
 
