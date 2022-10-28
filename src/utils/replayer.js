@@ -1,4 +1,5 @@
 import rrwebPlayer from "rrweb-player";
+import { getReplayConsolePlugin } from 'rrweb';
 import "rrweb-player/dist/style.css";
 
 let player;
@@ -18,9 +19,10 @@ const instantiatePlayer = (data) => {
     target: document.querySelector(".player"),
     props: {
       events: data,
-      width: 800,
-      height: 400,
+      width: 1000,
+      height: 500,
       autoPlay: false,
+      plugins: [getReplayConsolePlugin()],
     },
   });
 };

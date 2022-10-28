@@ -1,6 +1,6 @@
 import { Stack, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { DEFAULT_FUNNEL, DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import FunnelComponents from "./FunnelComponents";
 import SessionFilterForFunnel from "./SessionFilterForFunnel";
@@ -9,6 +9,7 @@ import BardButton from "./BardButton";
 
 const EditFunnelForm = () => {
   let { id } = useParams();
+  const navigate = useNavigate();
   const [eventSequence, seteventSequence] = useState([DEFAULT_FUNNEL]);
   const [sessionFilters, setSessionFilters] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
@@ -31,6 +32,7 @@ const EditFunnelForm = () => {
 
   const handleUpdateClick = async (e) => {
     await updateOneFunnel(id, { funnelName, eventSequence, sessionFilters });
+    navigate(`/funnels/${id}`);
   };
   return (
     <Stack
@@ -38,23 +40,17 @@ const EditFunnelForm = () => {
       justifyContent="flex-start"
       alignItems="flex-start"
       spacing={2}
-      sx={{ ml: "60px", mt: "30px" }}
+      sx={{
+        mx: "60px",
+        mt: "60px",
+        p: "30px",
+        borderRadius: "4px",
+        bgcolor: "white",
+        boxShadow: 3,
+      }}
     >
-      <Typography
-        variant="h6"
-        sx={{
-          mr: 2,
-          fontFamily: "monospace",
-          fontWeight: 700,
-          letterSpacing: ".3rem",
-          color: "inherit",
-          textDecoration: "none",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        }}
-      >
-        Update a Funnel
+      <Typography variant="h6" sx={{ fontSize: "22px" }}>
+        Update Funnel
       </Typography>
       <TextField
         variant="outlined"
@@ -80,17 +76,15 @@ const EditFunnelForm = () => {
       />
       <Stack
         direction="row"
-        justifyContent="flex-end"
         alignItems="flex-start"
         spacing={2}
         sx={{ mt: "10px", mr: "60px", ml: "60px", width: "85%" }}
       >
-        <Link to={`/funnels/${id}`}>
-          <BardButton text={"Cancel"} />
-        </Link>
-        <Link to={`/funnels/${id}`}>
-          <BardButton text={"Update Funnel"} onClick={handleUpdateClick} />
-        </Link>
+        <BardButton
+          text={"Cancel"}
+          onClick={() => navigate(`/funnels/${id}`)}
+        />
+        <BardButton text={"Update Funnel"} onClick={handleUpdateClick} />
       </Stack>
     </Stack>
   );

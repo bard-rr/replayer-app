@@ -57,7 +57,6 @@ const Funnel = () => {
         selectedFilter={selectedFilter}
         onChange={handleChange}
       />
-
       <BardButton
         text="Edit"
         onClick={() => navigate(`/funnels/update/${funnelId}`)}

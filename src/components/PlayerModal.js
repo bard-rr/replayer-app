@@ -33,7 +33,7 @@ const PlayerModal = ({ sessionId, open, setOpen }) => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             {sessionId}
           </Typography>
-          <Player sessionId={sessionId} />
+          <Player sessionId={sessionId} hide={true} />
         </Box>
       </Modal>
     </div>

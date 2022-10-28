@@ -8,7 +8,7 @@ import {
 } from "../utils/formatLength";
 import TimeDurationInput from "./TimeDurationInput";
 
-const LengthInputs = ({ setFilterData, filterData, index }) => {
+const LengthInputs = ({ setFilterData, filterData, index, labelColor }) => {
   const [startHours, setStartHours] = useState(
     msToHours(filterData[index].minLength) || DEFAULT_TIME_STRING
   );
@@ -73,6 +73,7 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
         setSeconds={setStartSeconds}
         changeFilter={changeFilter}
         isStart={true}
+        labelColor={labelColor}
       />
       <TimeDurationInput
         label="Max Length"
@@ -84,6 +85,7 @@ const LengthInputs = ({ setFilterData, filterData, index }) => {
         setSeconds={setEndSeconds}
         changeFilter={changeFilter}
         isStart={false}
+        labelColor={labelColor}
       />
     </>
   );

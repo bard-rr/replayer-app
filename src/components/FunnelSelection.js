@@ -28,7 +28,7 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
     <TextField
       variant="outlined"
       sx={{
-        ml: "60px",
+        // ml: "60px",
         width: "150px",
         "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {

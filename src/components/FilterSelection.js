@@ -29,6 +29,9 @@ const FilterSelection = ({
             newFilter["startDate"] = "";
             newFilter["endDate"] = "";
             break;
+          case "Has Errors?":
+            newFilter["yesOrNo"] = "";
+            break;
           default:
             newFilter = DEFAULT_FUNNEL_FILTER;
         }
@@ -42,7 +45,7 @@ const FilterSelection = ({
     <TextField
       variant="outlined"
       sx={{
-        ml: "60px",
+        ml: "0px",
         width: "150px",
         "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {
@@ -53,6 +56,7 @@ const FilterSelection = ({
       value={filterData[index].filterType}
       onChange={handleChange}
       select
+      defaultValue=""
     >
       <MenuItem value="">
         <em>None</em>

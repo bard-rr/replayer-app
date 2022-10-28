@@ -1,13 +1,13 @@
-import { TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
 
-const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
+const YesNoFilterField = ({ index, filterData, setFilterData }) => {
   const handleChange = (e) => {
     const newfilterData = filterData.map((innerData, innerIndex) => {
       if (index !== innerIndex) {
         return innerData;
       }
       let newFilter = { ...innerData };
-      newFilter.textContent = e.target.value;
+      newFilter.yesOrNo = e.target.value;
       return newFilter;
     });
     setFilterData(newfilterData);
@@ -17,18 +17,23 @@ const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
     <TextField
       variant="outlined"
       sx={{
-        ml: "60px",
-        width: "auto",
+        ml: "0px",
+        width: "150px",
         "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {
           "& > fieldset": { borderColor: "#A3A2AF" },
         },
       }}
-      value={filterData[index].textContent || ""}
-      label="Origin Host"
+      label="Yes or No?"
+      value={filterData[index].value}
       onChange={handleChange}
-    />
+      select
+      defaultValue=""
+    >
+      <MenuItem value="yes">Yes</MenuItem>
+      <MenuItem value="no">No</MenuItem>
+    </TextField>
   );
 };
 
-export default OriginHostFilterField;
+export default YesNoFilterField;
