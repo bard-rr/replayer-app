@@ -19,11 +19,10 @@ class Clickhouse {
   }
 
   async getEventsFromSession(sessionId) {
-    let query = `SELECT event from eventDb.eventTable where sessionId='${sessionId}'`;
-    let resultSet = await this.client.query({
-      query,
-      format: "JSONEachRow",
-    });
+    let query = `SELECT event from eventDb.eventTable where sessionId=
+                ${this.#getParam(sessionId, "String")}
+                `;
+    let resultSet = await this.#runQuery(query);
     let dataSet = await resultSet.json();
     return this.processData(dataSet);
   }
