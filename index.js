@@ -115,6 +115,19 @@ app.put("/funnels/:id", async (req, res) => {
     res.status(500).json({ error: error, location: "In Edit Funnel" });
   }
 });
+
+app.delete("/funnels/:id", async (req, res) => {
+  let id = Number.parseInt(req.params.id, 10);
+  try {
+    console.log("delete funnel", id);
+    await postgres.deleteFunnel(id);
+    res.status(200).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });

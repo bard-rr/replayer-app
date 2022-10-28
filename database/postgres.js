@@ -86,7 +86,6 @@ class Postgres {
     const name = body.funnelName;
     const lastModified = Date.now();
     const sql = `UPDATE funnels SET name = $1, last_modified_at_ms = $2, funnel= $3 WHERE id=$4`;
-    console.log(sql);
     try {
       await this.#executeQuery(sql, [name, lastModified, body, id]);
       return;
@@ -103,13 +102,24 @@ class Postgres {
   async insertFunnel(funnelObj) {
     let now = Date.now();
     const sql = `INSERT INTO funnels (
-        funnel, name, created_at_ms, last_modified_at_ms
+        funnel, name, created_at_ms, last_modified_at_ms, is_deleted
       ) 
       VALUES (
-        $1, $2, $3, $4
+        $1, $2, $3, $4, $5
       )`;
-    await this.#executeQuery(sql, [funnelObj, funnelObj.funnelName, now, now]);
+    await this.#executeQuery(sql, [
+      funnelObj,
+      funnelObj.funnelName,
+      now,
+      now,
+      false,
+    ]);
     return;
+  }
+
+  async deleteFunnel(funnelId) {
+    const sql = `UPDATE funnels SET is_deleted = true WHERE id = $1`;
+    await this.#executeQuery(sql, [funnelId]);
   }
 
   async getFunnelObj(funnelId) {
