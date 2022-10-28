@@ -56,7 +56,7 @@ class Clickhouse {
   }
 
   async getSessionIdsFromFilters(filterArr, startDate, endDate) {
-    const newFilterArr = [...filterArr];
+    const newFilterArr = Object.keys(filterArr[0]).length === 0 ? [] : [...filterArr];
     newFilterArr.push({
       filterType: "date",
       startDate,
