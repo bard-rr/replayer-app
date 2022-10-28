@@ -20,45 +20,6 @@ import BardButton from "./BardButton";
 import { Stack } from "@mui/material";
 import { Link } from "react-router-dom";
 
-// const fakeFunnels = [
-//   {
-//     name: "bought something",
-//     funnelId: 1,
-//     created: "2022-10-24",
-//     lastModified: "2022-10-25",
-//   },
-//   {
-//     name: "subscribed to emails",
-//     funnelId: 13,
-//     created: "2022-10-23",
-//     lastModified: "2022-10-23",
-//   },
-//   {
-//     name: "posted in forum",
-//     funnelId: 8,
-//     created: "2022-10-20",
-//     lastModified: "2022-10-22",
-//   },
-//   {
-//     name: "generated affiliate link",
-//     funnelId: 5,
-//     created: "2022-10-18",
-//     lastModified: "2022-10-23",
-//   },
-//   {
-//     name: "posted product review",
-//     funnelId: 3,
-//     created: "2022-10-25",
-//     lastModified: "2022-10-25",
-//   },
-//   {
-//     name: "completed survey",
-//     funnelId: 17,
-//     created: "2022-10-19",
-//     lastModified: "2022-10-21",
-//   },
-// ];
-
 const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
   const [page, setPage] = useState(DEFAULT_PAGE);
@@ -138,9 +99,11 @@ const FunnelList = () => {
         spacing={0.5}
         sx={{ mr: "60px", mt: "30px" }}
       >
-        <Link to={"/funnels/create"}>
-          <BardButton text={"Add Funnel"} sx={{ mr: "60px" }} />
-        </Link>
+        <BardButton
+          text={"Add Funnel"}
+          sx={{ mr: "60px" }}
+          onClick={() => navigate("/funnels/create")}
+        />
       </Stack>
       <TableContainer
         sx={{
