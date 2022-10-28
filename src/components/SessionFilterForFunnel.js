@@ -32,6 +32,7 @@ const SessionFilterForFunnel = ({ filterData, setFilterData }) => {
           filterData={filterData}
           setFilterData={setFilterData}
           filterOptions={filterOptions}
+          labelColor={"white"}
         />
       </Stack>
     </Box>

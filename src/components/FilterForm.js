@@ -8,7 +8,12 @@ import YesNoFilterField from "./YesNoFilterField";
 import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import DateInputs from "./DateInputs";
 
-const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
+const FilterForm = ({
+  filterData,
+  setFilterData,
+  filterOptions,
+  labelColor,
+}) => {
   const handleAddClick = (e) => {
     e.preventDefault();
     let newFilterData = [...filterData].concat(DEFAULT_FUNNEL_FILTER);
@@ -45,7 +50,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   setFilterData={setFilterData}
                   index={index}
                   filterData={filterData}
-                  labelColor={"white"}
+                  labelColor={labelColor}
                 />
                 <AddOrRemoveButton
                   handleAddClick={handleAddClick}
