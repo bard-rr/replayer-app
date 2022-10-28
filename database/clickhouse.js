@@ -35,8 +35,6 @@ class Clickhouse {
 
   async getSessions(paramsObj) {
     const sessionQuery = makeSessionQuery(paramsObj);
-    // todelete
-    console.log(sessionQuery);
     const result = await this.#getData(sessionQuery);
     return result;
   }
@@ -234,6 +232,10 @@ const filterBy = (paramsObj) => {
       case "originHost":
         const originHost = paramsObj.textContent;
         result.push(`(originHost = '${originHost}')`);
+        break;
+      case "Has Errors?":
+        const comparisonOperator = (paramsObj.yesOrNo === 'yes' ? '>' : '=');
+        result.push(`errorCount ${comparisonOperator} 0`);
         break;
       default:
         result.push(`(date = '${getTodayString()}')`);
