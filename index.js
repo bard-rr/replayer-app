@@ -40,6 +40,7 @@ app.get("/sessions", async (req, res) => {
       length: obj.lengthMs,
       date: obj.date,
       originHost: obj.originHost,
+      errorCount: obj.errorCount,
     };
   });
   res.status(200).json({ count, sessions });
