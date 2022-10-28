@@ -72,6 +72,7 @@ export default function SessionList() {
     { id: "originHost", label: "Origin Host" },
     { id: "date", label: "Date" },
     { id: "length", label: "Length" },
+    { id: "errorCount", label: "Error Count" },
   ];
 
   const makeHandleSort = (id) => {
@@ -170,6 +171,7 @@ export default function SessionList() {
                 </TableCell>
                 <TableCell>{session.date}</TableCell>
                 <TableCell>{msToTime(session.length)}</TableCell>
+                <TableCell>{session.errorCount}</TableCell>
               </TableRow>
             ))}
           </TableBody>
