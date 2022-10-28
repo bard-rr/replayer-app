@@ -36,6 +36,7 @@ const Funnel = () => {
           stepNum={idx + 1}
           event={event}
           results={results}
+          totalSessions={funnelData.results.totalFilteredSessions}
         />
       );
     });
