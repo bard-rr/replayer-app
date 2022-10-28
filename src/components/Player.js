@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import replayer from "../utils/replayer";
 import { getEventData } from "../utils/urlUtils";
-import BardButtion from "./BardButton";
+import BardButton from "./BardButton";
 
 const Player = (props) => {
   let { sessionId } = useParams();
@@ -27,7 +27,7 @@ const Player = (props) => {
 
   return (
     <>
-      <BardButtion
+      <BardButton
         text={"Sessions"}
         onClick={() => navigate("/sessions")}
         isBackButton={true}
@@ -37,6 +37,9 @@ const Player = (props) => {
           border: "0px",
           height: "auto",
           display: props.hide ? "none" : "inline-flex",
+          "&:hover": {
+            border: "0px",
+          },
         }}
       />
       <div className="player"></div>

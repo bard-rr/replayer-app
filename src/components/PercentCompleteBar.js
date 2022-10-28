@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import { Box, LinearProgress, Stack } from "@mui/material";
 
-const PercentCompleteBar = ({ numComplete, numIncomplete }) => {
+const PercentCompleteBar = ({ numComplete, totalSessions }) => {
   const [percentComplete, setPercentComplete] = useState(0);
 
   useEffect(() => {
-    const percent = 100 * (numComplete / (numComplete + numIncomplete));
+    const percent = 100 * (numComplete / totalSessions);
     setPercentComplete(percent || 0);
-  }, [numComplete, numIncomplete]);
+  }, [numComplete, totalSessions]);
 
   return (
     <Stack

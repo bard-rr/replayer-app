@@ -33,8 +33,7 @@ const NewFunnelForm = () => {
       alignItems="flex-start"
       spacing={2}
       sx={{
-        mx: "60px",
-        mt: "60px",
+        m: "60px",
         p: "30px",
         borderRadius: "4px",
         bgcolor: "white",

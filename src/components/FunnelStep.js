@@ -4,14 +4,14 @@ import PercentCompleteBar from "./PercentCompleteBar";
 import StepTitle from "./StepTitle";
 import StepCompletionDetails from "./StepCompletionDetails";
 
-const FunnelStep = ({ event, stepNum, results }) => {
+const FunnelStep = ({ event, stepNum, results, totalSessions }) => {
   return (
     <ListItem sx={{ pl: "8px" }}>
       <Stack direction="column" sx={{ width: "100%" }}>
         <StepTitle event={event} stepNum={stepNum} />
         <PercentCompleteBar
           numComplete={results.numberCompleted}
-          numIncomplete={results.numberNotCompleted}
+          totalSessions={totalSessions}
         />
         <StepCompletionDetails
           results={results}
