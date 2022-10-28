@@ -1,4 +1,4 @@
-import getDates from "./dateFilter";
+// import getDates from "./dateFilter";
 
 export const BASE_URL = "http://localhost:3003";
 const today = new Date().toISOString().substring(0, 10);
@@ -32,4 +32,4 @@ export const DEFAULT_TIME_STRING = "00";
 export const DEFAULT_FUNNEL = { eventType: "" };
 export const DEFAULT_FUNNEL_FILTER = {};
 
-export const ALL_FILTER_OPTIONS = ["length", "date", "originHost"];
+export const ALL_FILTER_OPTIONS = ["length", "date", "originHost", "Has Errors?"];

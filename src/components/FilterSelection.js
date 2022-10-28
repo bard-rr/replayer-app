@@ -29,6 +29,9 @@ const FilterSelection = ({
             newFilter["startDate"] = "";
             newFilter["endDate"] = "";
             break;
+          case "Has Errors?":
+            newFilter["yesOrNo"] = "";
+            break;
           default:
             newFilter = DEFAULT_FUNNEL_FILTER;
         }

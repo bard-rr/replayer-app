@@ -4,6 +4,7 @@ import { Box } from "@mui/system";
 import FilterSelection from "./FilterSelection";
 import AddOrRemoveButton from "./AddOrRemoveButton";
 import OriginHostFilterField from "./OriginHostFilterField";
+import YesNoFilterField from "./YesNoFilterField";
 import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import DateInputs from "./DateInputs";
 
@@ -100,6 +101,35 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   filterData={filterData}
                 />
                 <DateInputs
+                  setFilterData={setFilterData}
+                  index={index}
+                  filterData={filterData}
+                />
+                <AddOrRemoveButton
+                  handleAddClick={handleAddClick}
+                  handleRemoveClick={handleRemoveClick}
+                  index={index}
+                  dataLength={filterData.length}
+                  optionsLength={filterOptions.length}
+                />
+              </Stack>
+            );
+          case "Has Errors?":
+            return (
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                alignItems="flex-start"
+                spacing={4}
+                key={index}
+              >
+                <FilterSelection
+                  filterOptions={filterOptions}
+                  index={index}
+                  setFilterData={setFilterData}
+                  filterData={filterData}
+                />
+                <YesNoFilterField
                   setFilterData={setFilterData}
                   index={index}
                   filterData={filterData}
