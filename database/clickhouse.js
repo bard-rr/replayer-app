@@ -1,5 +1,6 @@
 // import { createClient } from "@clickhouse/client";
 const clickhouse = require("@clickhouse/client");
+const { escapeString } = require("./utils");
 const createClient = clickhouse.createClient;
 class Clickhouse {
   constructor() {
@@ -151,9 +152,13 @@ const DEFAULT_PAGE_NUM = 0;
 const getEventWhereClause = (queryObj) => {
   switch (queryObj.eventType) {
     case "click":
-      return `(eventType = 'click') AND (textContent = '${queryObj.textContent}')`;
+      return `(eventType = 'click') AND (textContent = '${escapeString(
+        queryObj.textContent
+      )}')`;
     default:
-      return `(eventType = 'click') AND (textContent = '${queryObj.textContent}')`;
+      return `(eventType = 'click') AND (textContent = '${escapeString(
+        queryObj.textContent
+      )}')`;
   }
 };
 const getFunnelWhereClause = (prevResultArr) => {
