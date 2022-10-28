@@ -18,7 +18,6 @@ import {
 import { getNewFunnels } from "../utils/urlUtils";
 import BardButton from "./BardButton";
 import { Stack } from "@mui/material";
-import { Link } from "react-router-dom";
 
 const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
@@ -101,7 +100,6 @@ const FunnelList = () => {
       >
         <BardButton
           text={"Add Funnel"}
-          sx={{ mr: "60px" }}
           onClick={() => navigate("/funnels/create")}
         />
       </Stack>

@@ -18,8 +18,8 @@ const instantiatePlayer = (data) => {
     target: document.querySelector(".player"),
     props: {
       events: data,
-      width: 800,
-      height: 400,
+      width: 1000,
+      height: 500,
       autoPlay: false,
     },
   });

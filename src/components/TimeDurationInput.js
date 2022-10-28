@@ -1,4 +1,5 @@
 import { Stack, TextField } from "@mui/material";
+import CustomLabel from "./CustomLabel";
 
 const TimeDurationInput = (props) => {
   const {
@@ -11,7 +12,7 @@ const TimeDurationInput = (props) => {
     changeFilter,
     isStart,
   } = props;
-  const { label } = props;
+  const { label, labelColor } = props;
   const inRange = (num, min, max) => {
     return Number(num) >= min && Number(num) <= max;
   };
@@ -54,7 +55,11 @@ const TimeDurationInput = (props) => {
       }}
       label="hello"
     >
-      <div className={"custom-label"}>{label}</div>
+      {/* <div className={"custom-label"}>{label}</div> */}
+      <CustomLabel
+        text={label}
+        sx={{ backgroundColor: labelColor || "#ECEFF4" }}
+      />
       <TextField
         variant="standard"
         onChange={(e) => handleChange(e, setHours, 0, 23)}

@@ -20,6 +20,7 @@ import {
 import { getNewSessions } from "../utils/urlUtils";
 import { msToTime } from "../utils/formatLength";
 import { rememberState, getMemory } from "../utils/statePersistence";
+import { Box } from "@mui/material";
 
 export default function SessionList() {
   const [page, setPage] = useState(getMemory("page", DEFAULT_PAGE));
@@ -114,11 +115,13 @@ export default function SessionList() {
 
   return (
     <div className="sessionList">
-      <SessionFilter
-        filterData={filterData}
-        setFilterData={setFilterData}
-        setPage={setPage}
-      />
+      <Box sx={{ ml: "60px" }}>
+        <SessionFilter
+          filterData={filterData}
+          setFilterData={setFilterData}
+          setPage={setPage}
+        />
+      </Box>
 
       <TableContainer
         sx={{

@@ -21,11 +21,11 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
   return (
     <Box
       sx={{
-        border: "1px solid black",
+        borderTop: "1px solid #A3A2AF",
         mt: "10px",
         mr: "60px",
         ml: "60px",
-        width: "85%",
+        width: "100%",
       }}
     >
       <Stack
@@ -35,20 +35,7 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
         spacing={2}
         sx={{ mt: "10px", mb: "10px" }}
       >
-        <Typography
-          variant="h9"
-          sx={{
-            ml: "10px",
-            fontFamily: "monospace",
-            fontWeight: 700,
-            letterSpacing: ".3rem",
-            color: "inherit",
-            textDecoration: "none",
-            "&:hover": {
-              cursor: "pointer",
-            },
-          }}
-        >
+        <Typography variant="h9" sx={{ fontSize: "18px", mb: "5px" }}>
           Event Sequence Definition
         </Typography>
         {funnelData.map((data, index) => {

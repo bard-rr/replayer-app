@@ -44,6 +44,7 @@ const FilterForm = ({ filterData, setFilterData, filterOptions }) => {
                   setFilterData={setFilterData}
                   index={index}
                   filterData={filterData}
+                  labelColor={"white"}
                 />
                 <AddOrRemoveButton
                   handleAddClick={handleAddClick}

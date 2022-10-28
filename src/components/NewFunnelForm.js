@@ -4,10 +4,11 @@ import { Stack, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { DEFAULT_FUNNEL, DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import BardButton from "./BardButton";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { createOneFunnel } from "../utils/urlUtils";
 
 const NewFunnelForm = () => {
+  const navigate = useNavigate();
   const [funnelData, setFunnelData] = useState([DEFAULT_FUNNEL]);
   const [filterData, setFilterData] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
@@ -18,6 +19,7 @@ const NewFunnelForm = () => {
       sessionFilters: filterData,
       eventSequence: funnelData,
     });
+    navigate("/funnels");
   };
 
   const handleNameChange = (e) => {
@@ -30,22 +32,16 @@ const NewFunnelForm = () => {
       justifyContent="flex-start"
       alignItems="flex-start"
       spacing={2}
-      sx={{ ml: "60px", mt: "30px" }}
+      sx={{
+        mx: "60px",
+        mt: "60px",
+        p: "30px",
+        borderRadius: "4px",
+        bgcolor: "white",
+        boxShadow: 3,
+      }}
     >
-      <Typography
-        variant="h6"
-        sx={{
-          mr: 2,
-          fontFamily: "monospace",
-          fontWeight: 700,
-          letterSpacing: ".3rem",
-          color: "inherit",
-          textDecoration: "none",
-          "&:hover": {
-            cursor: "pointer",
-          },
-        }}
-      >
+      <Typography variant="h6" sx={{ fontSize: "22px" }}>
         Create New Funnel
       </Typography>
       <TextField
@@ -69,17 +65,12 @@ const NewFunnelForm = () => {
       <FunnelComponents funnelData={funnelData} setFunnelData={setFunnelData} />
       <Stack
         direction="row"
-        justifyContent="flex-end"
         alignItems="flex-start"
         spacing={2}
         sx={{ mt: "10px", mr: "60px", ml: "60px", width: "85%" }}
       >
-        <Link to="/funnels">
-          <BardButton text={"Cancel"} />
-        </Link>
-        <Link to="/funnels">
-          <BardButton text={"Create Funnel"} onClick={handleSubmitClick} />
-        </Link>
+        <BardButton text={"Cancel"} onClick={() => navigate("/funnels")} />
+        <BardButton text={"Create Funnel"} onClick={handleSubmitClick} />
       </Stack>
     </Stack>
   );

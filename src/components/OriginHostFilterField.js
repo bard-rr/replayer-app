@@ -18,7 +18,7 @@ const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
       variant="outlined"
       sx={{
         ml: "60px",
-        width: "150px",
+        width: "auto",
         "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {
           "& > fieldset": { borderColor: "#A3A2AF" },
