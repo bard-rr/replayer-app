@@ -35,6 +35,8 @@ class Clickhouse {
 
   async getSessions(paramsObj) {
     const sessionQuery = makeSessionQuery(paramsObj);
+    // todelete
+    console.log(sessionQuery);
     const result = await this.#getData(sessionQuery);
     return result;
   }
@@ -244,6 +246,9 @@ const sortBy = (paramsObj) => {
   const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
   let column;
   switch (paramsObj.sortBy) {
+    case "sessionId":
+      column = "sessionId";
+      break;
     case "length":
       column = "lengthMs";
       break;
@@ -252,6 +257,9 @@ const sortBy = (paramsObj) => {
       break;
     case "originHost":
       column = "originHost";
+      break;
+    case "errorCount":
+      column = "errorCount";
       break;
     default:
       column = "date";
