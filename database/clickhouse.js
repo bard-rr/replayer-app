@@ -1,10 +1,12 @@
-// import { createClient } from "@clickhouse/client";
 const clickhouse = require("@clickhouse/client");
 const { escapeString } = require("./utils");
 const createClient = clickhouse.createClient;
 class Clickhouse {
   constructor() {
     this.client = {};
+    this.query_params = {};
+    this.DEFAULT_PER_PAGE = 5;
+    this.DEFAULT_PAGE_NUM = 0;
   }
 
   async init() {
@@ -52,7 +54,10 @@ class Clickhouse {
   }
 
   async #getData(query, format = "JSONEachRow") {
-    const resultSet = await this.client.query({ query, format });
+    let query_params = this.query_params;
+    console.log("query", query, "query_params", query_params);
+    const resultSet = await this.client.query({ query, format, query_params });
+    this.query_params = {};
     return resultSet.json();
   }
 
@@ -64,7 +69,7 @@ class Clickhouse {
       endDate,
     });
     const select = "SELECT sessionId FROM eventDb.sessionTable";
-    const whereClause = getWhereClauseFromFilters(newFilterArr);
+    const whereClause = this.#getWhereClauseFromFilters(newFilterArr);
     const query = `${select} WHERE ${whereClause}`;
     let result = await this.#getData(query);
     return result.map((resultObj) => resultObj.sessionId);
@@ -126,8 +131,8 @@ GROUP BY sessionId
   //returned by the query
   #getFirstFunnelResults = async (queryObj, filteredSessionArr) => {
     //create the query
-    let eventWhereClause = getEventWhereClause(queryObj);
-    let sessionWhereClause = getSessionWhereClause(filteredSessionArr);
+    let eventWhereClause = this.#getEventWhereClause(queryObj);
+    let sessionWhereClause = this.#getSessionWhereClause(filteredSessionArr);
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
@@ -137,199 +142,153 @@ GROUP BY sessionId
     if (prevResultArr.length === 0) {
       return [];
     }
-    let eventWhereClause = getEventWhereClause(queryObj);
-    let funnelWhereClause = getFunnelWhereClause(prevResultArr);
+    let eventWhereClause = this.#getEventWhereClause(queryObj);
+    let funnelWhereClause = this.#getFunnelWhereClause(prevResultArr);
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
     eventDb.conversionEvents WHERE ${eventWhereClause} ${funnelWhereClause}
     GROUP BY sessionId`;
     return await this.#getData(query);
   };
-}
 
-const DEFAULT_PER_PAGE = 5;
-const DEFAULT_PAGE_NUM = 0;
+  #getEventWhereClause = (queryObj) => {
+    switch (queryObj.eventType) {
+      case "click":
+        return `(eventType = 'click') AND (textContent = '${escapeString(
+          queryObj.textContent
+        )}')`;
+      default:
+        return `(eventType = 'click') AND (textContent = '${escapeString(
+          queryObj.textContent
+        )}')`;
+    }
+  };
+  #getFunnelWhereClause = (prevResultArr) => {
+    let funnelWhereClause = "AND (";
+    let prevResultClauses = [];
+    for (let i = 0; i < prevResultArr.length; i++) {
+      let onePrevResult = prevResultArr[i];
+      prevResultClauses.push(
+        `((sessionId = '${onePrevResult.sessionId}') AND (timestamp > ${onePrevResult.time}))`
+      );
+    }
+    funnelWhereClause += prevResultClauses.join(" OR ");
+    funnelWhereClause += ")";
+    return funnelWhereClause;
+  };
 
-const getEventWhereClause = (queryObj) => {
-  switch (queryObj.eventType) {
-    case "click":
-      return `(eventType = 'click') AND (textContent = '${escapeString(
-        queryObj.textContent
-      )}')`;
-    default:
-      return `(eventType = 'click') AND (textContent = '${escapeString(
-        queryObj.textContent
-      )}')`;
-  }
-};
-const getFunnelWhereClause = (prevResultArr) => {
-  let funnelWhereClause = "AND (";
-  let prevResultClauses = [];
-  for (let i = 0; i < prevResultArr.length; i++) {
-    let onePrevResult = prevResultArr[i];
-    prevResultClauses.push(
-      `((sessionId = '${onePrevResult.sessionId}') AND (timestamp > ${onePrevResult.time}))`
+  #getSessionWhereClause = (filteredSessionArr) => {
+    let sessionWhereClause = "AND (";
+    let clausePieces = [];
+    for (let i = 0; i < filteredSessionArr.length; i++) {
+      let sessionId = filteredSessionArr[i];
+      clausePieces.push(`(sessionId = '${sessionId}')`);
+    }
+    sessionWhereClause += clausePieces.join(" OR ");
+    sessionWhereClause += ")";
+    return sessionWhereClause;
+  };
+
+  #makeSessionQuery = (paramsObj) => {
+    const whereClause = this.#filterBy(paramsObj);
+    const orderBy = this.#sortBy(paramsObj);
+    const limitOffset = this.#paginateBy(paramsObj);
+    const select = "SELECT * FROM eventDb.sessionTable";
+    const sessionQuery = `${select} WHERE ${whereClause} ${orderBy} ${limitOffset}`;
+    return sessionQuery;
+  };
+
+  #makeCountQuery = (paramsObj) => {
+    return `SELECT count(*) FROM eventDb.sessionTable WHERE ${this.#filterBy(
+      paramsObj
+    )}`;
+  };
+
+  #getWhereClauseFromFilters = (filterArr) => {
+    let clausePieces = [];
+    for (let i = 0; i < filterArr.length; i++) {
+      let clausePiece = `(${this.#filterBy(filterArr[i])})`;
+      clausePieces.push(clausePiece);
+    }
+    return clausePieces.join(" AND "); //only support AND filtering right now
+  };
+
+  #filterBy = (paramsObj) => {
+    let result = [];
+    //parse filters from the query params
+    const filtersTags = Object.keys(paramsObj).filter(
+      (key) => key.substring(0, 6) === "filter"
     );
-  }
-  funnelWhereClause += prevResultClauses.join(" OR ");
-  funnelWhereClause += ")";
-  return funnelWhereClause;
-};
+    const filters = filtersTags.map((filter) => {
+      return paramsObj[filter];
+    });
 
-const getSessionWhereClause = (filteredSessionArr) => {
-  let sessionWhereClause = "AND (";
-  let clausePieces = [];
-  for (let i = 0; i < filteredSessionArr.length; i++) {
-    let sessionId = filteredSessionArr[i];
-    clausePieces.push(`(sessionId = '${sessionId}')`);
-  }
-  sessionWhereClause += clausePieces.join(" OR ");
-  sessionWhereClause += ")";
-  return sessionWhereClause;
-};
+    //use the filters to construct the where clause
+    filters.forEach((filter) => {
+      switch (filter) {
+        case "length":
+          const minLength = Number(paramsObj.minLength) || 0;
+          const maxLength = Number(paramsObj.maxLength) || Date.now();
+          result.push(
+            `(lengthMs >= {minLength: UInt64}) AND (lengthMs <= {maxLength: UInt64})`
+          );
+          this.query_params["maxLength"] = maxLength;
+          this.query_params["minLength"] = minLength;
+          break;
+        case "date":
+          const startDate = paramsObj.startDate || "1970-01-01";
+          const todayString = this.getTodayString();
+          const endDate = paramsObj.endDate || todayString;
+          result.push(
+            `(date >= {startDate: Date}) AND (date <= {endDate: Date})`
+          );
+          this.query_params["startDate"] = startDate;
+          this.query_params["endDate"] = endDate;
+          break;
+        case "originHost":
+          const originHost = paramsObj.textContent;
+          result.push(`(originHost = {originHost: String})`);
+          this.query_params["originHost"] = originHost;
+          break;
+        default:
+          result.push(`(date = '${this.getTodayString()}')`);
+      }
+    });
+    return result.join(` AND `);
+  };
 
-const makeSessionQuery = (paramsObj) => {
-  const whereClause = filterBy(paramsObj);
-  const orderBy = sortBy(paramsObj);
-  const limitOffset = paginateBy(paramsObj);
-  const select = "SELECT * FROM eventDb.sessionTable";
-  const sessionQuery = `${select} WHERE ${whereClause} ${orderBy} ${limitOffset}`;
-  return sessionQuery;
-};
-
-const makeCountQuery = (paramsObj) => {
-  return `SELECT count(*) FROM eventDb.sessionTable WHERE ${filterBy(
-    paramsObj
-  )}`;
-};
-
-const getWhereClauseFromFilters = (filterArr) => {
-  let clausePieces = [];
-  for (let i = 0; i < filterArr.length; i++) {
-    let clausePiece = `(${filterBy(filterArr[i])})`;
-    clausePieces.push(clausePiece);
-  }
-  return clausePieces.join(" AND "); //only support AND filtering right now
-};
-
-const filterBy = (paramsObj) => {
-  let result = [];
-  const filtersTags = Object.keys(paramsObj).filter(
-    (key) => key.substring(0, 6) === "filter"
-  );
-  const filters = filtersTags.map((filter) => {
-    return paramsObj[filter];
-  });
-  filters.forEach((filter) => {
-    switch (filter) {
+  #sortBy = (paramsObj) => {
+    const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
+    let column;
+    switch (paramsObj.sortBy) {
       case "length":
-        const minLength = Number(paramsObj.minLength) || 0;
-        const maxLength = Number(paramsObj.maxLength) || Date.now();
-        result.push(
-          `(lengthMs >= ${minLength}) AND (lengthMs <= ${maxLength})`
-        );
+        column = "lengthMs";
         break;
       case "date":
-        const startDate = paramsObj.startDate || "1970-01-01";
-        const todayString = getTodayString();
-        const endDate = paramsObj.endDate || todayString;
-        result.push(`(date >= '${startDate}') AND (date <= '${endDate}')`);
+        column = "date";
         break;
       case "originHost":
-        const originHost = paramsObj.textContent;
-        result.push(`(originHost = '${originHost}')`);
+        column = "originHost";
         break;
       default:
-        result.push(`(date = '${getTodayString()}')`);
+        column = "date";
     }
-  });
-  return result.join(` AND `);
-};
+    return `ORDER BY ${column} ${direction}, sessionId ASC`;
+  };
 
-const sortBy = (paramsObj) => {
-  const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
-  let column;
-  switch (paramsObj.sortBy) {
-    case "length":
-      column = "lengthMs";
-      break;
-    case "date":
-      column = "date";
-      break;
-    case "originHost":
-      column = "originHost";
-      break;
-    default:
-      column = "date";
-  }
-  return `ORDER BY ${column} ${direction}, sessionId ASC`;
-};
+  #paginateBy = (paramsObj) => {
+    const limit = Number(paramsObj.perPage) || this.DEFAULT_PER_PAGE;
+    const offset = limit * (Number(paramsObj.pageNum) || this.DEFAULT_PAGE_NUM);
 
-const paginateBy = (paramsObj) => {
-  const limit = Number(paramsObj.perPage) || DEFAULT_PER_PAGE;
-  const offset = limit * (Number(paramsObj.pageNum) || DEFAULT_PAGE_NUM);
+    return `LIMIT ${limit} OFFSET ${offset}`;
+  };
 
-  return `LIMIT ${limit} OFFSET ${offset}`;
-};
-
-const getTodayString = () => {
-  const today = new Date();
-  const year = today.getUTCFullYear();
-  const month = today.getUTCMonth() + 1;
-  const day = today.getUTCDate();
-  return `${year}-${month}-${day}`;
-};
+  getTodayString = () => {
+    const today = new Date();
+    const year = today.getUTCFullYear();
+    const month = today.getUTCMonth() + 1;
+    const day = today.getUTCDate();
+    return `${year}-${month}-${day}`;
+  };
+}
 
 module.exports = Clickhouse;
-
-//creates a clickhouse db
-// await this.client.exec({
-//   query: `CREATE DATABASE IF NOT EXISTS eventDb;`,
-// });
-// // //create a queryable table. note that Primary Keys don't need to be unique among rows
-// await this.client.exec({
-//   query: `
-//     CREATE TABLE IF NOT EXISTS eventDb.eventTable
-//     (sessionId String, event String)
-//     ENGINE = MergeTree()
-//     PRIMARY KEY (sessionId)
-//   `,
-// });
-
-// //this creates a clickhouse table that listens for messages sent to the provided
-// //rabbitMQ exchange. We use a materialize view to take messages from this table
-// //and place them into our queryable table without 'reading' them from the queue.
-// await this.client.exec({
-//   query: `
-//     CREATE TABLE IF NOT EXISTS eventDb.eventQueue
-//     (sessionId String, event String)
-//     ENGINE = RabbitMQ SETTINGS
-//       rabbitmq_host_port = 'localhost:5672',
-//       rabbitmq_exchange_name = 'test-exchange',
-//       rabbitmq_format = 'JSONEachRow'
-//   `,
-// });
-
-// //create a materialized view to populate the queryable table
-// await this.client.exec({
-//   query: `
-//     CREATE MATERIALIZED VIEW IF NOT EXISTS eventDb.consumer TO eventDb.eventTable
-//     AS SELECT * FROM eventDb.eventQueue
-//    `,
-// });
-
-//create a table to store session information
-// await this.client.exec({
-//   query: `
-//     CREATE TABLE IF NOT EXISTS eventDb.sessionTable
-//     (
-//       sessionId String,
-//       startTime DateTime64(3, 'Etc/UTC'),
-//       endTime DateTime64(3, 'Etc/UTC'),
-//       length Number,
-//       date Date,
-//       complete Bool
-//     )
-//     ENGINE = MergeTree()
-//     PRIMARY KEY (sessionId)
-//   `,
-// });
