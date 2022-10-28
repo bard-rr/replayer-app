@@ -233,6 +233,10 @@ const filterBy = (paramsObj) => {
         const originHost = paramsObj.textContent;
         result.push(`(originHost = '${originHost}')`);
         break;
+      case "Has Errors?":
+        const comparisonOperator = (paramsObj.yesOrNo === 'yes' ? '>' : '=');
+        result.push(`errorCount ${comparisonOperator} 0`);
+        break;
       default:
         result.push(`(date = '${getTodayString()}')`);
     }
@@ -244,6 +248,9 @@ const sortBy = (paramsObj) => {
   const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
   let column;
   switch (paramsObj.sortBy) {
+    case "sessionId":
+      column = "sessionId";
+      break;
     case "length":
       column = "lengthMs";
       break;
@@ -252,6 +259,9 @@ const sortBy = (paramsObj) => {
       break;
     case "originHost":
       column = "originHost";
+      break;
+    case "errorCount":
+      column = "errorCount";
       break;
     default:
       column = "date";
