@@ -77,7 +77,8 @@ class Clickhouse {
   }
 
   async getSessionIdsFromFilters(filterArr, startDate, endDate) {
-    const newFilterArr = Object.keys(filterArr[0]).length === 0 ? [] : [...filterArr];
+    const newFilterArr =
+      Object.keys(filterArr[0]).length === 0 ? [] : [...filterArr];
     newFilterArr.push({
       filterType: "date",
       startDate,
@@ -271,7 +272,7 @@ GROUP BY sessionId
           result.push(`(originHost = ${this.#getParam(originHost, "String")})`);
           break;
         case "Has Errors?":
-          const comparisonOperator = (paramsObj.yesOrNo === 'yes' ? '>' : '=');
+          const comparisonOperator = paramsObj.yesOrNo === "yes" ? ">" : "=";
           result.push(`errorCount ${comparisonOperator} 0`);
           break;
         default:
@@ -284,29 +285,28 @@ GROUP BY sessionId
   #sortBy = (paramsObj) => {
     //tenary and switch ensure that what makes it into query is sanitized
     const direction = paramsObj.sortOrder === "ascending" ? "ASC" : "DESC";
-      let column;
-      switch (paramsObj.sortBy) {
-        case "sessionId":
-          column = "sessionId";
-          break;
-        case "length":
-          column = "lengthMs";
-          break;
-        case "date":
-          column = "date";
-          break;
-        case "originHost":
-          column = "originHost";
-          break;
-        case "errorCount":
-          column = "errorCount";
-          break;
-        default:
-          column = "date";
-      }
-      return `ORDER BY ${column} ${direction}, sessionId ASC`;
+    let column;
+    switch (paramsObj.sortBy) {
+      case "sessionId":
+        column = "sessionId";
+        break;
+      case "length":
+        column = "lengthMs";
+        break;
+      case "date":
+        column = "date";
+        break;
+      case "originHost":
+        column = "originHost";
+        break;
+      case "errorCount":
+        column = "errorCount";
+        break;
+      default:
+        column = "date";
+    }
+    return `ORDER BY ${column} ${direction}, sessionId ASC`;
   };
-
 
   #paginateBy = (paramsObj) => {
     //NaN is falsey, so the || operator ensures we always have a number here
