@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_URL } from "./const";
+import { ALL_FILTER_OPTIONS, BASE_URL } from "./const";
 // import { fakeFunnel } from "../fakeData";
 
 export const getNewSessions = async (
@@ -106,6 +106,19 @@ export const deleteOneFunnel = async (id) => {
   try {
     const url = `${BASE_URL}/funnels/${id}`;
     await axios.delete(url);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getFilterOptionsFor = async (filterType) => {
+  try {
+    if (!ALL_FILTER_OPTIONS.includes(filterType)) {
+      throw new Error("Invalid filter type");
+    }
+    const url = `${BASE_URL}/filterOptions?filterType=${filterType}`;
+    let { data } = await axios.get(url);
+    return data;
   } catch (error) {
     console.error(error);
   }
