@@ -26,20 +26,23 @@ class Postgres {
   async getFunnelMetadata(paramsObj) {
     const funnelQuery = this.#makeFunnelQuery(paramsObj);
     let result = await this.#executeQuery(funnelQuery);
-    return result.rows.map((fullFunnel) => {
-      let createdDateStr = this.#getDateStr(
-        Number.parseInt(fullFunnel.created_at_ms, 10)
-      );
-      let lastModifiedDateStr = this.#getDateStr(
-        Number.parseInt(fullFunnel.last_modified_at_ms, 10)
-      );
-      return {
-        id: fullFunnel.id,
-        name: fullFunnel.name,
-        created: createdDateStr,
-        lastModified: lastModifiedDateStr,
-      };
-    });
+    //don't return deleted funnels + format objects properly
+    return result.rows
+      .filter((fullFunnel) => !fullFunnel.is_deleted)
+      .map((fullFunnel) => {
+        let createdDateStr = this.#getDateStr(
+          Number.parseInt(fullFunnel.created_at_ms, 10)
+        );
+        let lastModifiedDateStr = this.#getDateStr(
+          Number.parseInt(fullFunnel.last_modified_at_ms, 10)
+        );
+        return {
+          id: fullFunnel.id,
+          name: fullFunnel.name,
+          created: createdDateStr,
+          lastModified: lastModifiedDateStr,
+        };
+      });
   }
 
   #makeFunnelQuery(paramsObj) {

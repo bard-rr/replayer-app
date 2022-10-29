@@ -119,7 +119,6 @@ app.put("/funnels/:id", async (req, res) => {
 app.delete("/funnels/:id", async (req, res) => {
   let id = Number.parseInt(req.params.id, 10);
   try {
-    console.log("delete funnel", id);
     await postgres.deleteFunnel(id);
     res.status(200).send();
   } catch (error) {
