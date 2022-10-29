@@ -85,6 +85,7 @@ export const getOneFunnel = async (id) => {
 };
 
 export const createOneFunnel = async (funnelObj) => {
+  console.log(funnelObj);
   try {
     const url = `${BASE_URL}/funnels`;
     await axios.post(url, funnelObj);

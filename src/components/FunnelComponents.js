@@ -3,6 +3,7 @@ import FunnelSelection from "./FunnelSelection";
 import ClickEventField from "./ClickEventField";
 import { DEFAULT_FUNNEL } from "../utils/const";
 import AddOrRemoveButton from "./AddOrRemoveButton";
+import CustomEventField from "./CustomEventField";
 
 const FunnelComponents = ({ funnelData, setFunnelData }) => {
   const handleAddClick = (e) => {
@@ -26,15 +27,13 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
         mr: "60px",
         ml: "60px",
         width: "100%",
-      }}
-    >
+      }}>
       <Stack
         direction="column"
         justifyContent="flex-start"
         alignItems="flex-start"
         spacing={2}
-        sx={{ mt: "10px", mb: "10px" }}
-      >
+        sx={{ mt: "10px", mb: "10px" }}>
         <Typography variant="h9" sx={{ fontSize: "18px", mb: "5px" }}>
           Event Sequence Definition
         </Typography>
@@ -47,8 +46,7 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
                   justifyContent="flex-start"
                   alignItems="flex-start"
                   spacing={4}
-                  key={index}
-                >
+                  key={index}>
                   <FunnelSelection
                     data={data}
                     index={index}
@@ -68,6 +66,34 @@ const FunnelComponents = ({ funnelData, setFunnelData }) => {
                   />
                 </Stack>
               );
+            case "custom": {
+              return (
+                <Stack
+                  direction="row"
+                  justifyContent="flex-start"
+                  alignItems="flex-start"
+                  spacing={4}
+                  key={index}>
+                  <FunnelSelection
+                    data={data}
+                    index={index}
+                    funnelData={funnelData}
+                    setFunnelData={setFunnelData}
+                  />
+                  <CustomEventField
+                    index={index}
+                    funnelData={funnelData}
+                    setFunnelData={setFunnelData}
+                  />
+                  <AddOrRemoveButton
+                    handleAddClick={handleAddClick}
+                    handleRemoveClick={handleRemoveClick}
+                    index={index}
+                    dataLength={funnelData.length}
+                  />
+                </Stack>
+              );
+            }
             default:
               return (
                 <Box key={index}>
