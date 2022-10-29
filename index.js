@@ -127,6 +127,26 @@ app.delete("/funnels/:id", async (req, res) => {
   }
 });
 
+app.get("/funnelOptions", async (req, res) => {
+  let { eventType } = req.query;
+  try {
+    let data = await clickhouse.getFunnelOptions(eventType);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get("/filterOptions", async (req, res) => {
+  let { filterType } = req.query;
+  try {
+    let data = await clickhouse.getFilterOptions(filterType);
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
 });
