@@ -1,7 +1,6 @@
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Button } from "@mui/material";
-import { pink } from "@mui/material/colors";
 
 const BardButton = ({ text, onClick, sx, isBackButton, isDeleteButton }) => {
   return (

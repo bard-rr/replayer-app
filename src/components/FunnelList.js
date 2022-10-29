@@ -15,9 +15,10 @@ import {
   DEFAULT_PAGE,
   DEFAULT_SORT_FUNNELS,
 } from "../utils/const";
-import { getNewFunnels } from "../utils/urlUtils";
+import { deleteOneFunnel, getNewFunnels } from "../utils/urlUtils";
 import BardButton from "./BardButton";
 import { Stack } from "@mui/material";
+import DeleteButton from "./DeleteButton";
 
 const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
@@ -89,6 +90,19 @@ const FunnelList = () => {
     navigate(`/funnels/${funnelId}`);
   };
 
+  const handleClickDelete = async (e, funnelId) => {
+    e.stopPropagation();
+    if (
+      window.confirm(
+        "This will delete the funnel.\nAre you sure you want to do this?"
+      )
+    ) {
+      await deleteOneFunnel(funnelId);
+      let newFunnels = funnels.filter((funnel) => funnel.id !== funnelId);
+      setFunnels(newFunnels);
+    }
+  };
+
   return (
     <div>
       <Stack
@@ -129,6 +143,7 @@ const FunnelList = () => {
                   </TableCell>
                 );
               })}
+              <TableCell>{"Delete"}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -147,6 +162,12 @@ const FunnelList = () => {
                 <TableCell>{funnel.name}</TableCell>
                 <TableCell>{funnel.created}</TableCell>
                 <TableCell>{funnel.lastModified}</TableCell>
+                <TableCell component="th" scope="row">
+                  <DeleteButton
+                    handleClick={(e) => handleClickDelete(e, funnel.id)}
+                    sx={{ height: "36px", width: "10px" }}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

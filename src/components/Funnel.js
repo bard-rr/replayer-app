@@ -2,13 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import List from "@mui/material/List";
-import DeleteIcon from "@mui/icons-material/Delete";
 import FunnelStep from "./FunnelStep";
 import FunnelTimeFilter from "./FunnelTimeFilter";
 import getDates from "../utils/dateFilter";
 import { deleteOneFunnel, getFunnelData } from "../utils/urlUtils";
 import BardButton from "./BardButton";
-import { common, red } from "@mui/material/colors";
+import DeleteButton from "./DeleteButton";
 
 const Funnel = () => {
   const { funnelId } = useParams();
@@ -44,7 +43,8 @@ const Funnel = () => {
     });
   };
 
-  const handleClickDelete = async (funnelId) => {
+  const handleClickDelete = async (e, funnelId) => {
+    e.stopPropagation();
     if (
       window.confirm(
         "This will delete the funnel.\nAre you sure you want to do this?"
@@ -97,16 +97,13 @@ const Funnel = () => {
             zIndex: 1,
           }}
         />
-        <BardButton
-          isDeleteButton={true}
-          onClick={() => handleClickDelete(funnelId)}
+        <DeleteButton
+          handleClick={(e) => handleClickDelete(e, funnelId)}
           sx={{
             position: "absolute",
             top: "30px",
             right: "30px",
-            zIndex: 1,
-            color: common["white"],
-            backgroundColor: red["A700"],
+            height: "56px",
           }}
         />
         <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
