@@ -101,3 +101,13 @@ export const updateOneFunnel = async (id, newFunnelObj) => {
     console.error(error);
   }
 };
+
+export const deleteOneFunnel = async (id) => {
+  try {
+    const url = `${BASE_URL}/funnels/${id}`;
+    //console.log("delete request to ", url);
+    await axios.delete(url);
+  } catch (error) {
+    console.error(error);
+  }
+};
