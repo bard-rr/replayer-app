@@ -36,6 +36,7 @@ const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
             "& > fieldset": { borderColor: "#A3A2AF" },
           },
         }}
+        value={filterData[index].textContent || ""}
         onChange={handleChange}
         renderInput={(params) => (
           <TextField variant="outlined" {...params} label="Origin Host" />

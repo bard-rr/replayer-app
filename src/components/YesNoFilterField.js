@@ -25,7 +25,7 @@ const YesNoFilterField = ({ index, filterData, setFilterData }) => {
         },
       }}
       label="Yes or No?"
-      value={filterData[index].value}
+      value={filterData[index].yesOrNo || ""}
       onChange={handleChange}
       select
       defaultValue=""

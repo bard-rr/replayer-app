@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ALL_FILTER_OPTIONS, BASE_URL } from "./const";
+import { ALL_EVENT_OPTIONS, ALL_FILTER_OPTIONS, BASE_URL } from "./const";
 // import { fakeFunnel } from "../fakeData";
 
 export const getNewSessions = async (
@@ -117,6 +117,19 @@ export const getFilterOptionsFor = async (filterType) => {
       throw new Error("Invalid filter type");
     }
     const url = `${BASE_URL}/filterOptions?filterType=${filterType}`;
+    let { data } = await axios.get(url);
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getFunnelOptionsFor = async (eventType) => {
+  try {
+    if (!ALL_EVENT_OPTIONS.includes(eventType)) {
+      throw new Error("Invalid event type");
+    }
+    const url = `${BASE_URL}/funnelOptions?eventType=${eventType}`;
     let { data } = await axios.get(url);
     return data;
   } catch (error) {
