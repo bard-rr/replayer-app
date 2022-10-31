@@ -19,7 +19,9 @@ const StepCompletionDetails = ({ results, event, stepNum }) => {
 
   const getModalTitle = (count, completed) => {
     const status = completed ? "Completed" : "Dropped";
-    const step = `${event.eventType} on "${event.textContent}"`;
+    const step = `${event.eventType} on "${
+      event.textContent || event.customEventType
+    }"`;
     return `${status} step ${stepNum} (${step})`;
   };
 
@@ -33,8 +35,7 @@ const StepCompletionDetails = ({ results, event, stepNum }) => {
         ml: "30px",
         display: "flex",
         justifyContent: "space-between",
-      }}
-    >
+      }}>
       <Stack
         direction="row"
         alignItems="center"
@@ -43,8 +44,7 @@ const StepCompletionDetails = ({ results, event, stepNum }) => {
           "&:hover": {
             cursor: "pointer",
           },
-        }}
-      >
+        }}>
         <CheckCircleOutlineIcon sx={{ mr: "5px" }} color="success" />
         {results.numberCompleted} completed step
       </Stack>
@@ -56,8 +56,7 @@ const StepCompletionDetails = ({ results, event, stepNum }) => {
           "&:hover": {
             cursor: "pointer",
           },
-        }}
-      >
+        }}>
         <CancelOutlinedIcon sx={{ mr: "5px" }} color="error" />
         <Box>{results.numberNotCompleted} dropped</Box>
       </Stack>
