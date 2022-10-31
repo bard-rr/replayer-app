@@ -47,6 +47,18 @@ class Clickhouse {
     return result[0]["count()"];
   }
 
+  async getFunnelOptions(eventType) {
+    let query = this.#getFunnelOptionsQuery(eventType);
+    let result = await this.#runQuery(query);
+    return result.map((resultObj) => resultObj.textContent);
+  }
+
+  async getFilterOptions(filterType) {
+    let query = this.#getFilterOptionsQuery(filterType);
+    let result = await this.#runQuery(query);
+    return result.map((resultObj) => resultObj.textContent);
+  }
+
   #getParam(data, dataType) {
     let paramName = `parameter${this.paramCount}`;
     this.paramCount++;
@@ -184,6 +196,17 @@ GROUP BY sessionId
     }
   };
 
+  #getFunnelOptionsQuery = (eventType) => {
+    switch (eventType) {
+      case "click":
+        return `SELECT DISTINCT(textContent) 
+                FROM eventDb.conversionEvents 
+                WHERE eventType=${this.#getParam(eventType, "String")}`;
+      default:
+        throw new Error("Invalid funnel option");
+    }
+  };
+
   #getFunnelWhereClause = (prevResultArr) => {
     let funnelWhereClause = "AND (";
     let prevResultClauses = [];
@@ -280,6 +303,16 @@ GROUP BY sessionId
       }
     });
     return result.join(` AND `);
+  };
+
+  #getFilterOptionsQuery = (filterType) => {
+    switch (filterType) {
+      case "originHost":
+        return `SELECT DISTINCT(originHost) as textContent
+                FROM eventDb.sessionTable`;
+      default:
+        throw new Error("Invalid filter option");
+    }
   };
 
   #sortBy = (paramsObj) => {
