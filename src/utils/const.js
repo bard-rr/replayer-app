@@ -38,4 +38,4 @@ export const ALL_FILTER_OPTIONS = [
   "originHost",
   "Has Errors?",
 ];
-export const ALL_EVENT_OPTIONS = ["click"];
+export const ALL_EVENT_OPTIONS = ["click", "custom"];

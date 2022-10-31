@@ -6,6 +6,7 @@ import FunnelComponents from "./FunnelComponents";
 import SessionFilterForFunnel from "./SessionFilterForFunnel";
 import { getOneFunnel, updateOneFunnel } from "../utils/urlUtils";
 import BardButton from "./BardButton";
+import { getMemory } from "../utils/statePersistence";
 
 const EditFunnelForm = () => {
   let { id } = useParams();
@@ -81,7 +82,10 @@ const EditFunnelForm = () => {
       >
         <BardButton
           text={"Cancel"}
-          onClick={() => navigate(`/funnels/${id}`)}
+          onClick={() => {
+            let path = getMemory("lastPage", `/funnels/${id}`);
+            navigate(path);
+          }}
         />
         <BardButton text={"Update Funnel"} onClick={handleUpdateClick} />
       </Stack>

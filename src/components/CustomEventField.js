@@ -1,21 +1,33 @@
-import { TextField } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+import { getFunnelOptionsFor } from "../utils/urlUtils";
 
 const CustomEventField = ({ index, funnelData, setFunnelData }) => {
-  const handleChange = (e) => {
+  let [options, setOptions] = useState([]);
+  useEffect(() => {
+    let getOptions = async () => {
+      let newOptions = await getFunnelOptionsFor("custom");
+      setOptions(newOptions);
+    };
+    getOptions();
+  }, []);
+
+  const handleChange = (e, newValue) => {
     const newFunnelData = funnelData.map((innerData, innerIndex) => {
       if (index !== innerIndex) {
         return innerData;
       }
       let newFunnel = { ...innerData };
-      newFunnel.customEventType = e.target.value;
+      newFunnel.customEventType = newValue;
       return newFunnel;
     });
     setFunnelData(newFunnelData);
   };
 
   return (
-    <TextField
-      variant="outlined"
+    <Autocomplete
+      disablePortal
+      options={options}
       sx={{
         ml: "60px",
         width: "300px",
@@ -25,8 +37,10 @@ const CustomEventField = ({ index, funnelData, setFunnelData }) => {
         },
       }}
       value={funnelData[index].customEventType || ""}
-      label="Custom Event Name"
       onChange={handleChange}
+      renderInput={(params) => (
+        <TextField variant="outlined" label="Custom Event Name" {...params} />
+      )}
     />
   );
 };

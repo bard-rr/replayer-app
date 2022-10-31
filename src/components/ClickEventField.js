@@ -11,6 +11,7 @@ const ClickEventField = ({ index, funnelData, setFunnelData }) => {
     };
     getOptions();
   }, []);
+
   const handleChange = (e, newValue) => {
     const newFunnelData = funnelData.map((innerData, innerIndex) => {
       if (index !== innerIndex) {
