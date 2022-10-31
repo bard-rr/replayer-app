@@ -5,8 +5,9 @@ import List from "@mui/material/List";
 import FunnelStep from "./FunnelStep";
 import FunnelTimeFilter from "./FunnelTimeFilter";
 import getDates from "../utils/dateFilter";
-import { getFunnelData } from "../utils/urlUtils";
+import { deleteOneFunnel, getFunnelData } from "../utils/urlUtils";
 import BardButton from "./BardButton";
+import DeleteButton from "./DeleteButton";
 
 const Funnel = () => {
   const { funnelId } = useParams();
@@ -40,6 +41,18 @@ const Funnel = () => {
         />
       );
     });
+  };
+
+  const handleClickDelete = async (e, funnelId) => {
+    e.stopPropagation();
+    if (
+      window.confirm(
+        "This will delete the funnel.\nAre you sure you want to do this?"
+      )
+    ) {
+      await deleteOneFunnel(funnelId);
+      navigate("/funnels");
+    }
   };
 
   if (funnelData === null) return null;
@@ -80,8 +93,17 @@ const Funnel = () => {
           sx={{
             position: "absolute",
             top: "30px",
-            right: "30px",
+            right: "100px",
             zIndex: 1,
+          }}
+        />
+        <DeleteButton
+          handleClick={(e) => handleClickDelete(e, funnelId)}
+          sx={{
+            position: "absolute",
+            top: "30px",
+            right: "30px",
+            height: "56px",
           }}
         />
         <Box sx={{ fontSize: "18px" }}>{funnelData.funnel.funnelName}</Box>
