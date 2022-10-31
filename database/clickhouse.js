@@ -160,10 +160,13 @@ GROUP BY sessionId
   #getFirstFunnelResults = async (queryObj, filteredSessionArr) => {
     //create the query
     let eventWhereClause = this.#getEventWhereClause(queryObj);
+    console.log("eventWhereClause ", eventWhereClause);
     let sessionWhereClause = this.#getSessionWhereClause(filteredSessionArr);
+    console.log("sessionWhereClause ", sessionWhereClause);
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
+    console.log("first Query Clickhoust 155: ", query);
     return await this.#runQuery(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
@@ -184,6 +187,12 @@ GROUP BY sessionId
       case "click":
         query = `(eventType = 'click') AND (textContent = ${this.#getParam(
           queryObj.textContent,
+          "String"
+        )})`;
+        return query;
+      case "custom":
+        query = `(eventType = 'custom') AND (customEventType = ${this.#getParam(
+          queryObj.customEventType,
           "String"
         )})`;
         return query;
