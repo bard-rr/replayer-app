@@ -179,7 +179,7 @@ GROUP BY sessionId
         )})`;
         return query;
       case "custom":
-        query = `(eventType = 'custom') AND (customeEventType = ${this.#getParam(
+        query = `(eventType = 'custom') AND (customEventType = ${this.#getParam(
           queryObj.customEventType,
           "String"
         )})`;
