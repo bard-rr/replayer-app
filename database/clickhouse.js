@@ -74,14 +74,12 @@ class Clickhouse {
   async #runQuery(query, format = "JSONEachRow") {
     try {
       let query_params = this.query_params;
-      //console.log("query", query, "\nquery_params", query_params);
       const resultSet = await this.client.query({
         query,
         format,
         query_params,
       });
       this.#clearQueryParams();
-      //console.log("result set", resultSet);
       return resultSet.json();
     } catch (error) {
       throw new Error(error);
@@ -160,13 +158,10 @@ GROUP BY sessionId
   #getFirstFunnelResults = async (queryObj, filteredSessionArr) => {
     //create the query
     let eventWhereClause = this.#getEventWhereClause(queryObj);
-    console.log("eventWhereClause ", eventWhereClause);
     let sessionWhereClause = this.#getSessionWhereClause(filteredSessionArr);
-    console.log("sessionWhereClause ", sessionWhereClause);
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
-    console.log("first Query Clickhoust 155: ", query);
     return await this.#runQuery(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
