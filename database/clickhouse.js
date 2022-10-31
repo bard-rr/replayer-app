@@ -187,6 +187,12 @@ GROUP BY sessionId
           "String"
         )})`;
         return query;
+      case "custom":
+        query = `(eventType = 'custom') and (customEventType = ${this.#getParam(
+          queryObj.customEventType,
+          "String"
+        )})`;
+        return query;
       default:
         query = `(eventType = 'click') AND (textContent = ${this.#getParam(
           queryObj.textContent,
@@ -203,7 +209,7 @@ GROUP BY sessionId
                 FROM eventDb.conversionEvents 
                 WHERE eventType=${this.#getParam(eventType, "String")}`;
       case "custom":
-        return `SELECT DISTINCT(customEventType)
+        return `SELECT DISTINCT(customEventType) as textContent
                 FROM eventDb.conversionEvents
                 WHERE eventType=${this.#getParam(eventType, "String")}`;
       default:
