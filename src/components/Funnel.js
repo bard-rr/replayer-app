@@ -8,6 +8,7 @@ import getDates from "../utils/dateFilter";
 import { deleteOneFunnel, getFunnelData } from "../utils/urlUtils";
 import BardButton from "./BardButton";
 import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
 
 const Funnel = () => {
   const { funnelId } = useParams();
@@ -87,13 +88,13 @@ const Funnel = () => {
           selectedFilter={selectedFilter}
           onChange={handleChange}
         />
-        <BardButton
-          text="Edit"
-          onClick={() => navigate(`/funnels/update/${funnelId}`)}
+        <EditButton
+          handleClick={() => navigate(`/funnels/update/${funnelId}`)}
           sx={{
             position: "absolute",
             top: "30px",
             right: "100px",
+            height: "56px",
             zIndex: 1,
           }}
         />

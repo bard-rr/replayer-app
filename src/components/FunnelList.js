@@ -19,6 +19,8 @@ import { deleteOneFunnel, getNewFunnels } from "../utils/urlUtils";
 import BardButton from "./BardButton";
 import { Stack } from "@mui/material";
 import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
+import { rememberState } from "../utils/statePersistence";
 
 const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
@@ -86,12 +88,14 @@ const FunnelList = () => {
   };
 
   const handleFunnelClick = (e) => {
+    console.log("handle clicked a funnel");
     const funnelId = e.target.parentElement.dataset.id;
     navigate(`/funnels/${funnelId}`);
   };
 
   const handleClickDelete = async (e, funnelId) => {
     e.stopPropagation();
+    console.log("event in click delete", e);
     if (
       window.confirm(
         "This will delete the funnel.\nAre you sure you want to do this?"
@@ -101,6 +105,12 @@ const FunnelList = () => {
       let newFunnels = funnels.filter((funnel) => funnel.id !== funnelId);
       setFunnels(newFunnels);
     }
+  };
+
+  const handleClickEdit = (e, funnelId) => {
+    e.stopPropagation();
+    rememberState({ lastPage: `/funnels` });
+    navigate(`/funnels/update/${funnelId}`);
   };
 
   return (
@@ -143,7 +153,7 @@ const FunnelList = () => {
                   </TableCell>
                 );
               })}
-              <TableCell>{"Delete"}</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -163,9 +173,13 @@ const FunnelList = () => {
                 <TableCell>{funnel.created}</TableCell>
                 <TableCell>{funnel.lastModified}</TableCell>
                 <TableCell component="th" scope="row">
+                  <EditButton
+                    handleClick={(e) => handleClickEdit(e, funnel.id)}
+                    sx={{ height: "36px", minWidth: "10px", mr: "10px" }}
+                  />
                   <DeleteButton
                     handleClick={(e) => handleClickDelete(e, funnel.id)}
-                    sx={{ height: "36px", width: "10px" }}
+                    sx={{ height: "36px", minWidth: "10px" }}
                   />
                 </TableCell>
               </TableRow>
