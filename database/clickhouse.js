@@ -74,14 +74,12 @@ class Clickhouse {
   async #runQuery(query, format = "JSONEachRow") {
     try {
       let query_params = this.query_params;
-      //console.log("query", query, "\nquery_params", query_params);
       const resultSet = await this.client.query({
         query,
         format,
         query_params,
       });
       this.#clearQueryParams();
-      //console.log("result set", resultSet);
       return resultSet.json();
     } catch (error) {
       throw new Error(error);
@@ -188,7 +186,7 @@ GROUP BY sessionId
         )})`;
         return query;
       case "custom":
-        query = `(eventType = 'custom') and (customEventType = ${this.#getParam(
+        query = `(eventType = 'custom') AND (customEventType = ${this.#getParam(
           queryObj.customEventType,
           "String"
         )})`;
