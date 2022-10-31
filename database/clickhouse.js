@@ -202,6 +202,10 @@ GROUP BY sessionId
         return `SELECT DISTINCT(textContent) 
                 FROM eventDb.conversionEvents 
                 WHERE eventType=${this.#getParam(eventType, "String")}`;
+      case "custom":
+        return `SELECT DISTINCT(customEventType)
+                FROM eventDb.conversionEvents
+                WHERE eventType=${this.#getParam(eventType, "String")}`;
       default:
         throw new Error("Invalid funnel option");
     }
