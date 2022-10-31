@@ -21,7 +21,7 @@ const setupAllConnections = async () => {
   try {
     postgres = new Postgres();
     await postgres.init();
-    console.log("connected to Postgres!!");
+    console.log("connected to postgres!");
   } catch (e) {
     console.error("Postgres Error:", e);
   }
