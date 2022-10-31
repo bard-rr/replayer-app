@@ -99,7 +99,7 @@ class Postgres {
   }
 
   #makeCountQuery() {
-    return "SELECT count(*) FROM funnels";
+    return "SELECT count(*) FROM funnels WHERE is_deleted=false";
   }
 
   async insertFunnel(funnelObj) {
