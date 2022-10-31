@@ -14,6 +14,9 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
         case "click":
           newFunnel["textContent"] = "";
           break;
+        case "custom":
+          newFunnel["customEventType"] = "";
+          break;
         default:
           newFunnel = DEFAULT_FUNNEL;
           break;
@@ -38,12 +41,12 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
       label="Event Type"
       value={data.eventType}
       onChange={handleChange}
-      select
-    >
+      select>
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
       <MenuItem value={"click"}>Click</MenuItem>
+      <MenuItem value={"custom"}>Custom</MenuItem>
     </TextField>
   );
 };

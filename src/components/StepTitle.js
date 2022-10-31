@@ -12,12 +12,13 @@ const StepTitle = ({ event, stepNum }) => {
           textAlign: "center",
           mr: "9px",
           mt: "4px",
-        }}
-      >
+        }}>
         {stepNum}
       </Box>
       <ListItemText
-        primary={`${event.eventType} on "${event.textContent}"`}
+        primary={`${event.eventType} on "${
+          event.textContent || event.customEventType
+        }"`}
         sx={{ verticalAlign: "middle" }}
       />
     </Stack>
