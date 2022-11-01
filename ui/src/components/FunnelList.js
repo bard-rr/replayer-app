@@ -8,19 +8,19 @@ import TableFooter from "@mui/material/TableFooter";
 import TablePagination from "@mui/material/TablePagination";
 import TableSortLabel from "@mui/material/TableSortLabel";
 import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import BardButton from "./BardButton";
+import DeleteButton from "./DeleteButton";
+import EditButton from "./EditButton";
+import { deleteOneFunnel, getNewFunnels } from "../utils/urlUtils";
+import { rememberState } from "../utils/statePersistence";
 import {
   DEFAULT_LIMIT,
   DEFAULT_PAGE,
   DEFAULT_SORT_FUNNELS,
 } from "../utils/const";
-import { deleteOneFunnel, getNewFunnels } from "../utils/urlUtils";
-import BardButton from "./BardButton";
-import { Stack } from "@mui/material";
-import DeleteButton from "./DeleteButton";
-import EditButton from "./EditButton";
-import { rememberState } from "../utils/statePersistence";
 
 const FunnelList = () => {
   const [funnels, setFunnels] = useState([]);
@@ -36,8 +36,6 @@ const FunnelList = () => {
         const response = await getNewFunnels(page, rowsPerPage, sortState);
         setCount(Number(response.data.count));
         setFunnels(response.data.funnels);
-        // setCount(fakeFunnels.length);
-        // setFunnels(fakeFunnels);
       } catch (error) {
         console.error(error);
       }
@@ -172,7 +170,7 @@ const FunnelList = () => {
                 <TableCell>{funnel.name}</TableCell>
                 <TableCell>{funnel.created}</TableCell>
                 <TableCell>{funnel.lastModified}</TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell scope="row" width="100px">
                   <EditButton
                     handleClick={(e) => handleClickEdit(e, funnel.id)}
                     sx={{ height: "36px", minWidth: "10px", mr: "10px" }}

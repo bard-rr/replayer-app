@@ -6,6 +6,7 @@ import FunnelStep from "./FunnelStep";
 import FunnelTimeFilter from "./FunnelTimeFilter";
 import getDates from "../utils/dateFilter";
 import { deleteOneFunnel, getFunnelData } from "../utils/urlUtils";
+import FunnelFilterDisplay from "./FunnelFilterDisplay";
 import BardButton from "./BardButton";
 import DeleteButton from "./DeleteButton";
 import EditButton from "./EditButton";
@@ -111,6 +112,7 @@ const Funnel = () => {
         <Box sx={{ fontSize: "16px" }}>
           <em>{funnelData.results.totalFilteredSessions} sessions</em>
         </Box>
+        <FunnelFilterDisplay filters={funnelData.funnel.sessionFilters} />
         <List sx={{ width: "100%", mr: "30px", bgcolor: "background.paper" }}>
           {listFunnelSteps()}
         </List>
