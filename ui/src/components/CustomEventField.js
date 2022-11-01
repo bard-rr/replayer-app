@@ -26,7 +26,7 @@ const CustomEventField = ({ index, funnelData, setFunnelData }) => {
 
   return (
     <Autocomplete
-      disablePortal
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       options={options}
       sx={{
         ml: "60px",
