@@ -26,10 +26,9 @@ const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
   return (
     <>
       <Autocomplete
-        disablePortal
         options={options}
+        isOptionEqualToValue={(option, value) => option.id === value.id}
         sx={{
-          //ml: "60px",
           width: "525px",
           "& .MuiInputLabel-root": { color: "#8A8692" },
           "& .MuiOutlinedInput-root": {
