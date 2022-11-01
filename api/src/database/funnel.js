@@ -5,7 +5,6 @@ const handleFunnel = async (funnelId, pg, ch, queryObj) => {
     queryObj.startDate,
     queryObj.endDate
   );
-  console.log("handle funnel: ", funnel.eventSequence);
 
   if (filteredSessionArr.length === 0) {
     return createEmptyFunnel(funnel);

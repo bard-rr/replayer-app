@@ -1,5 +1,4 @@
 const clickhouse = require("@clickhouse/client");
-const { escapeString } = require("./utils");
 const createClient = clickhouse.createClient;
 class Clickhouse {
   constructor() {
@@ -11,10 +10,19 @@ class Clickhouse {
   }
 
   async init() {
+    //host should be the clickhouse container for PRD build
+    let host;
+    if (this.processData.env.NODE_ENV === "production") {
+      host = "clickhouse";
+    } else {
+      host = "http://localhost:8123";
+    }
+
     //create a client to interface with clickhouse
     this.client = createClient({
       username: "default",
       password: "",
+      host,
     });
   }
 
@@ -281,7 +289,7 @@ GROUP BY sessionId
     //use the filters to construct the where clause
     filters.forEach((filter) => {
       switch (filter) {
-        case "length":
+        case "length": {
           const minLength = Number(paramsObj.minLength) || 0;
           const maxLength = Number(paramsObj.maxLength) || Date.now();
           result.push(
@@ -289,7 +297,8 @@ GROUP BY sessionId
              (lengthMs <= ${this.#getParam(maxLength, "UInt64")})`
           );
           break;
-        case "date":
+        }
+        case "date": {
           const startDate = paramsObj.startDate || "1970-01-01";
           const todayString = this.getTodayString();
           const endDate = paramsObj.endDate || todayString;
@@ -298,14 +307,17 @@ GROUP BY sessionId
              (date <= ${this.#getParam(endDate, "Date")})`
           );
           break;
-        case "originHost":
+        }
+        case "originHost": {
           const originHost = paramsObj.textContent;
           result.push(`(originHost = ${this.#getParam(originHost, "String")})`);
           break;
-        case "Has Errors?":
+        }
+        case "Has Errors?": {
           const comparisonOperator = paramsObj.yesOrNo === "yes" ? ">" : "=";
           result.push(`errorCount ${comparisonOperator} 0`);
           break;
+        }
         default:
           result.push(`(date = '${this.getTodayString()}')`);
       }

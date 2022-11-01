@@ -15,3 +15,5 @@ The `npm run build` command in the `ui` directory will create a production build
 To build a docker image, run `docker build -t replayer .` in the root dir.
 
 To create a container from the image, run `docker run -p 3003:3003 -d --name replayer replayer`. You'll be able to access the app at port 3003 of localhost.
+
+To push the local image to the repo, use the docker desktop app

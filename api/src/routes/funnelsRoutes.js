@@ -25,7 +25,6 @@ funnelsRouter.post("/", async (req, res) => {
 
 funnelsRouter.get("/:id", async (req, res) => {
   let id = Number.parseInt(req.params.id, 10);
-  console.log(req.query);
   try {
     let result = await handleFunnel(
       id,
