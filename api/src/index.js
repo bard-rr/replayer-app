@@ -24,6 +24,8 @@ const setupAllConnections = async () => {
     console.error("clickhouse error:", e);
   }
   try {
+    // eslint-disable-next-line no-undef
+    console.log("env vars", process.env);
     postgres = new Postgres();
     await postgres.init();
     app.postgres = postgres;
