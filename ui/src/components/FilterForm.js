@@ -19,6 +19,7 @@ const FilterForm = ({
     let newFilterData = [...filterData].concat(DEFAULT_FUNNEL_FILTER);
     setFilterData(newFilterData);
   };
+
   const handleRemoveClick = (e, i) => {
     e.preventDefault();
     let newFilterData = filterData
