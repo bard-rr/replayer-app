@@ -12,8 +12,9 @@ class Clickhouse {
   async init() {
     //host should be the clickhouse container for PRD build
     let host;
-    if (this.processData.env.NODE_ENV === "production") {
-      host = "clickhouse";
+    // eslint-disable-next-line no-undef
+    if (process.env.NODE_ENV === "production") {
+      host = "http://clickhouse:8123";
     } else {
       host = "http://localhost:8123";
     }
@@ -82,6 +83,7 @@ class Clickhouse {
   async #runQuery(query, format = "JSONEachRow") {
     try {
       let query_params = this.query_params;
+      //console.log("query", query, "\nqueryparams", query_params);
       const resultSet = await this.client.query({
         query,
         format,

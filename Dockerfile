@@ -20,5 +20,5 @@ WORKDIR /api
 #install api dependancies onto the image
 RUN npm install --production 
 
-# is this all we need?
+# start the app in production mode
 CMD ["npm", "run", "start"]
