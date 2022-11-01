@@ -110,7 +110,7 @@ export default function SessionList() {
     };
     rememberState(stateObj);
 
-    const sessionId = e.target.parentElement.dataset.id;
+    const sessionId = e.target.parentElement.dataset.id || e.target.dataset.id;
     navigate(`/sessions/${sessionId}`);
   };
 
