@@ -117,7 +117,7 @@ export const getFilterOptionsFor = async (filterType) => {
     if (!ALL_FILTER_OPTIONS.includes(filterType)) {
       throw new Error("Invalid filter type");
     }
-    const url = `${BASE_URL}/filterOptions?filterType=${filterType}`;
+    const url = `${BASE_URL}/options/filter?filterType=${filterType}`;
     let { data } = await axios.get(url);
     return data;
   } catch (error) {
@@ -130,7 +130,7 @@ export const getFunnelOptionsFor = async (eventType) => {
     if (!ALL_EVENT_OPTIONS.includes(eventType)) {
       throw new Error("Invalid event type");
     }
-    const url = `${BASE_URL}/funnelOptions?eventType=${eventType}`;
+    const url = `${BASE_URL}/options/funnel?eventType=${eventType}`;
     let { data } = await axios.get(url);
     return data;
   } catch (error) {
