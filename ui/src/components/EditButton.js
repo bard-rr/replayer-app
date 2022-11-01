@@ -15,7 +15,7 @@ const EditButton = ({ handleClick, sx }) => {
         width: "10px",
         zIndex: 1,
         color: common["white"],
-        backgroundColor: blue["A700"],
+        backgroundColor: "#5E81AC",
         ...sx,
       }}
     />

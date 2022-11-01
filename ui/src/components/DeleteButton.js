@@ -15,7 +15,7 @@ const DeleteButton = ({ handleClick, sx }) => {
         width: "10px",
         zIndex: 1,
         color: common["white"],
-        backgroundColor: red["A700"],
+        backgroundColor: "#BF616A",
         ...sx,
       }}
     />
