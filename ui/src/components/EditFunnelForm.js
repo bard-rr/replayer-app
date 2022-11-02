@@ -14,6 +14,7 @@ const EditFunnelForm = () => {
   const [eventSequence, seteventSequence] = useState([DEFAULT_FUNNEL]);
   const [sessionFilters, setSessionFilters] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
+  const [nameMissing, setNameMissing] = useState(false);
 
   useEffect(() => {
     const getFunnel = async () => {
@@ -28,13 +29,20 @@ const EditFunnelForm = () => {
   }, [id]);
 
   const handleNameChange = (e) => {
+    setNameMissing(false);
     setFunnelName(e.target.value);
   };
 
   const handleUpdateClick = async (e) => {
-    await updateOneFunnel(id, { funnelName, eventSequence, sessionFilters });
-    navigate(`/funnels/${id}`);
+    if (funnelName.trim().length > 0) {
+      await updateOneFunnel(id, { funnelName, eventSequence, sessionFilters });
+      navigate(`/funnels/${id}`);
+    } else {
+      setNameMissing(true);
+      setFunnelName(funnelName.trim());
+    }
   };
+
   return (
     <Stack
       direction="column"
@@ -53,6 +61,9 @@ const EditFunnelForm = () => {
         Update Funnel
       </Typography>
       <TextField
+        required
+        error={nameMissing}
+        helperText={nameMissing && "Funnel name is required"}
         variant="outlined"
         sx={{
           ml: "60px",

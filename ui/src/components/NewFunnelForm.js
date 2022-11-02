@@ -12,17 +12,24 @@ const NewFunnelForm = () => {
   const [funnelData, setFunnelData] = useState([DEFAULT_FUNNEL]);
   const [filterData, setFilterData] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
+  const [nameMissing, setNameMissing] = useState(false);
 
   const handleSubmitClick = async (e) => {
-    await createOneFunnel({
-      funnelName,
-      sessionFilters: filterData,
-      eventSequence: funnelData,
-    });
-    navigate("/funnels");
+    if (funnelName.trim().length > 0) {
+      await createOneFunnel({
+        funnelName,
+        sessionFilters: filterData,
+        eventSequence: funnelData,
+      });
+      navigate("/funnels");
+    } else {
+      setNameMissing(true);
+      setFunnelName(funnelName.trim());
+    }
   };
 
   const handleNameChange = (e) => {
+    setNameMissing(false);
     setFunnelName(e.target.value);
   };
 
@@ -44,6 +51,9 @@ const NewFunnelForm = () => {
         Create New Funnel
       </Typography>
       <TextField
+        required
+        error={nameMissing}
+        helperText={nameMissing && "Funnel name is required"}
         variant="outlined"
         sx={{
           ml: "60px",

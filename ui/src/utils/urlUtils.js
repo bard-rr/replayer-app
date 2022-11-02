@@ -66,7 +66,6 @@ export const getFunnelData = async (id, filter) => {
   try {
     const params = getQueryString(filter);
     const url = `${BASE_URL}/funnels/${id}?${params}`;
-    console.log(`Funnel URL: ${url}`);
     const response = await axios.get(url);
     return response.data;
   } catch (error) {
@@ -85,7 +84,6 @@ export const getOneFunnel = async (id) => {
 };
 
 export const createOneFunnel = async (funnelObj) => {
-  console.log(funnelObj);
   try {
     const url = `${BASE_URL}/funnels`;
     await axios.post(url, funnelObj);

@@ -41,7 +41,8 @@ const FunnelSelection = ({ data, index, funnelData, setFunnelData }) => {
       label="Event Type"
       value={data.eventType}
       onChange={handleChange}
-      select>
+      select
+    >
       <MenuItem value="">
         <em>None</em>
       </MenuItem>
