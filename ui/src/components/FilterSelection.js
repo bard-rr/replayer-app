@@ -52,7 +52,7 @@ const FilterSelection = ({
           "& > fieldset": { borderColor: "#A3A2AF" },
         },
       }}
-      label="Event Type"
+      label="Filter Type"
       value={filterData[index].filterType}
       onChange={handleChange}
       select
