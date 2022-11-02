@@ -15,12 +15,12 @@ const EditFunnelForm = () => {
   const [sessionFilters, setSessionFilters] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
   const [nameMissing, setNameMissing] = useState(false);
+  const [eventTypeMissing, setEventTypeMissing] = useState(false);
+  const [textMissing, setTextMissing] = useState(false);
 
   useEffect(() => {
     const getFunnel = async () => {
-      //should work with no filter portion
       const response = await getOneFunnel(id);
-      console.log("funnel response from axios", response);
       setFunnelName(response.funnelName);
       seteventSequence(response.eventSequence);
       setSessionFilters(response.sessionFilters);
@@ -34,13 +34,33 @@ const EditFunnelForm = () => {
   };
 
   const handleUpdateClick = async (e) => {
-    if (funnelName.trim().length > 0) {
-      await updateOneFunnel(id, { funnelName, eventSequence, sessionFilters });
-      navigate(`/funnels/${id}`);
-    } else {
+    if (!hasName()) {
       setNameMissing(true);
       setFunnelName(funnelName.trim());
+    } else if (!hasCompleteEvents()) {
+      setEventTypeMissing(true);
+      setTextMissing(true);
+    } else {
+      await updateOneFunnel({
+        funnelName,
+        sessionFilters,
+        eventSequence,
+      });
+      navigate("/funnels");
     }
+  };
+
+  const hasName = () => funnelName.trim().length > 0;
+
+  const hasCompleteEvents = () => {
+    return eventSequence.every(
+      ({ eventType, textContent, customEventType }) => {
+        const hasEventType = eventType !== "";
+        const hasTextContentProp = !!textContent || !!customEventType;
+        const hasTextContent = textContent !== "" && customEventType !== "";
+        return hasEventType && hasTextContentProp && hasTextContent;
+      }
+    );
   };
 
   return (
@@ -84,6 +104,10 @@ const EditFunnelForm = () => {
       <FunnelComponents
         funnelData={eventSequence}
         setFunnelData={seteventSequence}
+        eventTypeMissing={eventTypeMissing}
+        setEventTypeMissing={setEventTypeMissing}
+        textMissing={textMissing}
+        setTextMissing={setTextMissing}
       />
       <Stack
         direction="row"

@@ -2,8 +2,11 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getFunnelOptionsFor } from "../utils/urlUtils";
 
-const CustomEventField = ({ index, funnelData, setFunnelData }) => {
+const CustomEventField = (props) => {
+  const { index, funnelData, setFunnelData, textMissing, setTextMissing } =
+    props;
   let [options, setOptions] = useState([]);
+
   useEffect(() => {
     let getOptions = async () => {
       let newOptions = await getFunnelOptionsFor("custom");
@@ -18,10 +21,16 @@ const CustomEventField = ({ index, funnelData, setFunnelData }) => {
         return innerData;
       }
       let newFunnel = { ...innerData };
-      newFunnel.customEventType = newValue;
+      newFunnel.customEventType = newValue || "";
+      delete newFunnel.textContent;
       return newFunnel;
     });
     setFunnelData(newFunnelData);
+    setTextMissing(false);
+  };
+
+  const selectionMissing = () => {
+    return textMissing && funnelData[index].customEventType === "";
   };
 
   return (
@@ -39,7 +48,14 @@ const CustomEventField = ({ index, funnelData, setFunnelData }) => {
       value={funnelData[index].customEventType || ""}
       onChange={handleChange}
       renderInput={(params) => (
-        <TextField variant="outlined" label="Custom Event Name" {...params} />
+        <TextField
+          required
+          variant="outlined"
+          label="Custom Event Name"
+          error={selectionMissing()}
+          helperText={selectionMissing() && "Event selection required"}
+          {...params}
+        />
       )}
     />
   );

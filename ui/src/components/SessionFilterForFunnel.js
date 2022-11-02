@@ -1,4 +1,3 @@
-// import Filter from "./Filter";
 import FilterForm from "./FilterForm";
 import { Box, Stack, Typography } from "@mui/material";
 import { ALL_FILTER_OPTIONS } from "../utils/const";

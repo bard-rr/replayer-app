@@ -13,19 +13,35 @@ const NewFunnelForm = () => {
   const [filterData, setFilterData] = useState([DEFAULT_FUNNEL_FILTER]);
   const [funnelName, setFunnelName] = useState("");
   const [nameMissing, setNameMissing] = useState(false);
+  const [eventTypeMissing, setEventTypeMissing] = useState(false);
+  const [textMissing, setTextMissing] = useState(false);
 
   const handleSubmitClick = async (e) => {
-    if (funnelName.trim().length > 0) {
+    if (!hasName()) {
+      setNameMissing(true);
+      setFunnelName(funnelName.trim());
+    } else if (!hasCompleteEvents()) {
+      setEventTypeMissing(true);
+      setTextMissing(true);
+    } else {
       await createOneFunnel({
         funnelName,
         sessionFilters: filterData,
         eventSequence: funnelData,
       });
       navigate("/funnels");
-    } else {
-      setNameMissing(true);
-      setFunnelName(funnelName.trim());
     }
+  };
+
+  const hasName = () => funnelName.trim().length > 0;
+
+  const hasCompleteEvents = () => {
+    return funnelData.every(({ eventType, textContent, customEventType }) => {
+      const hasEventType = eventType !== "";
+      const hasTextContentProp = !!textContent || !!customEventType;
+      const hasTextContent = textContent !== "" && customEventType !== "";
+      return hasEventType && hasTextContentProp && hasTextContent;
+    });
   };
 
   const handleNameChange = (e) => {
@@ -71,7 +87,14 @@ const NewFunnelForm = () => {
         filterData={filterData}
         setFilterData={setFilterData}
       />
-      <FunnelComponents funnelData={funnelData} setFunnelData={setFunnelData} />
+      <FunnelComponents
+        funnelData={funnelData}
+        setFunnelData={setFunnelData}
+        eventTypeMissing={eventTypeMissing}
+        setEventTypeMissing={setEventTypeMissing}
+        textMissing={textMissing}
+        setTextMissing={setTextMissing}
+      />
       <Stack
         direction="row"
         alignItems="flex-start"
