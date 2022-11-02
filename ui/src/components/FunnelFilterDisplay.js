@@ -4,8 +4,8 @@ import { msToTime } from "../utils/formatLength";
 const FunnelFilterDisplay = ({ filters }) => {
   const formatFilterText = (filter) => {
     switch (filter.filterType) {
-      case "originHost":
-        return `Origin Host: ${filter.textContent}`;
+      case "appName":
+        return `App Name: ${filter.textContent}`;
       case "length":
         const min = msToTime(filter.minLength);
         const max = msToTime(filter.maxLength);

@@ -69,7 +69,7 @@ export default function SessionList() {
 
   const headers = [
     { id: "sessionId", label: "Session Id" },
-    { id: "originHost", label: "Origin Host" },
+    { id: "appName", label: "App Name" },
     { id: "date", label: "Date" },
     { id: "length", label: "Length" },
     { id: "errorCount", label: "Error Count" },
@@ -167,7 +167,7 @@ export default function SessionList() {
               >
                 <TableCell>{session.sessionId}</TableCell>
                 <TableCell>
-                  {session.originHost ? session.originHost : "invalid source"}
+                  {session.appName ? session.appName : "invalid source"}
                 </TableCell>
                 <TableCell>{session.date}</TableCell>
                 <TableCell>{msToTime(session.length)}</TableCell>

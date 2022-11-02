@@ -2,11 +2,11 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { getFilterOptionsFor } from "../utils/urlUtils";
 
-const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
+const AppNameFilterField = ({ index, filterData, setFilterData }) => {
   let [options, setOptions] = useState([]);
   useEffect(() => {
     let getOptions = async () => {
-      let newOptions = await getFilterOptionsFor("originHost");
+      let newOptions = await getFilterOptionsFor("appName");
       setOptions(newOptions);
     };
     getOptions();
@@ -38,11 +38,11 @@ const OriginHostFilterField = ({ index, filterData, setFilterData }) => {
         value={filterData[index].textContent || ""}
         onChange={handleChange}
         renderInput={(params) => (
-          <TextField variant="outlined" {...params} label="Origin Host" />
+          <TextField variant="outlined" {...params} label="AppName" />
         )}
       />
     </>
   );
 };
 
-export default OriginHostFilterField;
+export default AppNameFilterField;
