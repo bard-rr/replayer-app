@@ -83,7 +83,7 @@ class Clickhouse {
   async #runQuery(query, format = "JSONEachRow") {
     try {
       let query_params = this.query_params;
-      //console.log("query", query, "\nqueryparams", query_params);
+      // console.log("query", query, "\nqueryparams", query_params);
       const resultSet = await this.client.query({
         query,
         format,
@@ -172,7 +172,7 @@ GROUP BY sessionId
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
-    console.log(queryObj, filteredSessionArr);
+    // console.log(queryObj, filteredSessionArr);
     return await this.#runQuery(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
@@ -204,7 +204,7 @@ GROUP BY sessionId
         return query;
       default:
         query = `(eventType = 'click') AND (textContent = ${this.#getParam(
-          queryObj.textContent,
+          "", // queryObj.textContent,
           "String"
         )})`;
         return query;
