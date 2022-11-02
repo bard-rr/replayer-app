@@ -55,7 +55,7 @@ export default function SessionList() {
     };
 
     getSessionIds();
-  }, [page, rowsPerPage, sortState, filterData, count]);
+  }, [page, rowsPerPage, sortState, filterData]);
 
   const handleChangePage = async (event, newPage) => {
     setPage(newPage);

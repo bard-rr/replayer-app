@@ -16,8 +16,8 @@ sessionsRouter.get("/", async (req, res) => {
     });
     res.status(200).json({ count, sessions });
   } catch (error) {
+    res.status(500).json(error);
     console.error(error);
-    res.status(500).json({ error });
   }
 });
 
@@ -27,8 +27,8 @@ sessionsRouter.get("/:id", async (req, res) => {
     let result = await req.app.clickhouse.getEventsFromSession(id);
     res.status(200).json(result);
   } catch (error) {
+    res.status(500).json(error);
     console.error(error);
-    res.status(500).json({ error });
   }
 });
 

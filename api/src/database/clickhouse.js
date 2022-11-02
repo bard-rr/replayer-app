@@ -1,4 +1,5 @@
 const clickhouse = require("@clickhouse/client");
+const { DEFAULT_QUERY_OBJECT } = require("./const");
 const createClient = clickhouse.createClient;
 class Clickhouse {
   constructor() {
@@ -45,12 +46,18 @@ class Clickhouse {
   }
 
   async getSessions(paramsObj) {
+    if (Object.keys(paramsObj).length === 0) {
+      paramsObj = DEFAULT_QUERY_OBJECT;
+    }
     const sessionQuery = this.#makeSessionQuery(paramsObj);
     const result = await this.#runQuery(sessionQuery);
     return result;
   }
 
   async getCount(paramsObj) {
+    if (Object.keys(paramsObj).length === 0) {
+      paramsObj = DEFAULT_QUERY_OBJECT;
+    }
     const countQuery = this.#makeCountQuery(paramsObj);
     const result = await this.#runQuery(countQuery);
     return result[0]["count()"];
