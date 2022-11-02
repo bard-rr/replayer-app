@@ -86,7 +86,6 @@ const FunnelList = () => {
   };
 
   const handleFunnelClick = (e) => {
-    console.log("handle clicked a funnel");
     const funnelId = e.target.parentElement.dataset.id;
     navigate(`/funnels/${funnelId}`);
   };
