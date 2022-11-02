@@ -32,10 +32,5 @@ export const DEFAULT_TIME_STRING = "00";
 export const DEFAULT_FUNNEL = { eventType: "" };
 export const DEFAULT_FUNNEL_FILTER = {};
 
-export const ALL_FILTER_OPTIONS = [
-  "length",
-  "date",
-  "originHost",
-  "Has Errors?",
-];
+export const ALL_FILTER_OPTIONS = ["length", "date", "appName", "Has Errors?"];
 export const ALL_EVENT_OPTIONS = ["click", "custom"];

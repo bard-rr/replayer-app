@@ -3,7 +3,7 @@ import LengthInputs from "./LengthInputs";
 import { Box } from "@mui/system";
 import FilterSelection from "./FilterSelection";
 import AddOrRemoveButton from "./AddOrRemoveButton";
-import OriginHostFilterField from "./OriginHostFilterField";
+import AppNameFilterField from "./AppNameFilterField";
 import YesNoFilterField from "./YesNoFilterField";
 import { DEFAULT_FUNNEL_FILTER } from "../utils/const";
 import DateInputs from "./DateInputs";
@@ -62,7 +62,7 @@ const FilterForm = ({
                 />
               </Stack>
             );
-          case "originHost":
+          case "appName":
             return (
               <Stack
                 direction="row"
@@ -77,7 +77,7 @@ const FilterForm = ({
                   setFilterData={setFilterData}
                   filterData={filterData}
                 />
-                <OriginHostFilterField
+                <AppNameFilterField
                   setFilterData={setFilterData}
                   index={index}
                   filterData={filterData}

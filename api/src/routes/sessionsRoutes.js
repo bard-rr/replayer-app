@@ -10,7 +10,7 @@ sessionsRouter.get("/", async (req, res) => {
         sessionId: obj.sessionId,
         length: obj.lengthMs,
         date: obj.date,
-        originHost: obj.originHost,
+        appName: obj.appName,
         errorCount: obj.errorCount,
       };
     });

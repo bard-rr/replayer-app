@@ -22,7 +22,7 @@ const FilterSelection = ({
             newFilter["minLength"] = "";
             newFilter["maxLength"] = "";
             break;
-          case "originHost":
+          case "appName":
             newFilter["textContent"] = "";
             break;
           case "date":

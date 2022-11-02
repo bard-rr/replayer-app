@@ -318,9 +318,9 @@ GROUP BY sessionId
           );
           break;
         }
-        case "originHost": {
-          const originHost = paramsObj.textContent;
-          result.push(`(originHost = ${this.#getParam(originHost, "String")})`);
+        case "appName": {
+          const appName = paramsObj.textContent;
+          result.push(`(appName = ${this.#getParam(appName, "String")})`);
           break;
         }
         case "Has Errors?": {
@@ -337,8 +337,8 @@ GROUP BY sessionId
 
   #getFilterOptionsQuery = (filterType) => {
     switch (filterType) {
-      case "originHost":
-        return `SELECT DISTINCT(originHost) as textContent
+      case "appName":
+        return `SELECT DISTINCT(appName) as textContent
                 FROM eventDb.sessionTable`;
       default:
         throw new Error("Invalid filter option");
@@ -359,8 +359,8 @@ GROUP BY sessionId
       case "date":
         column = "date";
         break;
-      case "originHost":
-        column = "originHost";
+      case "appName":
+        column = "appName";
         break;
       case "errorCount":
         column = "errorCount";
