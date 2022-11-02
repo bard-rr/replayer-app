@@ -1,6 +1,6 @@
 // import getDates from "./dateFilter";
 
-export const BASE_URL = "http://localhost:3003";
+export const BASE_URL = "http://localhost:3003/api";
 const today = new Date().toISOString().substring(0, 10);
 
 export const DEFAULT_FILTER = {

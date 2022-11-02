@@ -40,12 +40,16 @@ app.use(cors());
 //serve our static app if this is a production build
 // eslint-disable-next-line no-undef
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static("build"));
+  app.use("/", express.static("build"));
+  app.use("/sessions", express.static("build"));
+  app.use("/sessions/*", express.static("build"));
+  app.use("/funnels", express.static("build"));
+  app.use("/funnels/*", express.static("build"));
 }
-app.use("/sessions", sessionsRouter);
-app.use("/funnels", funnelsRouter);
-app.use("/funnel", funnelRouter);
-app.use("/options", optionsRouter);
+app.use("/api/sessions", sessionsRouter);
+app.use("/api/funnels", funnelsRouter);
+app.use("/api/funnel", funnelRouter);
+app.use("/api/options", optionsRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}.`);
