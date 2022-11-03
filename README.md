@@ -1,4 +1,6 @@
-## Bard Replayer Application
+<img src="https://raw.githubusercontent.com/bard-rr/.github/main/profile/Asset%2010-8.png" width="100>
+
+# Bard Replayer Application
 
 This is the repository for Bard's replayer application. You can find our code for the React frontend in the `ui` directory and the code for the Express API in the `api` directory.
 
