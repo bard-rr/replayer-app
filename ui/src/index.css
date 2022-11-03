@@ -1,11 +1,17 @@
+@font-face {
+  font-family: Neometric;
+  src: url("./assets/fonts/Neometric-Regular.otf") format("opentype");
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "Neometric";
+  /* font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif; */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #eceff4;
+  background-color: #e5e9f0;
 }
 
 code {
@@ -19,10 +25,6 @@ img {
   margin-right: auto;
   margin-top: 15px;
   margin-bottom: 15px;
-}
-
-.rr-player {
-  padding-top: 15px;
 }
 
 .player {

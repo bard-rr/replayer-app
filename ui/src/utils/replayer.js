@@ -1,6 +1,6 @@
 import rrwebPlayer from "rrweb-player";
-import { getReplayConsolePlugin } from 'rrweb';
-import "rrweb-player/dist/style.css";
+import { getReplayConsolePlugin } from "rrweb";
+import "./replayer.css";
 
 let player;
 

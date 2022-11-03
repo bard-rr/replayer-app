@@ -1,4 +1,3 @@
-import { blue, common } from "@mui/material/colors";
 import BardButton from "./BardButton";
 
 const EditButton = ({ handleClick, sx }) => {
@@ -7,15 +6,11 @@ const EditButton = ({ handleClick, sx }) => {
       onClick={(e) => handleClick(e)}
       isEditButton={true}
       sx={{
-        // position: "absolute",
-        // top: "30px",
-        // right: "30px",
-        "&:hover": { backgroundColor: blue[900] },
+        "&:hover": { backgroundColor: "#386acb", color: "#FFFFFF" },
         height: "36px",
         width: "10px",
         zIndex: 1,
-        color: common["white"],
-        backgroundColor: "#5E81AC",
+        color: "#7398FF",
         ...sx,
       }}
     />

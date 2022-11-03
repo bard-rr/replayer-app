@@ -18,7 +18,14 @@ const PercentCompleteBar = ({ numComplete, totalSessions }) => {
         <LinearProgress
           variant="determinate"
           value={percentComplete}
-          sx={{ height: "20px", borderRadius: "4px" }}
+          sx={{
+            height: "20px",
+            borderRadius: "4px",
+            backgroundColor: "rgba(169, 200, 255, 1)",
+            "& .MuiLinearProgress-bar": {
+              backgroundColor: "rgba(115, 152, 255, 1)",
+            },
+          }}
         />
       </Box>
       <Box
