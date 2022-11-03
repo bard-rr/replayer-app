@@ -12,7 +12,13 @@ WORKDIR /ui
 RUN npm install --production
 
 #create a PRD build for the ui in the api dir.
-RUN npm run build 
+RUN npm run build
+
+# go to home directory
+WORKDIR /
+
+# remove /ui directory
+RUN rm -rf /ui
 
 # Switch to the api directory
 WORKDIR /api
