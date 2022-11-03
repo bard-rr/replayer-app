@@ -1,6 +1,7 @@
 // import getDates from "./dateFilter";
 
-export const BASE_URL = "http://localhost:3003/api";
+const REPLAYER_API_HOSTNAME = document.location.hostname;
+export const BASE_URL = `http://${REPLAYER_API_HOSTNAME}:3003/api`;
 const today = new Date().toISOString().substring(0, 10);
 
 export const DEFAULT_FILTER = {
