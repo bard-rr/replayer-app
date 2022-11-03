@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/bard-rr/.github/main/profile/Asset%2010-8.png" width="100>
+<img src="https://raw.githubusercontent.com/bard-rr/.github/main/profile/Asset%2010-8.png" width="100">
 
 # Bard Replayer Application
 
