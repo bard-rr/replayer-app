@@ -1,4 +1,3 @@
-import { common, red } from "@mui/material/colors";
 import BardButton from "./BardButton";
 
 const DeleteButton = ({ handleClick, sx }) => {
@@ -7,15 +6,14 @@ const DeleteButton = ({ handleClick, sx }) => {
       isDeleteButton={true}
       onClick={(e) => handleClick(e)}
       sx={{
-        // position: "absolute",
-        // top: "30px",
-        // right: "30px",
-        "&:hover": { backgroundColor: red[900] },
+        "&:hover": {
+          backgroundColor: "#c4000f",
+          color: "#FFFFFF",
+        },
         height: "36px",
         width: "10px",
         zIndex: 1,
-        color: common["white"],
-        backgroundColor: "#BF616A",
+        color: "#ff4639",
         ...sx,
       }}
     />

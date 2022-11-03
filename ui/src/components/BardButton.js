@@ -14,8 +14,8 @@ const BardButton = ({
   return (
     <Button
       onClick={onClick}
-      type="submit"
-      variant={isDeleteButton ? "contained" : "outlined"}
+      color="primary"
+      variant={isDeleteButton ? "delete" : "outlined"}
       sx={{ height: "56px", ...sx }}
     >
       {isBackButton ? <ChevronLeftIcon /> : null}
