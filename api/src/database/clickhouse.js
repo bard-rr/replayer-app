@@ -1,3 +1,4 @@
+require("dotenv").config();
 const clickhouse = require("@clickhouse/client");
 const { DEFAULT_QUERY_OBJECT } = require("./const");
 const createClient = clickhouse.createClient;
@@ -12,13 +13,13 @@ class Clickhouse {
 
   async init() {
     //host should be the clickhouse container for PRD build
-    let host;
+    let host = `http://${process.env.CHHOST}:8123`;
     // eslint-disable-next-line no-undef
-    if (process.env.NODE_ENV === "production") {
-      host = "http://clickhouse:8123";
-    } else {
-      host = "http://localhost:8123";
-    }
+    // if (process.env.NODE_ENV === "production") {
+    //   host = "http://clickhouse:8123";
+    // } else {
+    //   host = "http://localhost:8123";
+    // }
 
     //create a client to interface with clickhouse
     this.client = createClient({
