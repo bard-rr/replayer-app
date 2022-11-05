@@ -1,27 +1,30 @@
 <img src="https://github.com/bard-rr/.github/blob/main/profile/logo2.png?raw=true" width="300">
+<br/>
 
-# Bard Replayer Application
+[![Version](https://img.shields.io/npm/v/bardrr)](https://www.npmjs.com/package/bardrr)
+[![Downloads/week](https://img.shields.io/npm/dt/bardrr)](https://npmjs.org/package/bardrr)
+[![License](https://img.shields.io/npm/l/monsoon-load-testing.svg)](https://github.com/minhphanhvu/bardrr/blob/master/package.json)
 
-This is the repository for Bard's replayer application. You can find our code for the React frontend in the `ui` directory and the code for the Express API in the `api` directory.
+# Replayer Application
 
-### Development workflow
+<p align="center">
+  <img src="https://github.com/bard-rr/.github/blob/main/profile/sessionPlayer.jpg?raw=true" width="600">
+</p>
 
-We can start both pieces of the application separatly with the `npm run dev` command in the `api` directory and the `npm run start` command in the `ui` directory. You can access the ui at port `3000` and the server at port `3003`.
+## Description
 
-### Production workflow
+This is Bard's replayer application. It includes a Nodejs API and a React frontend. The replayer application has connections to both the Clickhouse and Postgres databases. The connection to the Clickhouse database is to request session data and the Postgres database is to create and request funnel data. 
 
-The `npm run build` command in the `ui` directory will create a production build for the ui in `/api/build`. The `npm run start` command in the `api` directory will serve the content in the `/api/build` directory from the root of port `3003`. This is the workflow that creating a Docker image will use.
+The Frontend is divided into two major sections. The first is a table of all the sessions in the Clickhouse database. The sessions can be sorted and filtered by data based on date, length, and errors. You can also view a replay of each of the sessions.
 
-### Docker Notes
+The second section is the creation and use of conversion funnels. This section is all about defining a conversion funnel on a website and viewing the sessions that completed or failed to complete each step in the funnel. This will allow you to learn why users are not making it to each step of the funnel and converting. 
 
-To build a docker image, run `docker build -t replayer .` in the root dir.
+## Setup
 
-To create a container from the image, run `docker run -p 3003:3003 -d --name replayer replayer`. You'll be able to access the app at port 3003 of localhost.
+Clone the open source reposatory from [here](https://github.com/bard-rr/replayer-app). Run the application using:
 
-To push the local image to the repo, use the docker desktop app
+`npm run start`
 
-```
-docker build -t replayer .
-docker tag replayer bardrr/replayer:latest
-docker push bardrr/replayer:latest
-```
+## Website
+
+You can read more about our project [here](oursupercoolwebsite.com).
