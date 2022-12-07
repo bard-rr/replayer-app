@@ -58,7 +58,7 @@ const TimeDurationInput = (props) => {
       {/* <div className={"custom-label"}>{label}</div> */}
       <CustomLabel
         text={label}
-        sx={{ backgroundColor: labelColor || "#ECEFF4" }}
+        sx={{ backgroundColor: labelColor || "#E5E9F0" }}
       />
       <TextField
         variant="standard"
