@@ -1,5 +1,3 @@
-// import getDates from "./dateFilter";
-
 const REPLAYER_API_HOSTNAME = document.location.hostname;
 export const BASE_URL = `http://${REPLAYER_API_HOSTNAME}:3003/api`;
 const today = new Date().toISOString().substring(0, 10);
@@ -9,8 +7,6 @@ export const DEFAULT_FILTER = {
   startDate: "1970-01-01",
   endDate: today,
 };
-
-// export const DEFAULT_DATE_FILTER_FOR_FUNNELS = getDates("last 7");
 
 export const DEFAULT_SORT_STATE = {
   sortBy: "date",

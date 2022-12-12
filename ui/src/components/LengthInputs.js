@@ -28,8 +28,7 @@ const LengthInputs = ({ setFilterData, filterData, index, labelColor }) => {
     msToSeconds(filterData[index].maxLength) || DEFAULT_TIME_STRING
   );
 
-  //gross, but I can't think of a better way to do it: need the updated state that's
-  //changed in the TimeDurationInput component
+  //need the updated state that's changed in the TimeDurationInput component
   const changeFilter = (isStartChange, payload) => {
     let minLength;
     let maxLength;

@@ -46,7 +46,6 @@ const FunnelSelection = (props) => {
       error={selectionMissing()}
       helperText={selectionMissing() && "Event type required"}
       sx={{
-        // ml: "60px",
         width: "150px",
         "& .MuiInputLabel-root": { color: "#8A8692" },
         "& .MuiOutlinedInput-root": {

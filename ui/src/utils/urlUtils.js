@@ -1,6 +1,5 @@
 import axios from "axios";
 import { ALL_EVENT_OPTIONS, ALL_FILTER_OPTIONS, BASE_URL } from "./const";
-// import { fakeFunnel } from "../fakeData";
 
 export const getNewSessions = async (
   page,

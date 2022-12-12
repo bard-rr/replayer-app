@@ -5,14 +5,12 @@ const StepTitle = ({ event, stepNum }) => {
     <Stack direction="row" sx={{ width: "100%" }}>
       <Avatar
         sx={{
-          // borderRadius: "50%",
           border: "2px solid lightgrey",
           color: "black",
           backgroundColor: "white",
           fontSize: "1rem",
           width: "20px",
           height: "20px",
-          // textAlign: "center",
           mr: "9px",
           mt: "4px",
         }}
