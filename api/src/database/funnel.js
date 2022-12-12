@@ -35,8 +35,6 @@ const createEmptyFunnel = (funnel) => {
 
 const handleUpdateFunnel = async (id, pg, body) => {
   await pg.updateFunnel(id, body);
-  // const name = body.funnelName;
-  // const lastModified = Date.now();
 };
 
 const formatResults = (funnel, filteredSessionArr, eventSequenceResults) => {

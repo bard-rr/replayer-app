@@ -1,5 +1,4 @@
 const { Client } = require("pg");
-// const { Client } = pkg;
 const dotenv = require("dotenv");
 dotenv.config();
 

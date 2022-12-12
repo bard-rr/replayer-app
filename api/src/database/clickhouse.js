@@ -14,12 +14,6 @@ class Clickhouse {
   async init() {
     //host should be the clickhouse container for PRD build
     let host = `http://${process.env.CHHOST}:8123`;
-    // eslint-disable-next-line no-undef
-    // if (process.env.NODE_ENV === "production") {
-    //   host = "http://clickhouse:8123";
-    // } else {
-    //   host = "http://localhost:8123";
-    // }
 
     //create a client to interface with clickhouse
     this.client = createClient({
@@ -91,7 +85,6 @@ class Clickhouse {
   async #runQuery(query, format = "JSONEachRow") {
     try {
       let query_params = this.query_params;
-      // console.log("query", query, "\nqueryparams", query_params);
       const resultSet = await this.client.query({
         query,
         format,
@@ -119,12 +112,12 @@ class Clickhouse {
     return result.map((resultObj) => resultObj.sessionId);
   }
 
-  //make one db query for each eventSequence object in the array
-  //the query returns sessionIds and timestamps of when the event's we're looking
-  //for happened in the session.
-
   /*
-  first query
+make one db query for each eventSequence object in the array
+the query returns sessionIds and timestamps of when the event's we're looking
+for happened in the session.
+
+first query
   SELECT
       sessionId,
       min(timestamp)
@@ -134,17 +127,16 @@ class Clickhouse {
 
 
 subsequent queries
-
-SELECT
-    sessionId,
-    min(timestamp)
-FROM eventDb.conversionEvents
-WHERE (eventType = 'click') AND (textContent = 'Delete Elements') AND (
-  ((sessionId = 'undefined') AND (timestamp > 1666710420216)) OR
-  ((sessionId = '2969cdf9-627d-457f-a369-c29b520070ae') AND (timestamp > 1666710566122))
-  )
-GROUP BY sessionId
-  */
+  SELECT
+      sessionId,
+      min(timestamp)
+  FROM eventDb.conversionEvents
+  WHERE (eventType = 'click') AND (textContent = 'Delete Elements') AND (
+    ((sessionId = 'undefined') AND (timestamp > 1666710420216)) OR
+    ((sessionId = '2969cdf9-627d-457f-a369-c29b520070ae') AND (timestamp > 1666710566122))
+    )
+  GROUP BY sessionId
+*/
   async getEventSequenceResults(eventSequenceArr, filteredSessionArr) {
     let allResults = [];
     let firstResult = await this.#getFirstFunnelResults(
@@ -180,7 +172,6 @@ GROUP BY sessionId
     let query = `SELECT sessionId, MIN(timestamp) AS time FROM
                  eventDb.conversionEvents WHERE ${eventWhereClause} ${sessionWhereClause}
                  GROUP BY sessionId`;
-    // console.log(queryObj, filteredSessionArr);
     return await this.#runQuery(query);
   };
   #getSubsequentFunnelResults = async (prevResultArr, queryObj) => {
