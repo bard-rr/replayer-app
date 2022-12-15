@@ -27,11 +27,11 @@ Postgres: [Download Here](https://www.postgresql.org/download/) Will run on port
 
 ## Setup
 
-Clone the open source repository from [here](https://github.com/bard-rr/replayer-app). After installing dependancies in the `api` directory, you can run the application from the `api` directory with the following command:
+Clone the open source repository from [here](https://github.com/bard-rr/replayer-app). After installing the required software above and the dependancies in the `api` directory, you can run the application from the `api` directory with the following command:
 
 `npm run start`
 
-The api will run on port `3003` and will serve our React ui using files from the `/api/build` directory. The source code for our React application lives in the `ui` directory of this repo.
+The api will run on port `3003` and will serve our React ui using static files from the `/api/build` directory. The source code for our React application lives in the `ui` directory of this repo.
 
 ## Website
 
